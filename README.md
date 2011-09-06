@@ -8,7 +8,7 @@ This is a Sublime Text 2 plugin and build system allowing you to check your Java
 
 ## Installation
 First of all, be sure you have [node.js](http://nodejs.org/#download) installed in order to run JSHint (a derivative work of JSLint, used to detect errors and potential problems in JS).
-Each OS has a different `Packages` folder required by Sublime Text. Open it via Preferences -> Browse Packages, and copy this repository contents to the `JSHint` folder there.
+Each OS has a different `Packages` folder required by Sublime Text. Open it via Preferences -> Browse Packages, and copy this repository contents to a new `JSHint` folder there.
 
 The shorter way of doing this is:
 #### Mac
