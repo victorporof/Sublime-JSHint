@@ -18,7 +18,7 @@ There are two ways you can use Sublime-JSHint: as a build system or a python plu
 Open a JavaScript file, Select JSHint from Tools -> Build System, and hit Ctrl+B (or Cmd+B if you're on a Mac).
 
 ### Python plugin
-Open a JavaScript file, pop out the console in Sublime Text from View -> Show Console, and type `view.run_command("jshint")`. Should work like a charm.
+Open a JavaScript file, pop out the console in Sublime Text from View -> Show Console, and type `view.run_command("jshint")`.
 
 Writing commands in the console is ugly. Set up your own key combo for this, by going to Preferences -> Key Bindings - Default, and adding a command in that huge array: `{ "keys": ["super+shift+j"], "command": "jshint" }`. You can use any other command you want, thought most of them are already taken.
 
