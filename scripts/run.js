@@ -47,12 +47,12 @@
     // extra arguments with custom options could be passed, so check them now
     // and add them to the options object
     for (i = 3, len = argv.length; i < len; i++) {
-      hash = argv[i].split(": ");
+      hash = argv[i].split(":");
       key = hash[0];
       value = hash[1];
 
       // options are stored in key value pairs, such as option.es5 = true
-      option[key] = value;
+      option[key] = value === true || value.trim() === "true";
     }
 
     // read the source file and, when complete, lint the code
