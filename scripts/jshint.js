@@ -152,7 +152,7 @@
 
 /*jshint
  evil: true, nomen: false, onevar: false, regexp: false, strict: true, boss: true,
- undef: true, maxlen: 100
+ undef: true, maxlen: 100, indent:4
 */
 
 /*members "\b", "\t", "\n", "\f", "\r", "!=", "!==", "\"", "%", "(begin)",
@@ -191,9 +191,9 @@
  ScriptEngineMajorVersion, ScriptEngineMinorVersion, Scriptaculous, Scroller,
  Slick, Slider, Selector, SharedWorker, String, Style, SyntaxError, Sortable, Sortables,
  SortableObserver, Sound, Spinner, System, Swiff, Text, TextArea, Template,
- Timer, Tips, Type, TypeError, Toggle, Try, unescape, URI, URIError, URL, VBArray, WSH,
- WScript, Web, Window, XMLDOM, XMLHttpRequest, XPathEvaluator, XPathException,
- XPathExpression, XPathNamespace, XPathNSResolver, XPathResult, "\\", a,
+ Timer, Tips, Type, TypeError, Toggle, Try, "use strict", unescape, URI, URIError, URL,
+ VBArray, WSH, WScript, XDomainRequest, Web, Window, XMLDOM, XMLHttpRequest, XPathEvaluator,
+ XPathException, XPathExpression, XPathNamespace, XPathNSResolver, XPathResult, "\\", a,
  addEventListener, address, alert, apply, applicationCache, arguments, arity,
  asi, b, bitwise, block, blur, boolOptions, boss, browser, c, call, callee,
  caller, cases, charAt, charCodeAt, character, clearInterval, clearTimeout,
@@ -201,29 +201,29 @@
  content, couch, create, css, curly, d, data, datalist, dd, debug, decodeURI,
  decodeURIComponent, defaultStatus, defineClass, deserialize, devel, document,
  dojo, dijit, dojox, define, edition, else, emit, encodeURI, encodeURIComponent,
- entityify, eqeqeq, eqnull, errors, es5, escape, eval, event, evidence, evil,
+ entityify, eqeqeq, eqnull, errors, es5, escape, esnext, eval, event, evidence, evil,
  ex, exception, exec, exps, expr, exports, FileReader, first, floor, focus,
- forin, fragment, frames, from, fromCharCode, fud, funct, function, functions,
+ forin, fragment, frames, from, fromCharCode, fud, funcscope, funct, function, functions,
  g, gc, getComputedStyle, getRow, GLOBAL, global, globals, globalstrict,
- hasOwnProperty, help, history, i, id, identifier, immed, implieds, include,
+ hasOwnProperty, help, history, i, id, identifier, immed, implieds, importPackage, include,
  indent, indexOf, init, ins, instanceOf, isAlpha, isApplicationRunning, isArray,
- isDigit, isFinite, isNaN, iterator, join, jshint,
+ isDigit, isFinite, isNaN, iterator, java, join, jshint,
  JSHINT, json, jquery, jQuery, keys, label, labelled, last, lastsemic, laxbreak,
  latedef, lbp, led, left, length, line, load, loadClass, localStorage, location,
  log, loopfunc, m, match, maxerr, maxlen, member,message, meta, module, moveBy,
- moveTo, mootools, name, navigator, new, newcap, noarg, node, noempty, nomen,
+ moveTo, mootools, multistr, name, navigator, new, newcap, noarg, node, noempty, nomen,
  nonew, nonstandard, nud, onbeforeunload, onblur, onerror, onevar, onecase, onfocus,
- onload, onresize, onunload, open, openDatabase, openURL, opener, opera, outer, param,
+ onload, onresize, onunload, open, openDatabase, openURL, opener, opera, options, outer, param,
  parent, parseFloat, parseInt, passfail, plusplus, predef, print, process, prompt,
  proto, prototype, prototypejs, push, quit, range, raw, reach, reason, regexp,
  readFile, readUrl, regexdash, removeEventListener, replace, report, require,
  reserved, resizeBy, resizeTo, resolvePath, resumeUpdates, respond, rhino, right,
  runCommand, scroll, screen, scripturl, scrollBy, scrollTo, scrollbar, search, seal,
- send, serialize, sessionStorage, setInterval, setTimeout, shift, slice, sort,spawn,
- split, stack, status, start, strict, sub, substr, supernew, shadow, supplant, sum,
+ send, serialize, sessionStorage, setInterval, setTimeout, shift, slice, smarttabs, sort,
+ spawn, split, stack, status, start, strict, sub, substr, supernew, shadow, supplant, sum,
  sync, test, toLowerCase, toString, toUpperCase, toint32, token, top, trailing, type,
- typeOf, Uint16Array, Uint32Array, Uint8Array, undef, unused, urls, validthis, value, valueOf,
- v8, var, version, WebSocket, white, window, Worker, wsh*/
+ typeOf, Uint16Array, Uint32Array, Uint8Array, undef, undefs, unused, urls, validthis,
+ value, valueOf, var, version, WebSocket, white, window, Worker, wsh*/
 
 /*global exports: false */
 
@@ -269,13 +269,15 @@ var JSHINT = (function () {
             eqeqeq      : true, // if === should be required
             eqnull      : true, // if == null comparisons should be tolerated
             es5         : true, // if ES5 syntax should be allowed
+            esnext      : true, // if es.next specific syntax should be allowed
             evil        : true, // if eval should be allowed
             expr        : true, // if ExpressionStatement should be allowed as Programs
             forin       : true, // if for in statements must filter
+            funcscope   : true, // if only function scope should be used for scope tests
             globalstrict: true, // if global "use strict"; should be allowed (also
                                 // enables 'strict')
             immed       : true, // if immediate invocations must be wrapped in parens
-            iterator    : true, // if the `__iterator__` property should be disallowed
+            iterator    : true, // if the `__iterator__` property should be allowed
             jquery      : true, // if jQuery globals should be predefined
             lastsemic   : true, // if semicolons may be ommitted for the trailing
                                 // statements inside of a one-line blocks.
@@ -284,6 +286,7 @@ var JSHINT = (function () {
             loopfunc    : true, // if functions should be allowed to be defined within
                                 // loops
             mootools    : true, // if MooTools globals should be predefined
+            multistr    : true, // allow multiline strings
             newcap      : true, // if constructor names must be capitalized
             noarg       : true, // if arguments.caller and arguments.callee should be
                                 // disallowed
@@ -299,16 +302,18 @@ var JSHINT = (function () {
             onecase     : true, // if one case switch statements should be allowed
             passfail    : true, // if the scan should stop on first error
             plusplus    : true, // if increment/decrement should not be allowed
-            proto       : true, // if the `__proto__` property should be disallowed
+            proto       : true, // if the `__proto__` property should be allowed
             prototypejs : true, // if Prototype and Scriptaculous globals should be
                                 // predefined
-            regexdash   : true, // if unescaped last dash (-) inside brackets should be
-                                // tolerated
+            regexdash   : true, // if unescaped first/last dash (-) inside brackets
+                                // should be tolerated
             regexp      : true, // if the . should not be allowed in regexp literals
             rhino       : true, // if the Rhino environment globals should be predefined
             undef       : true, // if variables should be declared before used
             scripturl   : true, // if script-targeted URLs should be tolerated
             shadow      : true, // if variable shadowing should be tolerated
+            smarttabs   : true, // if smarttabs should be tolerated
+                                // (http://www.emacswiki.org/emacs/SmartTabs)
             strict      : true, // require the "use strict"; pragma
             sub         : true, // if all forms of subscript notation are tolerated
             supernew    : true, // if `new function () { ... };` and `new Object;`
@@ -316,7 +321,6 @@ var JSHINT = (function () {
             trailing    : true, // if trailing whitespace rules apply
             validthis   : true, // if 'this' inside a non-constructor function is valid.
                                 // This is a function scoped option only.
-            v8          : true, // if V8 specific syntax should be allowed
             white       : true, // if strict whitespace rules apply
             wsh         : true  // if the Windows Scripting Host environment globals
                                 // should be predefined
@@ -569,16 +573,20 @@ var JSHINT = (function () {
         nexttoken,
 
         node = {
-            __filename  : false,
-            __dirname   : false,
-            Buffer      : false,
-            console     : false,
-            exports     : false,
-            GLOBAL      : false,
-            global      : false,
-            module      : false,
-            process     : false,
-            require     : false
+            __filename    : false,
+            __dirname     : false,
+            Buffer        : false,
+            console       : false,
+            exports       : false,
+            GLOBAL        : false,
+            global        : false,
+            module        : false,
+            process       : false,
+            require       : false,
+            setTimeout    : false,
+            clearTimeout  : false,
+            setInterval   : false,
+            clearInterval : false
         },
 
         noreach,
@@ -629,27 +637,28 @@ var JSHINT = (function () {
         },
 
         rhino = {
-            defineClass : false,
-            deserialize : false,
-            gc          : false,
-            help        : false,
-            load        : false,
-            loadClass   : false,
-            print       : false,
-            quit        : false,
-            readFile    : false,
-            readUrl     : false,
-            runCommand  : false,
-            seal        : false,
-            serialize   : false,
-            spawn       : false,
-            sync        : false,
-            toint32     : false,
-            version     : false
+            defineClass  : false,
+            deserialize  : false,
+            gc           : false,
+            help         : false,
+            importPackage: false,
+            "java"       : false,
+            load         : false,
+            loadClass    : false,
+            print        : false,
+            quit         : false,
+            readFile     : false,
+            readUrl      : false,
+            runCommand   : false,
+            seal         : false,
+            serialize    : false,
+            spawn        : false,
+            sync         : false,
+            toint32      : false,
+            version      : false
         },
 
         scope,      // The current scope
-        src,
         stack,
 
         // standard contains the global names that are provided by the
@@ -705,12 +714,12 @@ var JSHINT = (function () {
             SQRT2               : true
         },
 
-        strict_mode,
+        directive,
         syntax = {},
         tab,
         token,
         urls,
-        useV8Syntax,
+        useESNextSyntax,
         warnings,
 
         wsh = {
@@ -723,39 +732,40 @@ var JSHINT = (function () {
             ScriptEngineMinorVersion  : true,
             VBArray                   : true,
             WSH                       : true,
-            WScript                   : true
+            WScript                   : true,
+            XDomainRequest            : true
         };
 
-        // Regular expressions. Some of these are stupidly long.
-        var ax, cx, tx, nx, nxg, lx, ix, jx, ft;
-        (function () {
-            /*jshint maxlen:300 */
+    // Regular expressions. Some of these are stupidly long.
+    var ax, cx, tx, nx, nxg, lx, ix, jx, ft;
+    (function () {
+        /*jshint maxlen:300 */
 
-            // unsafe comment or string
-            ax = /@cc|<\/?|script|\]\s*\]|<\s*!|&lt/i;
+        // unsafe comment or string
+        ax = /@cc|<\/?|script|\]\s*\]|<\s*!|&lt/i;
 
-            // unsafe characters that are silently deleted by one or more browsers
-            cx = /[\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/;
+        // unsafe characters that are silently deleted by one or more browsers
+        cx = /[\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/;
 
-            // token
-            tx = /^\s*([(){}\[.,:;'"~\?\]#@]|==?=?|\/(\*(jshint|jslint|members?|global)?|=|\/)?|\*[\/=]?|\+(?:=|\++)?|-(?:=|-+)?|%=?|&[&=]?|\|[|=]?|>>?>?=?|<([\/=!]|\!(\[|--)?|<=?)?|\^=?|\!=?=?|[a-zA-Z_$][a-zA-Z0-9_$]*|[0-9]+([xX][0-9a-fA-F]+|\.[0-9]*)?([eE][+\-]?[0-9]+)?)/;
+        // token
+        tx = /^\s*([(){}\[.,:;'"~\?\]#@]|==?=?|\/(\*(jshint|jslint|members?|global)?|=|\/)?|\*[\/=]?|\+(?:=|\++)?|-(?:=|-+)?|%=?|&[&=]?|\|[|=]?|>>?>?=?|<([\/=!]|\!(\[|--)?|<=?)?|\^=?|\!=?=?|[a-zA-Z_$][a-zA-Z0-9_$]*|[0-9]+([xX][0-9a-fA-F]+|\.[0-9]*)?([eE][+\-]?[0-9]+)?)/;
 
-            // characters in strings that need escapement
-            nx = /[\u0000-\u001f&<"\/\\\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/;
-            nxg = /[\u0000-\u001f&<"\/\\\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+        // characters in strings that need escapement
+        nx = /[\u0000-\u001f&<"\/\\\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/;
+        nxg = /[\u0000-\u001f&<"\/\\\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
 
-            // star slash
-            lx = /\*\/|\/\*/;
+        // star slash
+        lx = /\*\/|\/\*/;
 
-            // identifier
-            ix = /^([a-zA-Z_$][a-zA-Z0-9_$]*)$/;
+        // identifier
+        ix = /^([a-zA-Z_$][a-zA-Z0-9_$]*)$/;
 
-            // javascript url
-            jx = /^(?:javascript|jscript|ecmascript|vbscript|mocha|livescript)\s*:/i;
+        // javascript url
+        jx = /^(?:javascript|jscript|ecmascript|vbscript|mocha|livescript)\s*:/i;
 
-            // catches /* falls through */ comments
-            ft = /^\s*\/\*\s*falls\sthrough\s*\*\/\s*$/;
-        }());
+        // catches /* falls through */ comments
+        ft = /^\s*\/\*\s*falls\sthrough\s*\*\/\s*$/;
+    }());
 
     function F() {}     // Used by Object.create
 
@@ -863,44 +873,57 @@ var JSHINT = (function () {
     }
 
     function assume() {
-        if (option.couch)
+        if (option.couch) {
             combine(predefined, couch);
+        }
 
-        if (option.rhino)
+        if (option.rhino) {
             combine(predefined, rhino);
+        }
 
-        if (option.prototypejs)
+        if (option.prototypejs) {
             combine(predefined, prototypejs);
+        }
 
-        if (option.node)
+        if (option.node) {
             combine(predefined, node);
+        }
 
-        if (option.devel)
+        if (option.devel) {
             combine(predefined, devel);
+        }
 
-        if (option.dojo)
+        if (option.dojo) {
             combine(predefined, dojo);
+        }
 
-        if (option.browser)
+        if (option.browser) {
             combine(predefined, browser);
+        }
 
-        if (option.nonstandard)
+        if (option.nonstandard) {
             combine(predefined, nonstandard);
+        }
 
-        if (option.jquery)
+        if (option.jquery) {
             combine(predefined, jquery);
+        }
 
-        if (option.mootools)
+        if (option.mootools) {
             combine(predefined, mootools);
+        }
 
-        if (option.wsh)
+        if (option.wsh) {
             combine(predefined, wsh);
+        }
 
-        if (option.v8)
-            useV8Syntax();
+        if (option.esnext) {
+            useESNextSyntax();
+        }
 
-        if (option.globalstrict && option.strict !== false)
+        if (option.globalstrict && option.strict !== false) {
             option.strict = true;
+        }
     }
 
 
@@ -912,8 +935,13 @@ var JSHINT = (function () {
             name: 'JSHintError',
             line: line,
             character: chr,
-            message: message + " (" + percentage + "% scanned)."
+            message: message + " (" + percentage + "% scanned).",
+            raw: message
         };
+    }
+
+    function isundef(scope, m, t, a) {
+        return JSHINT.undefs.push([scope, m, t, a]);
     }
 
     function warning(m, t, a, b, c, d) {
@@ -984,7 +1012,13 @@ var JSHINT = (function () {
             character = 1;
             s = lines[line];
             line += 1;
-            at = s.search(/ \t/);
+
+            // If smarttabs option is used check for spaces followed by tabs only.
+            // Otherwise check for any occurence of mixed tabs and spaces.
+            if (option.smarttabs)
+                at = s.search(/ \t/);
+            else
+                at = s.search(/ \t|\t /);
 
             if (at >= 0)
                 warningAt("Mixed spaces and tabs.", line, at + 1);
@@ -999,10 +1033,10 @@ var JSHINT = (function () {
                 warningAt("Line too long.", line, s.length);
 
             // Check for trailing whitespaces
-            tw = s.search(/\s+$/);
-            if (option.trailing && ~tw && !~s.search(/^\s+$/))
+            tw = /\s+$/.test(s);
+            if (option.trailing && tw && !/^\s+$/.test(s)) {
                 warningAt("Trailing whitespace.", line, tw);
-
+            }
             return true;
         }
 
@@ -1048,7 +1082,8 @@ var JSHINT = (function () {
             if (i !== '(endline)') {
                 prereg = i &&
                     (('(,=:[!&|?{};'.indexOf(i.charAt(i.length - 1)) >= 0) ||
-                    i === 'return');
+                    i === 'return' ||
+                    i === 'case');
             }
             return t;
         }
@@ -1105,7 +1140,7 @@ var JSHINT = (function () {
 
             // token -- this is called by advance to get the next token
             token: function () {
-                var b, c, captures, d, depth, high, i, l, low, q, t;
+                var b, c, captures, d, depth, high, i, l, low, q, t, isLiteral, isInRange;
 
                 function match(x) {
                     var r = x.exec(s), r1;
@@ -1121,7 +1156,7 @@ var JSHINT = (function () {
                 }
 
                 function string(x) {
-                    var c, j, r = '';
+                    var c, j, r = '', allowNewLine = false;
 
                     if (jsonmode && x !== '"') {
                         warningAt("Strings must use doublequote.",
@@ -1139,11 +1174,20 @@ var JSHINT = (function () {
                         c = String.fromCharCode(i);
                     }
                     j = 0;
-                    for (;;) {
+unclosedString:     for (;;) {
                         while (j >= s.length) {
                             j = 0;
+
+                            var cl = line, cf = from;
                             if (!nextLine()) {
-                                errorAt("Unclosed string.", line, from);
+                                errorAt("Unclosed string.", cl, cf);
+                                break unclosedString;
+                            }
+
+                            if (allowNewLine) {
+                                allowNewLine = false;
+                            } else {
+                                warningAt("Unclosed string.", cl, cf);
                             }
                         }
                         c = s.charAt(j);
@@ -1202,6 +1246,22 @@ var JSHINT = (function () {
                                 }
                                 esc(2);
                                 break;
+                            case '':
+                                // last character is escape character
+                                // always allow new line if escaped, but show
+                                // warning if option is not set
+                                allowNewLine = true;
+                                if (option.multistr) {
+                                    if (jsonmode) {
+                                        warningAt("Avoid EOL escapement.", line, character);
+                                    }
+                                    c = '';
+                                    character -= 1;
+                                    break;
+                                }
+                                warningAt("Bad escapement of EOL. Use option multistr if needed.",
+                                    line, character);
+                                break;
                             default:
                                 warningAt("Bad escapement.", line, character);
                             }
@@ -1225,6 +1285,7 @@ var JSHINT = (function () {
                         }
                         if (s) {
                             errorAt("Unexpected '{a}'.", line, character, s.substr(0, 1));
+                            s = '';
                         }
                     } else {
 
@@ -1274,9 +1335,6 @@ var JSHINT = (function () {
     //      // comment
 
                         case '//':
-                            if (src) {
-                                warningAt("Unexpected comment.", line, character);
-                            }
                             s = '';
                             token.comment = true;
                             break;
@@ -1284,9 +1342,6 @@ var JSHINT = (function () {
     //      /* comment
 
                         case '/*':
-                            if (src) {
-                                warningAt("Unexpected comment.", line, character);
-                            }
                             for (;;) {
                                 i = s.search(lx);
                                 if (i >= 0) {
@@ -1325,8 +1380,8 @@ var JSHINT = (function () {
     //      /
                         case '/':
                             if (token.id === '/=') {
-                                errorAt(
-"A regular expression literal can be confused with '/='.", line, from);
+                                errorAt("A regular expression literal can be confused with '/='.",
+                                    line, from);
                             }
                             if (prereg) {
                                 depth = 0;
@@ -1338,13 +1393,12 @@ var JSHINT = (function () {
                                     l += 1;
                                     switch (c) {
                                     case '':
-                                        errorAt("Unclosed regular expression.",
-                                                line, from);
-                                        return;
+                                        errorAt("Unclosed regular expression.", line, from);
+                                        return quit('Stopping.', line, from);
                                     case '/':
                                         if (depth > 0) {
-                                            warningAt("Unescaped '{a}'.",
-                                                    line, from + l, '/');
+                                            warningAt("{a} unterminated regular expression " +
+                                                "group(s).", line, from + l, depth);
                                         }
                                         c = s.substr(0, l - 1);
                                         q = {
@@ -1428,12 +1482,12 @@ var JSHINT = (function () {
                                                     line, from + l, '^');
                                             }
                                         }
-                                        q = false;
                                         if (c === ']') {
                                             warningAt("Empty class.", line,
                                                     from + l - 1);
-                                            q = true;
                                         }
+                                        isLiteral = false;
+                                        isInRange = false;
 klass:                                  do {
                                             c = s.charAt(l);
                                             l += 1;
@@ -1442,19 +1496,31 @@ klass:                                  do {
                                             case '^':
                                                 warningAt("Unescaped '{a}'.",
                                                         line, from + l, c);
-                                                q = true;
+                                                if (isInRange) {
+                                                    isInRange = false;
+                                                } else {
+                                                    isLiteral = true;
+                                                }
                                                 break;
                                             case '-':
-                                                if (q) {
-                                                    q = false;
+                                                if (isLiteral && !isInRange) {
+                                                    isLiteral = false;
+                                                    isInRange = true;
+                                                } else if (isInRange) {
+                                                    isInRange = false;
+                                                } else if (s.charAt(l) === ']') {
+                                                    isInRange = true;
                                                 } else {
-                                                    warningAt("Unescaped '{a}'.",
-                                                            line, from + l, '-');
-                                                    q = true;
+                                                    if (option.regexdash !== (l === 2 || (l === 3 &&
+                                                        s.charAt(2) === '^'))) {
+                                                        warningAt("Unescaped '{a}'.",
+                                                            line, from + l - 1, '-');
+                                                    }
+                                                    isLiteral = true;
                                                 }
                                                 break;
                                             case ']':
-                                                if (!q && !option.regexdash) {
+                                                if (isInRange && !option.regexdash) {
                                                     warningAt("Unescaped '{a}'.",
                                                             line, from + l - 1, '-');
                                                 }
@@ -1469,18 +1535,44 @@ klass:                                  do {
 "Unexpected escaped character '{a}' in regular expression.", line, from + l, c);
                                                 }
                                                 l += 1;
-                                                q = true;
+
+                                                // \w, \s and \d are never part of a character range
+                                                if (/[wsd]/i.test(c)) {
+                                                    if (isInRange) {
+                                                        warningAt("Unescaped '{a}'.",
+                                                            line, from + l, '-');
+                                                        isInRange = false;
+                                                    }
+                                                    isLiteral = false;
+                                                } else if (isInRange) {
+                                                    isInRange = false;
+                                                } else {
+                                                    isLiteral = true;
+                                                }
                                                 break;
                                             case '/':
                                                 warningAt("Unescaped '{a}'.",
                                                         line, from + l - 1, '/');
-                                                q = true;
+
+                                                if (isInRange) {
+                                                    isInRange = false;
+                                                } else {
+                                                    isLiteral = true;
+                                                }
                                                 break;
                                             case '<':
-                                                q = true;
+                                                if (isInRange) {
+                                                    isInRange = false;
+                                                } else {
+                                                    isLiteral = true;
+                                                }
                                                 break;
                                             default:
-                                                q = true;
+                                                if (isInRange) {
+                                                    isInRange = false;
+                                                } else {
+                                                    isLiteral = true;
+                                                }
                                             }
                                         } while (c);
                                         break;
@@ -1588,13 +1680,12 @@ klass:                                  do {
         }
 
 // Define t in the current function in the current scope.
-
         if (is_own(funct, t) && !funct['(global)']) {
             if (funct[t] === true) {
                 if (option.latedef)
                     warning("'{a}' was used before it was defined.", nexttoken, t);
             } else {
-                if (!option.shadow)
+                if (!option.shadow && type !== "exception")
                     warning("'{a}' is already defined.", nexttoken, t);
             }
         }
@@ -1860,7 +1951,8 @@ loop:   for (;;) {
         right = right || nexttoken;
         if (option.white) {
             if (left.character !== right.from && left.line === right.line) {
-                warning("Unexpected space after '{a}'.", right, left.value);
+                left.from += (left.character - left.from);
+                warning("Unexpected space after '{a}'.", left, left.value);
             }
         }
     }
@@ -1888,8 +1980,9 @@ loop:   for (;;) {
             left = left || token;
             right = right || nexttoken;
             if (left.line === right.line && left.character === right.from) {
+                left.from += (left.character - left.from);
                 warning("Missing space after '{a}'.",
-                        nexttoken, left.value);
+                        left, left.value);
             }
         }
     }
@@ -1903,8 +1996,9 @@ loop:   for (;;) {
             left = left || token;
             right = right || nexttoken;
             if (left.character === right.from) {
+                left.from += (left.character - left.from);
                 warning("Missing space after '{a}'.",
-                        nexttoken, left.value);
+                        left, left.value);
             }
         }
     }
@@ -1934,8 +2028,9 @@ loop:   for (;;) {
             if (!option.laxbreak) {
                 warning("Bad line breaking before '{a}'.", token, nexttoken.id);
             }
-        } else if (token.character !== nexttoken.from && option.white) {
-            warning("Unexpected space after '{a}'.", nexttoken, token.value);
+        } else if (!token.comment && token.character !== nexttoken.from && option.white) {
+            token.from += (token.character - token.from);
+            warning("Unexpected space after '{a}'.", token, token.value);
         }
         advance(',');
         nonadjacent(token, nexttoken);
@@ -2040,6 +2135,9 @@ loop:   for (;;) {
                 nobreaknonadjacent(prevtoken, token);
                 nonadjacent(token, nexttoken);
             }
+            if (s === "in" && left.id === "!") {
+                warning("Confusing use of '{a}'.", left, '!');
+            }
             if (typeof f === 'function') {
                 return f(left, this);
             } else {
@@ -2067,7 +2165,7 @@ loop:   for (;;) {
                 warning("Confusing use of '{a}'.", left, '!');
             }
             if (right.id === '!') {
-                warning("Confusing use of '{a}'.", left, '!');
+                warning("Confusing use of '{a}'.", right, '!');
             }
             this.left = left;
             this.right = right;
@@ -2100,7 +2198,7 @@ loop:   for (;;) {
                 warning("'{a}' is a function.", left, left.value);
             }
             if (left) {
-                if (option.v8 && funct[left.value] === 'const') {
+                if (option.esnext && funct[left.value] === 'const') {
                     warning("Attempting to override '{a}' which is a constant", left, left.value);
                 }
                 if (left.id === '.' || left.id === '[') {
@@ -2295,13 +2393,8 @@ loop:   for (;;) {
                     // Otherwise, complain about missing semicolon.
                     if (!option.lastsemic || nexttoken.id != '}' ||
                             nexttoken.line != token.line) {
-                        warningAt("Missing semicolon.", token.line, token.from +
-                            token.value.length);
+                        warningAt("Missing semicolon.", token.line, token.character);
                     }
-                }
-                if (!option.asi && !(option.lastsemic && nexttoken.id == '}' &&
-                        nexttoken.line == token.line)) {
-
                 }
             } else {
                 adjacent(token, nexttoken);
@@ -2318,24 +2411,7 @@ loop:   for (;;) {
     }
 
 
-    function use_strict() {
-        if (nexttoken.value === 'use strict') {
-            if (strict_mode) {
-                warning("Unnecessary \"use strict\".");
-            }
-            advance();
-            advance(';');
-            strict_mode = true;
-            option.newcap = true;
-            option.undef = true;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    function statements(begin) {
+    function statements(startLine) {
         var a = [], f, p;
 
         while (!nexttoken.reach && nexttoken.id !== '(end)') {
@@ -2343,10 +2419,69 @@ loop:   for (;;) {
                 warning("Unnecessary semicolon.");
                 advance(';');
             } else {
-                a.push(statement());
+                a.push(statement(startLine === nexttoken.line));
             }
         }
         return a;
+    }
+
+
+    /*
+     * read all directives
+     * recognizes a simple form of asi, but always
+     * warns, if it is used
+     */
+    function directives() {
+        var i, p, pn;
+
+        for (;;) {
+            if (nexttoken.id === "(string)") {
+                p = peek(0);
+                if (p.id === "(endline)") {
+                    i = 1;
+                    do {
+                        pn = peek(i);
+                        i = i + 1;
+                    } while (pn.id === "(endline)");
+
+                    if (pn.id !== ";") {
+                        if (pn.id !== "(string)" && pn.id !== "(number)" &&
+                            pn.id !== "(regexp)" && pn.identifier !== true &&
+                            pn.id !== "}") {
+                            break;
+                        }
+                        warning("Missing semicolon.", nexttoken);
+                    } else {
+                        p = pn;
+                    }
+                } else if (p.id === "}") {
+                    // directive with no other statements, warn about missing semicolon
+                    warning("Missing semicolon.", p);
+                } else if (p.id !== ";") {
+                    break;
+                }
+
+                indentation();
+                advance();
+                if (directive[token.value]) {
+                    warning("Unnecessary directive \"{a}\".", token, token.value);
+                }
+
+                if (token.value === "use strict") {
+                    option.newcap = true;
+                    option.undef = true;
+                }
+
+                // there's no directive negation, so always set to true
+                directive[token.value] = true;
+
+                if (p.id === ";") {
+                    advance(";");
+                }
+                continue;
+            }
+            break;
+        }
     }
 
 
@@ -2356,34 +2491,59 @@ loop:   for (;;) {
      *
      * ordinary - true for everything but function bodies and try blocks.
      * stmt     - true if block can be a single statement (e.g. in if/for/while).
+     * isfunc   - true if block is a function body
      */
-    function block(ordinary, stmt) {
+    function block(ordinary, stmt, isfunc) {
         var a,
             b = inblock,
             old_indent = indent,
-            m = strict_mode,
+            m,
             s = scope,
-            t;
+            t,
+            line,
+            d;
 
         inblock = ordinary;
-        scope = Object.create(scope);
+        if (!ordinary || !option.funcscope) scope = Object.create(scope);
         nonadjacent(token, nexttoken);
         t = nexttoken;
 
         if (nexttoken.id === '{') {
             advance('{');
-            if (nexttoken.id !== '}' || token.line !== nexttoken.line) {
+            line = token.line;
+            if (nexttoken.id !== '}') {
                 indent += option.indent;
                 while (!ordinary && nexttoken.from > indent) {
                     indent += option.indent;
                 }
-                if (!ordinary && !use_strict() && !m && option.strict &&
-                        funct['(context)']['(global)']) {
-                    warning("Missing \"use strict\" statement.");
+
+                if (isfunc) {
+                    m = {};
+                    for (d in directive) {
+                        if (is_own(directive, d)) {
+                            m[d] = directive[d];
+                        }
+                    }
+                    directives();
+
+                    if (option.strict && funct['(context)']['(global)']) {
+                        if (!m["use strict"] && !directive["use strict"]) {
+                            warning("Missing \"use strict\" statement.");
+                        }
+                    }
                 }
-                a = statements();
-                strict_mode = m;
+
+                a = statements(line);
+
+                if (isfunc) {
+                    directive = m;
+                }
+
                 indent -= option.indent;
+                if (line !== nexttoken.line) {
+                    indentation();
+                }
+            } else if (line !== nexttoken.line) {
                 indentation();
             }
             advance('}', t);
@@ -2397,11 +2557,14 @@ loop:   for (;;) {
                         nexttoken, '{', nexttoken.value);
 
             noreach = true;
-            a = [statement()];
+            indent += option.indent;
+            // test indentation only if statement is in new line
+            a = [statement(nexttoken.line === token.line)];
+            indent -= option.indent;
             noreach = false;
         }
         funct['(verb)'] = null;
-        scope = s;
+        if (!ordinary || !option.funcscope) scope = s;
         inblock = b;
         if (ordinary && option.noempty && (!a || a.length === 0)) {
             warning("Empty block.");
@@ -2493,7 +2656,7 @@ loop:   for (;;) {
                 // if we're inside of typeof or delete.
                 if (anonname != 'typeof' && anonname != 'delete' &&
                     option.undef && typeof predefined[v] !== 'boolean') {
-                    warning("'{a}' is not defined.", token, v);
+                    isundef(funct, "'{a}' is not defined.", token, v);
                 }
                 note_implied(token);
             } else {
@@ -2526,10 +2689,9 @@ loop:   for (;;) {
                         // if the base object of a reference is null so no need to
                         // display warning if we're inside of typeof or delete.
                         if (anonname != 'typeof' && anonname != 'delete' && option.undef) {
-                            warning("'{a}' is not defined.", token, v);
-                        } else {
-                            funct[v] = true;
+                            isundef(funct, "'{a}' is not defined.", token, v);
                         }
+                        funct[v] = true;
                         note_implied(token);
                     } else {
                         switch (s[v]) {
@@ -2593,7 +2755,7 @@ loop:   for (;;) {
     reserve('default').reach = true;
     reserve('finally');
     reservevar('arguments', function (x) {
-        if (strict_mode && funct['(global)']) {
+        if (directive['use strict'] && funct['(global)']) {
             warning("Strict violation.", x);
         }
     });
@@ -2603,7 +2765,7 @@ loop:   for (;;) {
     reservevar('NaN');
     reservevar('null');
     reservevar('this', function (x) {
-        if (strict_mode && !option.validthis && ((funct['(statement)'] &&
+        if (directive['use strict'] && !option.validthis && ((funct['(statement)'] &&
                 funct['(name)'].charAt(0) > 'Z') || funct['(global)'])) {
             warning("Possible strict violation.", x);
         }
@@ -2782,8 +2944,8 @@ loop:   for (;;) {
                     if (c.id !== 'function') {
                         i = c.value.substr(0, 1);
                         if (option.newcap && (i < 'A' || i > 'Z')) {
-                            warning("A constructor name should start with "+
-                                "an uppercase letter.", token);
+                            warning("A constructor name should start with an uppercase letter.",
+                                token);
                         }
                     }
                 }
@@ -2819,7 +2981,7 @@ loop:   for (;;) {
         if (left && left.value === 'arguments' && (m === 'callee' || m === 'caller')) {
             if (option.noarg)
                 warning("Avoid arguments.{a}.", left, m);
-            else if (strict_mode)
+            else if (directive['use strict'])
                 error('Strict violation.');
         } else if (!option.evil && left && left.value === 'document' &&
                 (m === 'write' || m === 'writeln')) {
@@ -3002,7 +3164,6 @@ loop:   for (;;) {
         nospace();
         if (nexttoken.id === ')') {
             advance(')');
-            nospace(prevtoken, token);
             return;
         }
         for (;;) {
@@ -3045,7 +3206,7 @@ loop:   for (;;) {
         }
         funct['(params)'] = functionparams();
 
-        block(false);
+        block(false, false, true);
         scope = oldScope;
         option = oldOption;
         funct['(last)'] = token.line;
@@ -3143,10 +3304,10 @@ loop:   for (;;) {
         };
     }(delim('{')));
 
-// This Function is called when v8 option is set to true
+// This Function is called when esnext option is set to true
 // it adds the `const` statement to JSHINT
 
-    useV8Syntax = function () {
+    useESNextSyntax = function () {
         var conststatement = stmt('const', function (prefix) {
             var id, name, value;
 
@@ -3166,6 +3327,12 @@ loop:   for (;;) {
                 }
                 name = token;
                 this.first.push(token);
+
+                if (nexttoken.id !== "=") {
+                    warning("const " +
+                      "'{a}' is initialized to 'undefined'.", token, id);
+                }
+
                 if (nexttoken.id === '=') {
                     nonadjacent(token, nexttoken);
                     advance('=');
@@ -3181,6 +3348,7 @@ loop:   for (;;) {
                     value = expression(0);
                     name.first = value;
                 }
+
                 if (nexttoken.id !== ',') {
                     break;
                 }
@@ -3195,6 +3363,7 @@ loop:   for (;;) {
         // JavaScript does not have block scope. It only has function scope. So,
         // declaring a variable in a block can have unexpected consequences.
         var id, name, value;
+
         if (funct['(onevar)'] && option.onevar) {
             warning("Too many var statements.");
         } else if (!funct['(global)']) {
@@ -3204,7 +3373,7 @@ loop:   for (;;) {
         for (;;) {
             nonadjacent(token, nexttoken);
             id = identifier();
-            if (option.v8 && funct[id] === "const") {
+            if (option.esnext && funct[id] === "const") {
                 warning("const '" + id + "' has already been declared");
             }
             if (funct['(global)'] && predefined[id] === false) {
@@ -3247,7 +3416,7 @@ loop:   for (;;) {
 
         }
         var i = identifier();
-        if (option.v8 && funct[i] === "const") {
+        if (option.esnext && funct[i] === "const") {
             warning("const '" + i + "' has already been declared");
         }
         adjacent(token, nexttoken);
@@ -3444,14 +3613,23 @@ loop:   for (;;) {
                         error("Each value should have its own case label.");
                         return;
                     case ':':
+                        g = false;
                         statements();
                         break;
                     default:
                         error("Missing ':' on a case clause.", token);
+                        return;
                     }
                 } else {
-                    error("Expected '{a}' and instead saw '{b}'.",
-                        nexttoken, 'case', nexttoken.value);
+                    if (token.id === ':') {
+                        advance(':');
+                        error("Unexpected '{a}'.", token, ':');
+                        statements();
+                    } else {
+                        error("Expected '{a}' and instead saw '{b}'.",
+                            nexttoken, 'case', nexttoken.value);
+                        return;
+                    }
                 }
             }
         }
@@ -3519,7 +3697,7 @@ loop:   for (;;) {
             expression(20);
             advance(')', t);
             s = block(true, true);
-            if (option.forin && (s.length > 1 || typeof s[0] !== 'object' ||
+            if (option.forin && s && (s.length > 1 || typeof s[0] !== 'object' ||
                     s[0].value !== 'if')) {
                 warning("The body of a for in should be wrapped in an if statement to filter " +
                         "unwanted properties from the prototype.", this);
@@ -3631,19 +3809,21 @@ loop:   for (;;) {
 
 
     stmt('return', function () {
-        if (!option.asi)
-            nolinebreak(this);
+        if (this.line === nexttoken.line) {
+            if (nexttoken.id === '(regexp)')
+                warning("Wrap the /regexp/ literal in parens to disambiguate the slash operator.");
 
-        if (nexttoken.id === '(regexp)')
-            warning("Wrap the /regexp/ literal in parens to disambiguate the slash operator.");
-
-        if (this.line === nexttoken.line || !option.asi) {
             if (nexttoken.id !== ';' && !nexttoken.reach) {
                 nonadjacent(token, nexttoken);
-                this.first = expression(20);
+                if (peek().value === "=" && !option.boss) {
+                    warningAt("Did you mean to return a conditional instead of an assignment?",
+                              token.line, token.character + 1);
+                }
+                this.first = expression(0);
             }
+        } else if (!option.asi) {
+            nolinebreak(this); // always warn (Line breaking error)
         }
-
         reachable('return');
         return this;
     }).exps = true;
@@ -3705,8 +3885,8 @@ loop:   for (;;) {
                     } else if ((nexttoken.value === '__proto__' &&
                         !option.proto) || (nexttoken.value === '__iterator__' &&
                         !option.iterator)) {
-                            warning("The '{a}' key may produce unexpected results.",
-                                nexttoken, nexttoken.value);
+                        warning("The '{a}' key may produce unexpected results.",
+                            nexttoken, nexttoken.value);
                     } else {
                         o[nexttoken.value] = true;
                     }
@@ -3779,6 +3959,7 @@ loop:   for (;;) {
     var itself = function (s, o, g) {
         var a, i, k;
         JSHINT.errors = [];
+        JSHINT.undefs = [];
         predefined = Object.create(standard);
         combine(predefined, g || {});
         if (o) {
@@ -3818,7 +3999,6 @@ loop:   for (;;) {
         };
         functions = [funct];
         urls = [];
-        src = false;
         stack = null;
         member = {};
         membersOnly = null;
@@ -3829,15 +4009,13 @@ loop:   for (;;) {
         warnings = 0;
         lex.init(s);
         prereg = true;
-        strict_mode = false;
-
-        // if v8 option is set, we can use v8 syntax
-        if (option.v8) {
-            useV8Syntax();
-        }
+        directive = {};
 
         prevtoken = token = nexttoken = syntax['(begin)'];
         assume();
+
+        // combine the passed globals after we've assumed all our options
+        combine(predefined, g || {});
 
         try {
             advance();
@@ -3849,31 +4027,43 @@ loop:   for (;;) {
                 jsonValue();
                 break;
             default:
-                if (nexttoken.value === 'use strict') {
-                    if (!option.globalstrict)
-                        warning("Use the function form of \"use strict\".");
-                    use_strict();
+                directives();
+                if (directive["use strict"] && !option.globalstrict) {
+                    warning("Use the function form of \"use strict\".", prevtoken);
                 }
 
-                statements('lib');
+                statements();
             }
             advance('(end)');
         } catch (e) {
             if (e) {
+                var nt = nexttoken || {};
                 JSHINT.errors.push({
+                    raw       : e.raw,
                     reason    : e.message,
-                    line      : e.line || nexttoken.line,
-                    character : e.character || nexttoken.from
+                    line      : e.line || nt.line,
+                    character : e.character || nt.from
                 }, null);
             }
         }
+
+        for (i = 0; i < JSHINT.undefs.length; i += 1) {
+            k = JSHINT.undefs[i].slice(0);
+            scope = k.shift();
+            a = k[2];
+
+            if (typeof scope[a] !== 'string' && typeof funct[a] !== 'string') {
+                warning.apply(warning, k);
+            }
+        }
+
         return JSHINT.errors.length === 0;
     };
 
     // Data summary.
     itself.data = function () {
 
-        var data = {functions: []}, fu, globals, implieds = [], f, i, j,
+        var data = { functions: [], options: option }, fu, globals, implieds = [], f, i, j,
             members = [], n, unused = [], v;
         if (itself.errors.length) {
             data.errors = itself.errors;
