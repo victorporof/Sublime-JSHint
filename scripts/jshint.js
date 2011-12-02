@@ -502,7 +502,7 @@ var JSHINT = (function () {
 
         functionicity = [
             'closure', 'exception', 'global', 'label',
-            'outer', 'unused', 'var'
+            'outer', 'unused', 'var', 'let'
         ],
 
         functions,      // All of the functions
@@ -1673,7 +1673,7 @@ klass:                                  do {
     }());
 
 
-    function addlabel(t, type) {
+    function addlabel(t, type, flags) {
 
         if (t === 'hasOwnProperty') {
             warning("'hasOwnProperty' is a really bad name.");
@@ -1685,7 +1685,7 @@ klass:                                  do {
                 if (option.latedef)
                     warning("'{a}' was used before it was defined.", nexttoken, t);
             } else {
-                if (!option.shadow && type !== "exception")
+                if (!option.shadow && type !== "exception" && flags !== "let")
                     warning("'{a}' is already defined.", nexttoken, t);
             }
         }
@@ -2667,6 +2667,7 @@ loop:   for (;;) {
                 case 'closure':
                 case 'function':
                 case 'var':
+                case 'let':
                 case 'unused':
                     warning("'{a}' used out of scope.", token, v);
                     break;
@@ -2702,6 +2703,7 @@ loop:   for (;;) {
                             funct[v] = s['(global)'] ? 'global' : 'outer';
                             break;
                         case 'var':
+                        case 'let':
                         case 'unused':
                             s[v] = 'closure';
                             funct[v] = s['(global)'] ? 'global' : 'outer';
@@ -3034,9 +3036,9 @@ loop:   for (;;) {
         advance(')');
         nospace(prevtoken, token);
         if (typeof left === 'object') {
-            if (left.value === 'parseInt' && n === 1) {
-                warning("Missing radix parameter.", left);
-            }
+            // if (left.value === 'parseInt' && n === 1) {
+            //     warning("Missing radix parameter.", left);
+            // }
             if (!option.evil) {
                 if (left.value === 'eval' || left.value === 'Function' ||
                         left.value === 'execScript') {
@@ -3233,12 +3235,14 @@ loop:   for (;;) {
                 if (b) {
                     indentation();
                 }
-                if (nexttoken.value === 'get' && peek().id !== ':') {
-                    advance('get');
+                var nexttokenvalue = nexttoken.value;
+
+                if ((nexttokenvalue === 'get' || nexttokenvalue === 'set') && peek().id !== ':') {
+                    advance(nexttokenvalue);
                     if (!option.es5) {
                         error("get/set are ES5 features.");
                     }
-                    i = property_name();
+                    i = nexttokenvalue + " " + property_name();
                     if (!i) {
                         error("Missing property name.");
                     }
@@ -3249,22 +3253,10 @@ loop:   for (;;) {
                         warning("Don't make functions within a loop.", t);
                     }
                     p = f['(params)'];
-                    if (p) {
+                    if (nexttokenvalue === 'get' && p) {
                         warning("Unexpected parameter '{a}' in get {b} function.", t, p[0], i);
                     }
-                    adjacent(token, nexttoken);
-                    advance(',');
-                    indentation();
-                    advance('set');
-                    j = property_name();
-                    if (i !== j) {
-                        error("Expected {a} and instead saw {b}.", token, i, j);
-                    }
-                    t = nexttoken;
-                    adjacent(token, nexttoken);
-                    f = doFunction();
-                    p = f['(params)'];
-                    if (!p || p.length !== 1 || p[0] !== 'value') {
+                    if (nexttokenvalue === 'set' && (!p || p.length !== 1)) {
                         warning("Expected (value) in set {a} function.", t, i);
                     }
                 } else {
@@ -3407,6 +3399,53 @@ loop:   for (;;) {
         return this;
     });
     varstatement.exps = true;
+
+    var letstatement = stmt('let', function (prefix) {
+        var id, name, value;
+
+        if (funct['(onevar)'] && option.onevar) {
+            warning("Too many let statements.");
+        } else if (!funct['(global)']) {
+            funct['(onevar)'] = true;
+        }
+        this.first = [];
+        for (;;) {
+            nonadjacent(token, nexttoken);
+            id = identifier();
+            if (option.esnext && funct[id] === "const") {
+                warning("const '" + id + "' has already been declared");
+            }
+            if (funct['(global)'] && predefined[id] === false) {
+                warning("Redefinition of '{a}'.", token, id);
+            }
+            addlabel(id, 'unused', 'let');
+            if (prefix) {
+                break;
+            }
+            name = token;
+            this.first.push(token);
+            if (nexttoken.id === '=') {
+                nonadjacent(token, nexttoken);
+                advance('=');
+                nonadjacent(token, nexttoken);
+                if (nexttoken.id === 'undefined') {
+                    warning("It is not necessary to initialize '{a}' to 'undefined'.", token, id);
+                }
+                if (peek(0).id === '=' && nexttoken.identifier) {
+                    error("Variable {a} was not declared correctly.",
+                            nexttoken, nexttoken.value);
+                }
+                value = expression(0);
+                name.first = value;
+            }
+            if (nexttoken.id !== ',') {
+                break;
+            }
+            comma();
+        }
+        return this;
+    });
+    letstatement.exps = true;
 
     blockstmt('function', function () {
         if (inblock) {
@@ -3676,10 +3715,13 @@ loop:   for (;;) {
         advance('(');
         nonadjacent(this, t);
         nospace();
-        if (peek(nexttoken.id === 'var' ? 1 : 0).id === 'in') {
+        if (peek((nexttoken.id === 'var' || nexttoken.id === 'let') ? 1 : 0).id === 'in') {
             if (nexttoken.id === 'var') {
                 advance('var');
                 varstatement.fud.call(varstatement, true);
+            } else if (nexttoken.id === 'let') {
+                advance('let');
+                letstatement.fud.call(letstatement, true);
             } else {
                 switch (funct[nexttoken.value]) {
                 case 'unused':
@@ -3710,6 +3752,9 @@ loop:   for (;;) {
                 if (nexttoken.id === 'var') {
                     advance('var');
                     varstatement.fud.call(varstatement);
+                } else if (nexttoken.id === 'let') {
+                    advance('let');
+                    letstatement.fud.call(letstatement);
                 } else {
                     for (;;) {
                         expression(0, 'for');
