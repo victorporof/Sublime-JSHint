@@ -9,10 +9,12 @@ class JshintCommand(sublime_plugin.TextCommand):
       regx.sub("\ ", sublime.packages_path()) + "/JSHint/scripts/run.js " +
       regx.sub("\ ", self.view.file_name()) +
         " browser:\ true" +
-        " es5:\ true" +
         " v8:\ true" +
+        " es5:\ true" +
+        " esnext:\ true" +
+        " globalstrict:\ true" +
         " trailing:\ true" +
-        " onevar:\ true" +
+        " undef:\ true" +
         " sub:\ true")
 
     if len(lint) > 0:

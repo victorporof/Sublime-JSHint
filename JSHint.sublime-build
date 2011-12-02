@@ -2,9 +2,11 @@
   "selector": "source.js",
   "cmd": ["node", "$packages/JSHint/scripts/run.js", "$file",
     "browser: true",
-    "es5: true",
     "v8: true",
+    "es5: true",
+    "esnext: true",
+    "globalstrict: true",
     "trailing: true",
-    "onevar: true",
+    "undef: true",
     "sub: true"]
 }
