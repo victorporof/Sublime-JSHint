@@ -62,7 +62,10 @@
       }
 
       // lint the code and write readable error output to the console
-      jshint(data, option);
+      try {
+        jshint(data, option);
+      } catch(e) {}
+
       jshint.errors.forEach(function(e) {
 
         // if the error is null, then we could not continue (too many errors)
