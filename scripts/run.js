@@ -51,9 +51,23 @@
       key = hash[0];
       value = hash[1];
 
+      // there are two options that allow numerical values
+      if (key === "maxerr" || key === "indent") {
+        option[key] = +value; //store value as Number, not as String
+        continue;
+      }
+    
+      // there is one option that allows array of strings to be passed (predefined custom globals)
+      if (key === "predef") {
+        option[key] = eval(value);//eval is evil, but JSON.parse would require only double quotes to be used
+        continue;
+      }
+
       // options are stored in key value pairs, such as option.es5 = true
       option[key] = value === true || value.trim() === "true";
     }
+    
+    option['predef'] = ['nokia'];
 
     // read the source file and, when complete, lint the code
     fs.readFile(source, "utf8", function(err, data) {
