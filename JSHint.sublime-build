@@ -6,7 +6,9 @@
     "es5: true",
     "esnext: true",
     "globalstrict: true",
+    "strictundef: true",
+    "laxradix: true",
     "trailing: true",
-    "undef: true",
+    "undef: false",
     "sub: true"]
 }

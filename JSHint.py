@@ -13,8 +13,10 @@ class JshintCommand(sublime_plugin.TextCommand):
         " es5:\ true" +
         " esnext:\ true" +
         " globalstrict:\ true" +
+        " strictundef:\ true" +
+        " laxradix:\ true" +
         " trailing:\ true" +
-        " undef:\ true" +
+        " undef:\ false" +
         " sub:\ true")
 
     if len(lint) > 0:
