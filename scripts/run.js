@@ -91,7 +91,8 @@
 
         // do some formatting if the error data is available
         if ("undefined" !== typeof raw) {
-          log([e.line, ":",
+          log([source, ":",
+               e.line, ":",
                e.character, " ",
                raw.replace("{a}", e.a).
                    replace("{b}", e.b).

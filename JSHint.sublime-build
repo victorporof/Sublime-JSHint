@@ -1,6 +1,9 @@
 {
   "selector": "source.js",
-  "cmd": ["node", "$packages/JSHint/scripts/run.js", "$file",
+  "working_dir": "$file_path",
+
+  "cmd": [
+    "node", "$packages/JSHint/scripts/run.js", "$file_name",
     "browser: true",
     "v8: true",
     "es5: true",
@@ -10,5 +13,8 @@
     "laxradix: true",
     "trailing: true",
     "undef: false",
-    "sub: true"]
+    "sub: true"
+  ],
+
+  "file_regex": "^(.+?)\\:([0-9]+?)\\:([0-9]+?) "
 }
