@@ -4,6 +4,7 @@
 
   "cmd": [
     "node", "$packages/JSHint/scripts/run.js", "$file_name",
+    "browser: true",
     "v8: true",
     "es5: true",
     "esnext: true",
