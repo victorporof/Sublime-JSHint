@@ -21,7 +21,11 @@ The shorter way of doing this is:
 There are two ways you can use Sublime-JSHint: as a build system or a python plugin.
 
 ### Build system
-Open a JavaScript file, Select JSHint from Tools -> Build System, and hit Ctrl+B (or Cmd+B if you're on a Mac).
+Open a JavaScript file, Select JSHint from Tools -> Build System, and:
+
+- `Ctrl+B` (or `Cmd+B` if you're on a Mac) to lint
+- `F4` jump to next error row/column
+- `Shift`-`F4` jump to previous error row-column
 
 ### Python plugin
 Open a JavaScript file, pop out the console in Sublime Text from View -> Show Console, and type `view.run_command("jshint")`.
