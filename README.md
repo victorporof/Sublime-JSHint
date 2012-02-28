@@ -11,6 +11,9 @@ First of all, be sure you have [node.js](http://nodejs.org/#download) installed 
 Each OS has a different `Packages` folder required by Sublime Text. Open it via Preferences -> Browse Packages, and copy this repository contents to a new `JSHint` folder there.
 
 The shorter way of doing this is:
+#### Linux
+`git clone git://github.com/victorporof/Sublime-JSHint.git ~/.config/sublime-text-2/Packages/JSHint`
+
 #### Mac
 `git clone git://github.com/victorporof/Sublime-JSHint.git ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/JSHint`
 
