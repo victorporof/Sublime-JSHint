@@ -18,7 +18,7 @@ The shorter way of doing this is:
 `git clone git://github.com/victorporof/Sublime-JSHint.git ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/JSHint`
 
 #### Windows
-`git clone git://github.com/victorporof/Sublime-JSHint.git %APPDATA%\Sublime Text 2\Packages\JSHint`
+`git clone git://github.com/victorporof/Sublime-JSHint.git %APPDATA%/Sublime\ Text\ 2/Packages/JSHint`
 
 ## Usage
 There are two ways you can use Sublime-JSHint: as a build system or a python plugin.
