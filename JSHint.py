@@ -6,7 +6,7 @@ class JshintCommand(sublime_plugin.TextCommand):
 
     regx = re.compile(" ")
     lint = commands.getoutput("node " +
-      regx.sub("\ ", sublime.packages_path()) + "/JSHint/scripts/run.js " +
+      regx.sub("\ ", sublime.packages_path()) + "/Sublime-JSHint/scripts/run.js " +
       regx.sub("\ ", self.view.file_name()) +
         " browser:\ true" +
         " v8:\ true" +
