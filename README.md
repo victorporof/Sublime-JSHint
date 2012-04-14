@@ -12,13 +12,13 @@ Each OS has a different `Packages` folder required by Sublime Text. Open it via 
 
 The shorter way of doing this is:
 #### Linux
-`git clone git://github.com/victorporof/Sublime-JSHint.git ~/.config/sublime-text-2/Packages/JSHint`
+`git clone git://github.com/victorporof/Sublime-JSHint.git ~/.config/sublime-text-2/Packages/Sublime-JSHint`
 
 #### Mac
-`git clone git://github.com/victorporof/Sublime-JSHint.git ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/JSHint`
+`git clone git://github.com/victorporof/Sublime-JSHint.git ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/Sublime-JSHint`
 
 #### Windows
-`git clone git://github.com/victorporof/Sublime-JSHint.git %APPDATA%/Sublime\ Text\ 2/Packages/JSHint`
+`git clone git://github.com/victorporof/Sublime-JSHint.git %APPDATA%/Sublime\ Text\ 2/Packages/Sublime-JSHint`
 
 ## Usage
 There are two ways you can use Sublime-JSHint: as a build system or a python plugin.
