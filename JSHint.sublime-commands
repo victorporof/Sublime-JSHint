@@ -1,0 +1,6 @@
+[
+    {
+        "caption": "JSHint: Linter",
+        "command": "jshint"
+    }
+]
