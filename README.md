@@ -31,7 +31,7 @@ Open a JavaScript file, Select JSHint from Tools -> Build System, and:
 - `Shift`-`F4` jump to previous error row-column
 
 ### Python plugin
-Tools -> Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`) and type jshint.
+Tools -> Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`) and type `jshint`.
 
 -- or --
 
