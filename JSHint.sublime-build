@@ -3,7 +3,7 @@
   "working_dir": "$file_path",
 
   "cmd": [
-    "node", "$packages/Sublime-JSHint/scripts/run.js", "$file_name",
+    "/usr/local/bin/node", "$packages/Sublime-JSHint/scripts/run.js", "$file_name",
     "browser: true",
     "v8: true",
     "es5: true",
