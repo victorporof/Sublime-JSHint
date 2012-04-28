@@ -47,6 +47,6 @@ change to
 `cmd=["absolute/path/to/node",...]`
 
 ## Customize
-Both `JSHint.sublime-build` and `JSHint.py` have some predefined settings which are probably quite important when writing JavaScript code (like "es5: true"). Add some more settings and options from the TONS available (see the [JSHint docs](http://jshint.com/#docs)).
+Both `JSHint.sublime-build` and `JSHint.py` have some predefined settings which are probably quite important when writing JavaScript code (like "es5: true"). Add some more settings and options from the TONS available (see the [JSHint docs](http://www.jshint.com/options/)).
 
 Have fun!
