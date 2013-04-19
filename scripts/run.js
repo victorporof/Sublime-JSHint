@@ -66,8 +66,11 @@
       // options are stored in key value pairs, such as option.es5 = true
       option[key] = value === true || value.trim() === "true";
 
-      var opts = fs.readFileSync("../.jshintrc", 'utf8');
-      option = JSON.parse(opts);
+      var opts;
+      try {
+        opts = fs.readFileSync("../.jshintrc", "utf8");
+        option = JSON.parse(opts);
+      } catch(e) {}
     }
 
     // read the source file and, when complete, lint the code
