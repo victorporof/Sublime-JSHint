@@ -66,9 +66,10 @@
       // options are stored in key value pairs, such as option.es5 = true
       option[key] = value === true || value.trim() === "true";
 
-      var opts;
+      // when a JSHint config file exists 1 directory above the source file
+      // then use this configuration instead of the default one
       try {
-        opts = fs.readFileSync("../.jshintrc", "utf8");
+        var opts = fs.readFileSync("../.jshintrc", "utf8");
         option = JSON.parse(opts);
       } catch(e) {}
     }
