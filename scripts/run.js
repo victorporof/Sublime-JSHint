@@ -56,7 +56,7 @@
         option[key] = +value; //store value as Number, not as String
         continue;
       }
-    
+
       // there is one option that allows array of strings to be passed (predefined custom globals)
       if (key === "predef") {
         option[key] = eval(value);//eval is evil, but JSON.parse would require only double quotes to be used
@@ -65,6 +65,9 @@
 
       // options are stored in key value pairs, such as option.es5 = true
       option[key] = value === true || value.trim() === "true";
+
+      var opts = fs.readFileSync("../.jshintrc", 'utf8');
+      option = JSON.parse(opts);
     }
 
     // read the source file and, when complete, lint the code
