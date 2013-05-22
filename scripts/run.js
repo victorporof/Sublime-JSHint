@@ -79,9 +79,9 @@
     // the source file or one dir above, then use this
     // configuration instead of the default one
     if (fs.existsSync(filename)) {
-        option = getOptions(filename);
+      option = getOptions(filename);
     } else if (fs.existsSync("../" + filename)) {
-        option = getOptions("../" + filename);
+      option = getOptions("../" + filename);
     }
 
     // read the source file and, when complete, lint the code
