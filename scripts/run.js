@@ -39,7 +39,7 @@
   var option = {};
 
   // Continue only if the source file is specified.
-  if (source == "") {
+  if (source == "" || !source.match(".jsm?" + "$")) {
     return;
   }
 
@@ -96,7 +96,7 @@
     // Lint the code and write readable error output to the console.
     try {
       jshint(data, option);
-    } catch(e) {}
+    } catch (e) {}
 
     jshint.errors.forEach(function(e) {
       // If the argument is null, then we could not continue (too many errors).
@@ -112,9 +112,9 @@
           e.line, ":",
           e.character, ":",
           e.raw.replace("{a}", e.a)
-               .replace("{b}", e.b)
-               .replace("{c}", e.c)
-               .replace("{d}", e.d)
+          .replace("{b}", e.b)
+          .replace("{c}", e.c)
+          .replace("{d}", e.d)
         ].join(""));
       }
     });
