@@ -1,6 +1,6 @@
 [
-    {
-        "caption": "JSHint: Linter",
-        "command": "jshint"
-    }
+  {
+    "caption": "JSHint",
+    "command": "jshint"
+  }
 ]
