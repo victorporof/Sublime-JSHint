@@ -81,7 +81,7 @@
         continue;
       }
 
-      // Options are stored in key value pairs, such as option.es5 = true
+      // Options are stored in key value pairs, such as option.es5 = true.
       option[key] = value == "true";
     }
   }
