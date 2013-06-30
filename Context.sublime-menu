@@ -1,0 +1,3 @@
+[
+	{ "caption": "Lint code using JSHint", "command": "jshint" }
+]

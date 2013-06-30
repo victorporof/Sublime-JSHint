@@ -1,0 +1,3 @@
+[
+  { "keys": ["ctrl+shift+j"], "command": "jshint" }
+]
