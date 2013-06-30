@@ -43,6 +43,14 @@
 
   // continue only if the source file is specified
   if (source !== "") {
+    // when a JSHint config file exists in the same dir as
+    // the source file or one dir above, then use this
+    // configuration instead of the default one
+    var filename = ".jshintrc",
+        getOptions = function (file) {
+          var data = fs.readFileSync(file, "utf8");
+          return JSON.parse(data);
+        };
 
     // extra arguments with custom options could be passed, so check them now
     // and add them to the options object
@@ -56,7 +64,7 @@
         option[key] = +value; //store value as Number, not as String
         continue;
       }
-    
+
       // there is one option that allows array of strings to be passed (predefined custom globals)
       if (key === "predef") {
         option[key] = eval(value);//eval is evil, but JSON.parse would require only double quotes to be used
@@ -65,6 +73,15 @@
 
       // options are stored in key value pairs, such as option.es5 = true
       option[key] = value === true || value.trim() === "true";
+    }
+
+    // when a JSHint config file exists in the same dir as
+    // the source file or one dir above, then use this
+    // configuration instead of the default one
+    if (fs.existsSync(filename)) {
+      option = getOptions(filename);
+    } else if (fs.existsSync("../" + filename)) {
+      option = getOptions("../" + filename);
     }
 
     // read the source file and, when complete, lint the code
