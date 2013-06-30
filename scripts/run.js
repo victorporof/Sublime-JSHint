@@ -35,6 +35,7 @@
 
   // The source file to be linted and options.
   var source = argv[2] || "";
+  var settings = (argv[3] || "").split(",");
   var option = {};
 
   // Continue only if the source file is specified.
@@ -57,13 +58,13 @@
   } else {
     // Extra arguments with custom options could be passed, so check them now
     // and add them to the options object.
-    var settings = argv[3].split(",");
     for (var i = 0, len = settings.length; i < len; i++) {
       var hash = settings[i].split(":");
+      if (hash.length != 2) {
+        continue;
+      }
       var key = hash[0].trim();
       var value = hash[1].trim();
-
-      log(key + " " + value + "\n\n");
 
       // There are two options that allow numerical values.
       if (key == "maxerr" || key == "indent") {

@@ -3,17 +3,7 @@
   "working_dir": "$file_path",
 
   "cmd": [
-    "node", "$packages/Sublime-JSHint/scripts/run.js", "$file_name",
-    "browser: true",
-    "v8: true",
-    "es5: true",
-    "esnext: true",
-    "globalstrict: true",
-    "strictundef: true",
-    "laxradix: true",
-    "trailing: true",
-    "undef: false",
-    "sub: true"
+    "/usr/local/bin/node", "$packages/Sublime-JSHint/scripts/run.js", "$file_name"
   ],
 
   "file_regex": "^(.+?)\\:([0-9]+?)\\:([0-9]+?) "
