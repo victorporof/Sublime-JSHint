@@ -3,7 +3,6 @@ import sublime, sublime_plugin
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit):
-
     scriptPath = sublime.packages_path() + "/Sublime-JSHint/scripts/run.js"
     filePath = self.view.file_name()
     setings = ','.join([
@@ -19,15 +18,15 @@ class JshintCommand(sublime_plugin.TextCommand):
     ])
 
     cmd = ["/usr/local/bin/node", scriptPath, filePath, setings]
-    lint = commands.getoutput('"' + '" "'.join(cmd) + '"')
+    output = commands.getoutput('"' + '" "'.join(cmd) + '"')
 
     self.view.erase_regions("jshint_errors");
 
-    if len(lint) > 0:
+    if len(output) > 0:
       regions = []
       menuitems = []
 
-      for line in sorted(lint.splitlines()):
+      for line in sorted(output.splitlines()):
         try:
           data = line.split(":")
           line = int(data[1]) - 1
@@ -40,7 +39,7 @@ class JshintCommand(sublime_plugin.TextCommand):
 
       self.view.add_regions("jshint_errors", regions, " ", "cross")
       sublime.active_window().show_quick_panel(menuitems, self.on_chosen)
-      print lint
+      print output
 
   def on_chosen(self, index):
     if index == -1:
