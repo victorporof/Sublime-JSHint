@@ -14,10 +14,11 @@ class JshintCommand(sublime_plugin.TextCommand):
       "globalstrict: true",
       "trailing: true",
       "undef: true",
-      "unused: true"
+      "unused: true",
+      "smarttabs: true"
     ])
 
-    cmd = ["node", scriptPath, filePath, setings]
+    cmd = ["/usr/local/bin/node", scriptPath, filePath, setings]
     lint = commands.getoutput('"' + '" "'.join(cmd) + '"')
 
     self.view.erase_regions("jshint_errors");
