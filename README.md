@@ -6,7 +6,7 @@
 ## About
 This is a Sublime Text 2 plugin and build system allowing you to check your JavaScript code for nasty errors, coding conventions and other goodies. It relies on JSHint, a fork of JSLint (developed by Douglas Crockford). The linter is itself written in JavaScript, so you'll need something (node.js) to interpret JavaScript code outside the browser.
 
-![Screenshot](https://dl.dropboxusercontent.com/u/2388316/screenshots/sublime-jshint-small.jpg)
+![Screenshot](https://dl.dropboxusercontent.com/u/2388316/screenshots/sublime-jshint.png)
 
 ## Installation
 First of all, be sure you have [node.js](http://nodejs.org/#download) installed in order to run JSHint (a derivative work of JSLint, used to detect errors and potential problems in JS).
