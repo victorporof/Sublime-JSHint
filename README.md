@@ -4,7 +4,7 @@
 #### [Node.js download](http://nodejs.org/#download)
 
 ## About
-This is a Sublime Text 2 plugin and build system allowing you to check your JavaScript code for nasty errors, coding conventions and other goodies. It relies on JSHint, a fork of JSLint (developed by Douglas Crockford). The linter is itself written in JavaScript, so you'll need something (node.js) to interpret JavaScript code outside the browser.
+This is a Sublime Text 2 plugin allowing you to check your JavaScript code for nasty errors, coding conventions and other goodies. It relies on JSHint, a fork of JSLint (developed by Douglas Crockford). The linter is itself written in JavaScript, so you'll need something (node.js) to interpret JavaScript code outside the browser.
 
 ![Screenshot](https://dl.dropboxusercontent.com/u/2388316/screenshots/sublime-jshint.png)
 
@@ -23,9 +23,6 @@ The shorter way of doing this is:
 `git clone git://github.com/victorporof/Sublime-JSHint.git %APPDATA%/Sublime\ Text\ 2/Packages/Sublime-JSHint`
 
 ## Usage
-There are two ways you can use Sublime-JSHint: as a build system or a python plugin.
-
-### Python plugin
 Tools -> Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`) and type `jshint`.
 
 -- or --
@@ -41,13 +38,6 @@ Right click in the current buffer and select "Lint code using JSHint".
 Open a JavaScript file, pop out the console in Sublime Text from View -> Show Console, and type `view.run_command("jshint")`.
 
 Writing commands in the console is ugly. Set up your own key combo for this, by going to Preferences -> Key Bindings - User, and adding a command in that huge array: `{ "keys": ["super+shift+j"], "command": "jshint" },`. You can use any other command you want, thought most of them are already taken.
-
-### Build system
-Open a JavaScript file, Select JSHint from Tools -> Build System, and:
-
-- `Ctrl+B` (or `Cmd+B` if you're on a Mac) to lint
-- `F4` jump to next error row/column
-- `Shift`-`F4` jump to previous error row-column
 
 ## Oh noez, command not found!
 If you get an error `sh: node: command not found` or similar, you don't have `node` in the right path. Try setting the absolute path to node in `JSHint.py` or `JSHint.sublime-build`.
