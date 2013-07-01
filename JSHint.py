@@ -63,7 +63,7 @@ class JshintCommand(sublime_plugin.TextCommand):
       # in the view and a menuitem in a quick panel.
       for line in output.decode().splitlines():
         try:
-          _, lineNo, columnNo, description = line.split(" :: ")
+          lineNo, columnNo, description = line.split(" :: ")
           point = self.view.text_point(int(lineNo) - 1, int(columnNo))
           word = self.view.word(point)
           menuitems.append(lineNo + ":" + columnNo + " " + description)
