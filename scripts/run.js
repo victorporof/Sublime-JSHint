@@ -141,24 +141,24 @@
         }
       })
       .forEach(function(e) {
-      // If the argument is null, then we could not continue (too many errors).
-      if (!e) {
-        log("Stopping, unable to continue.");
-        return;
-      }
+        // If the argument is null, then we could not continue (too many errors).
+        if (!e) {
+          log("Stopping, unable to continue.");
+          return;
+        }
 
-      // Do some formatting if the error data is available.
-      if (e.raw) {
-        log([
-          (filePath || tempPath).split(path.sep).pop(), ":",
-          e.line, ":",
-          e.character, ":",
-          e.raw.replace("{a}", e.a)
-               .replace("{b}", e.b)
-               .replace("{c}", e.c)
-               .replace("{d}", e.d)
-        ].join(""));
-      }
-    });
+        // Do some formatting if the error data is available.
+        if (e.raw) {
+          log([
+            (filePath || tempPath).split(path.sep).pop(), ":",
+            e.line, ":",
+            e.character, ":",
+            e.raw.replace("{a}", e.a)
+                 .replace("{b}", e.b)
+                 .replace("{c}", e.c)
+                 .replace("{d}", e.d)
+          ].join(""));
+        }
+      });
   });
 }());
