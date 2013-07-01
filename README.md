@@ -1,4 +1,4 @@
-# Sublime-JSHint: Javascript Lint for Sublime Text editor via node.js
+# JSHint Graphical Gutter for Sublime Text 2 via node.js
 #### [Sublime Text 2](http://www.sublimetext.com/2)
 #### [JSHint homepage](http://jshint.com/)
 #### [Node.js download](http://nodejs.org/#download)
