@@ -25,13 +25,6 @@ The shorter way of doing this is:
 ## Usage
 There are two ways you can use Sublime-JSHint: as a build system or a python plugin.
 
-### Build system
-Open a JavaScript file, Select JSHint from Tools -> Build System, and:
-
-- `Ctrl+B` (or `Cmd+B` if you're on a Mac) to lint
-- `F4` jump to next error row/column
-- `Shift`-`F4` jump to previous error row-column
-
 ### Python plugin
 Tools -> Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`) and type `jshint`.
 
@@ -49,14 +42,24 @@ Open a JavaScript file, pop out the console in Sublime Text from View -> Show Co
 
 Writing commands in the console is ugly. Set up your own key combo for this, by going to Preferences -> Key Bindings - User, and adding a command in that huge array: `{ "keys": ["super+shift+j"], "command": "jshint" },`. You can use any other command you want, thought most of them are already taken.
 
-### Oh noez, command not found!
+### Build system
+Open a JavaScript file, Select JSHint from Tools -> Build System, and:
+
+- `Ctrl+B` (or `Cmd+B` if you're on a Mac) to lint
+- `F4` jump to next error row/column
+- `Shift`-`F4` jump to previous error row-column
+
+## Oh noez, command not found!
 If you get an error `sh: node: command not found` or similar, you don't have `node` in the right path. Try setting the absolute path to node in `JSHint.py` or `JSHint.sublime-build`.
 This means from:
-`cmd=["node",...]`
+`cmd = ["/usr/local/bin/node", ...]`
 change to
-`cmd=["absolute/path/to/node",...]`
+`cmd = ["/your/absolute/path/to/node", ...]`
+
+## Using your own jshint options
+The Plugin looks for a .jshintrc file in the same directory (or one directory above if it doesn't exist) as the source file and uses this options instead of the default ones. [Here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc)'s an example of how it can look like.
 
 ## Customize
-Both `JSHint.sublime-build` and `JSHint.py` have some predefined settings which are probably quite important when writing JavaScript code (like "es5: true"). Add some more settings and options from the TONS available (see the [JSHint docs](http://www.jshint.com/options/)).
+`JSHint.py` has some predefined settings which are probably quite important when writing JavaScript code (like "moz: true"). Add some more settings and options from the TONS available (see the [JSHint docs](http://www.jshint.com/options/)).
 
 Have fun!
