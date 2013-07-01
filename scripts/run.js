@@ -155,14 +155,14 @@
         // Do some formatting if the error data is available.
         if (e.raw) {
           log([
-            (filePath || tempPath).split(path.sep).pop(), ":",
-            e.line, ":",
-            e.character, ":",
+            (filePath || tempPath).split(path.sep).pop(),
+            e.line,
+            e.character,
             e.raw.replace("{a}", e.a)
                  .replace("{b}", e.b)
                  .replace("{c}", e.c)
                  .replace("{d}", e.d)
-          ].join(""));
+          ].join(" :: "));
         }
       });
   });

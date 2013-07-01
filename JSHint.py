@@ -18,7 +18,7 @@ class JshintCommand(sublime_plugin.TextCommand):
 
     packageName = PLUGIN_FOLDER.replace(sublime.packages_path(), "")
     scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
-    setings = ' && '.join([
+    setings = " && ".join([
       # To add persistent options that are used everywhere, edit the .jshintrc
       # file inside the scripts folder. But you can als add some options here
       # if you like. For example:
@@ -41,7 +41,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     cmd = ["/usr/local/bin/node", scriptPath, tempPath, filePath or "?", setings]
     output = ""
     try:
-      if sublime.platform() != 'windows':
+      if sublime.platform() != "windows":
         output = commands.getoutput('"' + '" "'.join(cmd) + '"')
       else:
         output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
@@ -63,12 +63,10 @@ class JshintCommand(sublime_plugin.TextCommand):
       # in the view and a menuitem in a quick panel.
       for line in output.decode().splitlines():
         try:
-          data = line.split(':')
-          line = int(data[1]) - 1
-          column = int(data[2])
-          point = self.view.text_point(line, column)
+          _, lineNo, columnNo, description = line.split(" :: ")
+          point = self.view.text_point(int(lineNo) - 1, int(columnNo))
           word = self.view.word(point)
-          menuitems.append(data[1] + ":" + data[2] + " " + data[3])
+          menuitems.append(lineNo + ":" + columnNo + " " + description)
           regions.append(word)
         except:
           pass
