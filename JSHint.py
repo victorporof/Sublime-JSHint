@@ -1,5 +1,10 @@
 import sublime, sublime_plugin
-import commands, os, re
+import os, re
+
+try
+  import commands
+except ImportError:
+  import subprocess
 
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 
@@ -34,7 +39,11 @@ class JshintCommand(sublime_plugin.TextCommand):
     f.close()
 
     cmd = ["/usr/local/bin/node", scriptPath, tempPath, filePath or "?", setings]
-    output = commands.getoutput('"' + '" "'.join(cmd) + '"')
+    output = ""
+    if commands:
+      output = commands.getoutput('"' + '" "'.join(cmd) + '"')
+    else:
+      output = subprocess.check_output('"' + '" "'.join(cmd) + '"', stderr=subprocess.STDOUT, shell=True)
 
     # We're done with linting, remove the temporary file and rebuild the
     # regions shown in the current view.
@@ -66,7 +75,7 @@ class JshintCommand(sublime_plugin.TextCommand):
         sublime.HIDE_ON_MINIMAP)
 
       sublime.active_window().show_quick_panel(menuitems, self.on_chosen)
-      print output
+      print(output)
 
   def on_chosen(self, index):
     if index == -1:
