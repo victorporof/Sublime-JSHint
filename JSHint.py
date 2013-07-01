@@ -1,7 +1,7 @@
 import sublime, sublime_plugin
 import os, re
 
-try
+try:
   import commands
 except ImportError:
   import subprocess
@@ -40,10 +40,12 @@ class JshintCommand(sublime_plugin.TextCommand):
 
     cmd = ["/usr/local/bin/node", scriptPath, tempPath, filePath or "?", setings]
     output = ""
-    if commands:
+    try:
       output = commands.getoutput('"' + '" "'.join(cmd) + '"')
-    else:
-      output = subprocess.check_output('"' + '" "'.join(cmd) + '"', stderr=subprocess.STDOUT, shell=True)
+    except NameError:
+      output = subprocess.check_output('"' + '" "'.join(cmd) + '"', 
+                                       stderr=subprocess.STDOUT,
+                                       shell=True)
 
     # We're done with linting, remove the temporary file and rebuild the
     # regions shown in the current view.
@@ -56,9 +58,9 @@ class JshintCommand(sublime_plugin.TextCommand):
 
       # For each line of jshint output (errors, warnings etc.) add a region
       # in the view and a menuitem in a quick panel.
-      for line in output.splitlines():
+      for line in output.decode().splitlines():
         try:
-          data = line.split(":")
+          data = line.split(':')
           line = int(data[1]) - 1
           column = int(data[2])
           point = self.view.text_point(line, column)
@@ -68,14 +70,21 @@ class JshintCommand(sublime_plugin.TextCommand):
         except:
           pass
 
-      icon = ".." + packageName + "/warning"
-      self.view.add_regions("jshint_errors", regions, "keyword", icon,
-        sublime.DRAW_EMPTY |
-        sublime.DRAW_OUTLINED |
-        sublime.HIDE_ON_MINIMAP)
+      if int(sublime.version()) >= 3000:
+        icon = "Packages/" + packageName + "/warning.png"
+        self.view.add_regions("jshint_errors", regions, "keyword", icon,
+          sublime.DRAW_EMPTY |
+          sublime.DRAW_NO_FILL |
+          sublime.DRAW_NO_OUTLINE |
+          sublime.DRAW_SQUIGGLY_UNDERLINE)
+      else:
+        icon = ".." + packageName + "/warning"
+        self.view.add_regions("jshint_errors", regions, "keyword", icon,
+          sublime.DRAW_EMPTY |
+          sublime.DRAW_OUTLINED |
+          sublime.HIDE_ON_MINIMAP)
 
       sublime.active_window().show_quick_panel(menuitems, self.on_chosen)
-      print(output)
 
   def on_chosen(self, index):
     if index == -1:
