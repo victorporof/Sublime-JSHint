@@ -100,6 +100,9 @@
 
     jshint.errors
       .sort(function(first, second) {
+        first = first || {};
+        second = second || {};
+
         if (first.line == second.line) {
           return +first.character < +second.character ? -1 : 1;
         } else {

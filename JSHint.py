@@ -32,8 +32,9 @@ class JshintCommand(sublime_plugin.TextCommand):
           line = int(data[1]) - 1
           column = int(data[2])
           point = self.view.text_point(line, column)
+          word = self.view.word(point)
           menuitems.append(data[1] + ":" + data[2] + " " + data[3])
-          regions.append(sublime.Region(point - 1, point))
+          regions.append(word)
         except:
           pass
 
