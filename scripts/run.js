@@ -44,7 +44,11 @@
   var getOptions = function(file) {
     var data = fs.readFileSync(file, "utf8");
     var comments = /(?:\/\*(?:[\s\S]*?)\*\/)|(?:\/\/(?:.*)$)/g;
-    return JSON.parse(data.replace(comments, ""));
+    try {
+      return JSON.parse(data.replace(comments, ""));
+    } catch (e) {
+      log("Error parsing " + file + ": " + e);
+    }
   };
   var setOptions = function(file, store) {
     var obj = getOptions(file);
