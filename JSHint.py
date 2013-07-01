@@ -38,7 +38,7 @@ class JshintCommand(sublime_plugin.TextCommand):
         except:
           pass
 
-      self.view.add_regions("jshint_errors", regions, " ", "cross")
+      self.view.add_regions("jshint_errors", regions, " ", "cross", sublime.DRAW_EMPTY)
       sublime.active_window().show_quick_panel(menuitems, self.on_chosen)
       print output
 
