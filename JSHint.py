@@ -41,9 +41,12 @@ class JshintCommand(sublime_plugin.TextCommand):
     cmd = ["/usr/local/bin/node", scriptPath, tempPath, filePath or "?", setings]
     output = ""
     try:
-      output = commands.getoutput('"' + '" "'.join(cmd) + '"')
+      if sublime.platform() != 'windows':
+        output = commands.getoutput('"' + '" "'.join(cmd) + '"')
+      else:
+        output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
     except NameError:
-      output = subprocess.check_output('"' + '" "'.join(cmd) + '"', 
+      output = subprocess.check_output('"' + '" "'.join(cmd) + '"',
                                        stderr=subprocess.STDOUT,
                                        shell=True)
 
