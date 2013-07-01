@@ -35,7 +35,7 @@
 
   // The source file to be linted and options.
   var source = argv[2] || "";
-  var settings = (argv[3] || "").split(",");
+  var settings = (argv[3] || "").split(" && ");
   var option = {};
 
   // Continue only if the source file is specified.
@@ -112,9 +112,9 @@
           e.line, ":",
           e.character, ":",
           e.raw.replace("{a}", e.a)
-          .replace("{b}", e.b)
-          .replace("{c}", e.c)
-          .replace("{d}", e.d)
+               .replace("{b}", e.b)
+               .replace("{c}", e.c)
+               .replace("{d}", e.d)
         ].join(""));
       }
     });

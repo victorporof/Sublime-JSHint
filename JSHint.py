@@ -5,7 +5,7 @@ class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     scriptPath = sublime.packages_path() + "/Sublime-JSHint/scripts/run.js"
     filePath = self.view.file_name()
-    setings = ','.join([
+    setings = ' && '.join([
       "browser: true",
       "node: true",
       "esnext: true",
