@@ -33,7 +33,7 @@
   var fs = require('fs');
   var jshint = require("jshint/src/stable/jshint.js").JSHINT;
 
-  // The source file to be linted, original source's patch and some options.
+  // The source file to be linted, original source's path and some options.
   var tempPath = argv[2] || "";
   var filePath = argv[3] || "";
   var settings = (argv[4] || "").split(" && ");
