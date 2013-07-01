@@ -1,5 +1,7 @@
-import commands, os, re
 import sublime, sublime_plugin
+import commands, os, re
+
+PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit):
@@ -9,8 +11,8 @@ class JshintCommand(sublime_plugin.TextCommand):
     if filePath != None and not re.search(r'\.jsm?$', filePath):
       return
 
-    packageFolder = sublime.packages_path() + "/Sublime-JSHint";
-    scriptPath = packageFolder + "/scripts/run.js"
+    packageName = PLUGIN_FOLDER.replace(sublime.packages_path(), "")
+    scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
     setings = ' && '.join([
       # To add persistent options that are used everywhere, edit the .jshintrc
       # file inside the scripts folder. But you can als add some options here
@@ -26,7 +28,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     # ...and save it in a temporary file. This allows for scratch buffers
     # and dirty files to be linted as well.
     tempName = ".__temp__"
-    tempPath = packageFolder + '/' + tempName
+    tempPath = PLUGIN_FOLDER + '/' + tempName
     f = open(tempPath, 'w')
     f.write(bufferText)
     f.close()
@@ -57,7 +59,8 @@ class JshintCommand(sublime_plugin.TextCommand):
         except:
           pass
 
-      self.view.add_regions("jshint_errors", regions, "keyword", "cross",
+      icon = ".." + packageName + "/warning"
+      self.view.add_regions("jshint_errors", regions, "keyword", icon,
         sublime.DRAW_EMPTY |
         sublime.DRAW_OUTLINED |
         sublime.HIDE_ON_MINIMAP)
