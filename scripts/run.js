@@ -33,15 +33,11 @@
   var fs = require('fs');
   var jshint = require("jshint/src/stable/jshint.js").JSHINT;
 
-  // The source file to be linted and options.
-  var source = argv[2] || "";
-  var settings = (argv[3] || "").split(" && ");
+  // The source file to be linted, original source's patch and some options.
+  var tempPath = argv[2] || "";
+  var filePath = argv[3] || "";
+  var settings = (argv[4] || "").split(" && ");
   var option = {};
-
-  // Continue only if the source file is specified.
-  if (!source || !source.match(".jsm?" + "$")) {
-    return;
-  }
 
   // When a JSHint config file exists in the same dir as the source file or
   // one dir above, then use this configuration instead of the default one.
@@ -67,12 +63,12 @@
   };
   var getUserHome = function() {
     return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
-  }
+  };
 
   var jshintrc = ".jshintrc";
-  var sourceFolder = source.split(path.sep).slice(0, -1).join(path.sep);
-  var sourceParent = source.split(path.sep).slice(0, -2).join(path.sep);
-  var tmpPath;
+  var sourceFolder = filePath.split(path.sep).slice(0, -1).join(path.sep);
+  var sourceParent = filePath.split(path.sep).slice(0, -2).join(path.sep);
+  var jshintrcPath;
 
   // Try and get some persistent options from the plugin folder.
   if (fs.existsSync(jshintrc)) {
@@ -80,16 +76,16 @@
   }
 
   // Try and get more options from the source's folder.
-  if (fs.existsSync(tmpPath = sourceFolder + path.sep + jshintrc)) {
-    setOptions(tmpPath, option);
+  if (fs.existsSync(jshintrcPath = sourceFolder + path.sep + jshintrc)) {
+    setOptions(jshintrcPath, option);
   }
   // ...or the parent folder.
-  else if (fs.existsSync(tmpPath = sourceParent + path.sep + jshintrc)) {
-    setOptions(tmpPath, option);
+  else if (fs.existsSync(jshintrcPath = sourceParent + path.sep + jshintrc)) {
+    setOptions(jshintrcPath, option);
   }
   // ...or the user's home folder if everything else fails.
-  else if (fs.existsSync(tmpPath = getUserHome() + path.sep + jshintrc)) {
-    setOptions(tmpPath, option);
+  else if (fs.existsSync(jshintrcPath = getUserHome() + path.sep + jshintrc)) {
+    setOptions(jshintrcPath, option);
   }
 
   // Extra arguments with custom options could be passed, so check them now
@@ -122,7 +118,7 @@
   }
 
   // Read the source file and, when done, lint the code.
-  fs.readFile(source, "utf8", function(err, data) {
+  fs.readFile(tempPath, "utf8", function(err, data) {
     if (err) {
       log("Error, unable to continue.");
       return;
@@ -154,7 +150,7 @@
       // Do some formatting if the error data is available.
       if (e.raw) {
         log([
-          source.split(path.sep).pop(), ":",
+          (filePath || tempPath).split(path.sep).pop(), ":",
           e.line, ":",
           e.character, ":",
           e.raw.replace("{a}", e.a)
