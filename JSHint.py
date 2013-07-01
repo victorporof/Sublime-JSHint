@@ -6,7 +6,9 @@ class JshintCommand(sublime_plugin.TextCommand):
     scriptPath = sublime.packages_path() + "/Sublime-JSHint/scripts/run.js"
     filePath = self.view.file_name()
     setings = ' && '.join([
-      # You can add some options here if you like. For example:
+      # To add persistent options that are used everywhere, edit the .jshintrc
+      # file inside the scripts folder. But you can als add some options here
+      # if you like. For example:
       # "browser: true",
       # "esnext: true",
       # "moz: true"
