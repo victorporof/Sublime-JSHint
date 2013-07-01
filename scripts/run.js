@@ -39,24 +39,54 @@
   var option = {};
 
   // Continue only if the source file is specified.
-  if (source == "" || !source.match(".jsm?" + "$")) {
+  if (!source || !source.match(".jsm?" + "$")) {
     return;
   }
 
   // When a JSHint config file exists in the same dir as the source file or
   // one dir above, then use this configuration instead of the default one.
-  var jshintrc = ".jshintrc";
   var getOptions = function(file) {
     var data = fs.readFileSync(file, "utf8");
     var comments = /(?:\/\*(?:[\s\S]*?)\*\/)|(?:\/\/(?:.*)$)/g;
     return JSON.parse(data.replace(comments, ""));
   };
+  var setOptions = function(file, store) {
+    var obj = getOptions(file);
+    for (var key in obj) {
+      switch (obj[key]) {
+        case "false":
+          store[key] = false;
+          break;
+        case "true":
+          store[key] = true;
+          break;
+        default:
+          store[key] = obj[key];
+      }
+    }
+  };
 
+  var jshintrc = ".jshintrc";
+  var sourceFolder = source.split(path.sep).slice(0, -1).join(path.sep);
+  var sourceParent = source.split(path.sep).slice(0, -2).join(path.sep);
+
+  // Try and get some options from the plugin folder.
   if (fs.existsSync(jshintrc)) {
-    option = getOptions(jshintrc);
-  } else if (fs.existsSync("../" + jshintrc)) {
-    option = getOptions("../" + jshintrc);
-  } else {
+    setOptions(jshintrc, option);
+  }
+  // Try and get more options from the source's folder.
+  if (fs.existsSync(sourceFolder + path.sep + jshintrc)) {
+    setOptions(sourceFolder + path.sep + jshintrc, option);
+  }
+  // ...or the parent folder.
+  else if (fs.existsSync(sourceParent + path.sep + jshintrc)) {
+    setOptions(sourceParent + path.sep + jshintrc, option);
+  // ...or the user's home folder.
+  } else if (fs.existsSync("~" + path.sep + jshintrc)) {
+    setOptions(sourceParent + path.sep + jshintrc, option);
+  }
+  // ...just use the default stuff if everything else fails.
+  else {
     // Extra arguments with custom options could be passed, so check them now
     // and add them to the options object.
     for (var i = 0, len = settings.length; i < len; i++) {
@@ -77,17 +107,17 @@
       // There is one option that allows array of strings to be passed
       // (predefined custom globals)
       if (key == "predef") {
-        // eval is evil, but JSON.parse would require usage of only double quotes
+        // eval is evil, but JSON.parse would require usage of only double quotes.
         option[key] = eval(value);
         continue;
       }
 
       // Options are stored in key value pairs, such as option.es5 = true.
-      option[key] = value == "true";
+      option[key] = value == "true" || value === true;
     }
   }
 
-  // Read the source file and, when complete, lint the code.
+  // Read the source file and, when compvare, lint the code.
   fs.readFile(source, "utf8", function(err, data) {
     if (err) {
       log("Error, unable to continue.");
