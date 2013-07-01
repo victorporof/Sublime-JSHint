@@ -70,10 +70,11 @@
   var sourceFolder = source.split(path.sep).slice(0, -1).join(path.sep);
   var sourceParent = source.split(path.sep).slice(0, -2).join(path.sep);
 
-  // Try and get some options from the plugin folder.
+  // Try and get some persistent options from the plugin folder.
   if (fs.existsSync(jshintrc)) {
     setOptions(jshintrc, option);
   }
+
   // Try and get more options from the source's folder.
   if (fs.existsSync(sourceFolder + path.sep + jshintrc)) {
     setOptions(sourceFolder + path.sep + jshintrc, option);
@@ -81,43 +82,42 @@
   // ...or the parent folder.
   else if (fs.existsSync(sourceParent + path.sep + jshintrc)) {
     setOptions(sourceParent + path.sep + jshintrc, option);
-  // ...or the user's home folder.
-  } else if (fs.existsSync("~" + path.sep + jshintrc)) {
+  }
+  // ...or the user's home folder if everything else fails.
+  else if (fs.existsSync("~" + path.sep + jshintrc)) {
     setOptions(sourceParent + path.sep + jshintrc, option);
   }
-  // ...just use the default stuff if everything else fails.
-  else {
-    // Extra arguments with custom options could be passed, so check them now
-    // and add them to the options object.
-    for (var i = 0, len = settings.length; i < len; i++) {
-      var hash = settings[i].split(":");
-      if (hash.length != 2) {
-        continue;
-      }
-      var key = hash[0].trim();
-      var value = hash[1].trim();
 
-      // There are two options that allow numerical values.
-      if (key == "maxerr" || key == "indent") {
-        // Store value as Number, not as String.
-        option[key] = +value;
-        continue;
-      }
-
-      // There is one option that allows array of strings to be passed
-      // (predefined custom globals)
-      if (key == "predef") {
-        // eval is evil, but JSON.parse would require usage of only double quotes.
-        option[key] = eval(value);
-        continue;
-      }
-
-      // Options are stored in key value pairs, such as option.es5 = true.
-      option[key] = value == "true" || value === true;
+  // Extra arguments with custom options could be passed, so check them now
+  // and add them to the options object. These overwrite everything else!
+  for (var i = 0, len = settings.length; i < len; i++) {
+    var hash = settings[i].split(":");
+    if (hash.length != 2) {
+      continue;
     }
+    var key = hash[0].trim();
+    var value = hash[1].trim();
+
+    // There are two options that allow numerical values.
+    if (key == "maxerr" || key == "indent") {
+      // Store value as Number, not as String.
+      option[key] = +value;
+      continue;
+    }
+
+    // There is one option that allows array of strings to be passed
+    // (predefined custom globals)
+    if (key == "predef") {
+      // eval is evil, but JSON.parse would require usage of only double quotes.
+      option[key] = eval(value);
+      continue;
+    }
+
+    // Options are stored in key value pairs, such as option.es5 = true.
+    option[key] = value == "true" || value === true;
   }
 
-  // Read the source file and, when compvare, lint the code.
+  // Read the source file and, when done, lint the code.
   fs.readFile(source, "utf8", function(err, data) {
     if (err) {
       log("Error, unable to continue.");
