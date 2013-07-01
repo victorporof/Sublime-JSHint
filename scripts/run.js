@@ -48,7 +48,8 @@
   var jshintrc = ".jshintrc";
   var getOptions = function(file) {
     var data = fs.readFileSync(file, "utf8");
-    return JSON.parse(data);
+    var comments = /(?:\/\*(?:[\s\S]*?)\*\/)|(?:\/\/(?:.*)$)/g;
+    return JSON.parse(data.replace(comments, ""));
   };
 
   if (fs.existsSync(jshintrc)) {
