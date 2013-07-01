@@ -56,6 +56,8 @@ This means from:
 change to
 `cmd = ["/your/absolute/path/to/node", ...]`
 
+On Windows, the absolute path to node.exe *must* use forward slashes.
+
 ## Using your own jshint options
 The plugin looks for a `.jshintrc` file in the same directory as the source file you're linting (or one directory above if it doesn't exist, or in your home folder if everything else fails) and uses those options instead of the default ones. [Here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc)'s an example of how it can look like.
 
