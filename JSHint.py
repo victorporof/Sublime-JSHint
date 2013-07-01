@@ -7,7 +7,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     filePath = self.view.file_name()
     setings = ' && '.join([
       "browser: true",
-      "node: true",
+      "node: false",
       "esnext: true",
       "moz: true",
       "globalstrict: true",
