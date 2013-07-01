@@ -65,10 +65,14 @@
       }
     }
   };
+  var getUserHome = function() {
+    return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
+  }
 
   var jshintrc = ".jshintrc";
   var sourceFolder = source.split(path.sep).slice(0, -1).join(path.sep);
   var sourceParent = source.split(path.sep).slice(0, -2).join(path.sep);
+  var tmpPath;
 
   // Try and get some persistent options from the plugin folder.
   if (fs.existsSync(jshintrc)) {
@@ -76,16 +80,16 @@
   }
 
   // Try and get more options from the source's folder.
-  if (fs.existsSync(sourceFolder + path.sep + jshintrc)) {
-    setOptions(sourceFolder + path.sep + jshintrc, option);
+  if (fs.existsSync(tmpPath = sourceFolder + path.sep + jshintrc)) {
+    setOptions(tmpPath, option);
   }
   // ...or the parent folder.
-  else if (fs.existsSync(sourceParent + path.sep + jshintrc)) {
-    setOptions(sourceParent + path.sep + jshintrc, option);
+  else if (fs.existsSync(tmpPath = sourceParent + path.sep + jshintrc)) {
+    setOptions(tmpPath, option);
   }
   // ...or the user's home folder if everything else fails.
-  else if (fs.existsSync("~" + path.sep + jshintrc)) {
-    setOptions(sourceParent + path.sep + jshintrc, option);
+  else if (fs.existsSync(tmpPath = getUserHome() + path.sep + jshintrc)) {
+    setOptions(tmpPath, option);
   }
 
   // Extra arguments with custom options could be passed, so check them now
