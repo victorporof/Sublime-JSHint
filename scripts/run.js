@@ -47,7 +47,7 @@
     try {
       return JSON.parse(data.replace(comments, ""));
     } catch (e) {
-      log("Error parsing " + file + ": " + e);
+      return {};
     }
   };
   var setOptions = function(file, store) {
@@ -125,7 +125,6 @@
   // Read the source file and, when done, lint the code.
   fs.readFile(tempPath, "utf8", function(err, data) {
     if (err) {
-      log("Error, unable to continue.");
       return;
     }
 
@@ -148,7 +147,6 @@
       .forEach(function(e) {
         // If the argument is null, then we could not continue (too many errors).
         if (!e) {
-          log("Stopping, unable to continue.");
           return;
         }
 
