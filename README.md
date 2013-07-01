@@ -1,4 +1,4 @@
-# JSHint Gutter for Sublime Text 2 via node.js
+# JSHint Gutter for Sublime Text 2 and 3 via node.js
 #### [Sublime Text 2](http://www.sublimetext.com/2)
 #### [JSHint homepage](http://jshint.com/)
 #### [Node.js download](http://nodejs.org/#download)
