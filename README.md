@@ -57,9 +57,10 @@ change to
 `cmd = ["/your/absolute/path/to/node", ...]`
 
 ## Using your own jshint options
-The Plugin looks for a .jshintrc file in the same directory (or one directory above if it doesn't exist) as the source file and uses this options instead of the default ones. [Here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc)'s an example of how it can look like.
+The plugin looks for a `.jshintrc` file in the same directory as the source file you're linting (or one directory above if it doesn't exist, or in your home folder if everything else fails) and uses those options instead of the default ones. [Here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc)'s an example of how it can look like.
 
-## Customize
-`JSHint.py` has some predefined settings which are probably quite important when writing JavaScript code (like "moz: true"). Add some more settings and options from the TONS available (see the [JSHint docs](http://www.jshint.com/options/)).
+A few persistent options are always applied, if not overwritten by your own `.jshintrc` file. Those are defined [here](https://github.com/victorporof/Sublime-JSHint/blob/master/scripts/.jshintrc). You can safely add stuff to that json file if you want.
+
+Although not recommended, `JSHint.py` can also contain some predefined settings which are probably quite important when writing JavaScript code (like "moz: true"). Add some more settings and options from the TONS available (see the [JSHint docs](http://www.jshint.com/options/)).
 
 Have fun!
