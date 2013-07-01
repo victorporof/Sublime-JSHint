@@ -98,7 +98,15 @@
       jshint(data, option);
     } catch (e) {}
 
-    jshint.errors.forEach(function(e) {
+    jshint.errors
+      .sort(function(first, second) {
+        if (first.line == second.line) {
+          return +first.character < +second.character ? -1 : 1;
+        } else {
+          return +first.line < +second.line ? -1 : 1;
+        }
+      })
+      .forEach(function(e) {
       // If the argument is null, then we could not continue (too many errors).
       if (!e) {
         log("Stopping, unable to continue.");

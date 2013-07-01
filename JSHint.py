@@ -26,7 +26,7 @@ class JshintCommand(sublime_plugin.TextCommand):
       regions = []
       menuitems = []
 
-      for line in sorted(output.splitlines()):
+      for line in output.splitlines():
         try:
           data = line.split(":")
           line = int(data[1]) - 1
