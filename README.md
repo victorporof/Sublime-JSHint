@@ -51,11 +51,11 @@ Open a JavaScript file, pop out the console in Sublime Text from View -> Show Co
 Writing commands in the console is ugly. Set up your own key combo for this, by going to Preferences -> Key Bindings - User, and adding a command in that huge array: `{ "keys": ["super+shift+j"], "command": "jshint" },`. You can use any other command you want, thought most of them are already taken.
 
 ## Oh noez, command not found!
-If you get an error `sh: node: command not found` or similar, you don't have `node` in the right path. Try setting the absolute path to node in `JSHint.py` or `JSHint.sublime-build`.
+If you get an error `sh: node: command not found` or similar, you don't have `node` in the right path. Try setting the absolute path to node in `JSHint.py`.
 This means from:
-`cmd = ["/usr/local/bin/node", ...]`
+`node = "node" if self.exists_in_path("node") else "/usr/local/bin/node"`
 change to
-`cmd = ["/your/absolute/path/to/node", ...]`
+`node = "node" if self.exists_in_path("node") else "/your/absolute/path/to/node"`
 
 Simply using `node` without specifying a path sometimes doesn't work :(
 
