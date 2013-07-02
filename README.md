@@ -13,17 +13,24 @@ First of all, be sure you have [node.js](http://nodejs.org/#download) installed 
 Each OS has a different `Packages` folder required by Sublime Text. Open it via Preferences -> Browse Packages, and copy this repository contents to a new `Sublime-JSHint` folder there.
 
 The shorter way of doing this is:
-#### Linux
-`git clone git://github.com/victorporof/Sublime-JSHint.git ~/.config/sublime-text-2/Packages/Sublime-JSHint`
+### Through [Sublime Package Manager](http://wbond.net/sublime_packages/package_control)
 
+* `Ctrl+Shift+P` or `Cmd+Shift+P` in Linux/Windows/OS X
+* type `install`, select `Package Control: Install Package`
+* type `js gutter`, select `JSHint Gutter`
+
+### Manually
 #### Mac
 `git clone git://github.com/victorporof/Sublime-JSHint.git ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/Sublime-JSHint`
+
+#### Linux
+`git clone git://github.com/victorporof/Sublime-JSHint.git ~/.config/sublime-text-2/Packages/Sublime-JSHint`
 
 #### Windows
 `git clone git://github.com/victorporof/Sublime-JSHint.git %APPDATA%/Sublime\ Text\ 2/Packages/Sublime-JSHint`
 
 ## Usage
-Tools -> Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`) and type `jshint`.
+Tools -> Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) and type `jshint`.
 
 -- or --
 
@@ -55,4 +62,4 @@ A few persistent options are always applied, if not overwritten by your own `.js
 
 Although not recommended, `JSHint.py` can also contain some predefined settings which are probably quite important when writing JavaScript code (like "moz: true"). Add some more settings and options from the TONS available (see the [JSHint docs](http://www.jshint.com/options/)).
 
-Have fun!
+Thank you!
