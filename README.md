@@ -21,13 +21,13 @@ The shorter way of doing this is:
 
 ### Manually
 #### Mac
-`git clone git://github.com/victorporof/Sublime-JSHint.git ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/Sublime-JSHint`
+`git clone https://github.com/victorporof/Sublime-JSHint.git ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/Sublime-JSHint`
 
 #### Linux
-`git clone git://github.com/victorporof/Sublime-JSHint.git ~/.config/sublime-text-2/Packages/Sublime-JSHint`
+`git clone https://github.com/victorporof/Sublime-JSHint.git ~/.config/sublime-text-2/Packages/Sublime-JSHint`
 
 #### Windows
-`git clone git://github.com/victorporof/Sublime-JSHint.git %APPDATA%/Sublime\ Text\ 2/Packages/Sublime-JSHint`
+`git clone https://github.com/victorporof/Sublime-JSHint.git %APPDATA%/Sublime\ Text\ 2/Packages/Sublime-JSHint`
 
 ## Usage
 Tools -> Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) and type `jshint`.
