@@ -7,5 +7,6 @@
   "trailing": true,
   "undef": true,
   "unused": true,
-  "smarttabs": true
+  "smarttabs": true,
+  "globals": {}
 }

@@ -37,7 +37,16 @@
   var tempPath = argv[2] || "";
   var filePath = argv[3] || "";
   var settings = (argv[4] || "").split(" && ");
-  var option = {};
+  var option = Object.create(null);
+  var global = Object.create(null);
+
+  // Some handy utility functions.
+  var isTrue = function(value) {
+    return value == "true" || value == true;
+  }
+  var getUserHome = function() {
+    return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
+  };
 
   // When a JSHint config file exists in the same dir as the source file or
   // one dir above, then use this configuration instead of the default one.
@@ -47,26 +56,28 @@
     try {
       return JSON.parse(data.replace(comments, ""));
     } catch (e) {
-      return {};
+      return Object.create(null);
     }
   };
   var setOptions = function(file, store) {
     var obj = getOptions(file);
     for (var key in obj) {
-      switch (obj[key]) {
-        case "false":
-          store[key] = false;
-          break;
-        case "true":
-          store[key] = true;
-          break;
-        default:
+      // Globals are defined as an object, with keys as names, and a boolean
+      // value to determine if they are assignable.
+      if (key.indexOf("global") == 0 || key == "predef") {
+        for (var name in obj[key]) {
+          global[name] = isTrue(value);
+        }
+      } else {
+        // Special case "true" and "false" pref values as actually booleans.
+        // This avoids common accidents in .jshintrc json files.
+        if (obj[key] == "true" || obj[key] == "false") {
+          store[key] = isTrue(value);
+        } else {
           store[key] = obj[key];
+        }
       }
     }
-  };
-  var getUserHome = function() {
-    return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
   };
 
   var jshintrc = ".jshintrc";
@@ -111,7 +122,7 @@
     }
 
     // There is one option that allows array of strings to be passed
-    // (predefined custom globals)
+    // (predefined custom globals).
     if (key == "predef") {
       // eval is evil, but JSON.parse would require usage of only double quotes.
       option[key] = eval(value);
@@ -119,7 +130,7 @@
     }
 
     // Options are stored in key value pairs, such as option.es5 = true.
-    option[key] = value == "true" || value === true;
+    option[key] = isTrue(value);
   }
 
   // Read the source file and, when done, lint the code.
@@ -130,7 +141,7 @@
 
     // Lint the code and write readable error output to the console.
     try {
-      jshint(data, option);
+      jshint(data, option, global);
     } catch (e) {}
 
     jshint.errors
