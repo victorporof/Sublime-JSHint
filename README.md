@@ -66,6 +66,18 @@ On Windows, the absolute path to node.exe *must* use forward slashes.
 ## Using your own jshint options
 The plugin looks for a `.jshintrc` file in the same directory as the source file you're linting (or one directory above if it doesn't exist, or in your home folder if everything else fails) and uses those options instead of the default ones. [Here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc)'s an example of how it can look like.
 
+Here's how a `.jshintrc` file in your home folder could look like:
+```
+{
+  "validthis": true,
+  "globals": {
+    "Components": false,
+    "XPCOMUtils": false,
+    "EventEmitter": true,
+    "Promise": true
+  }
+}
+```
 A few persistent options are always applied, if not overwritten by your own `.jshintrc` file. Those are defined [here](https://github.com/victorporof/Sublime-JSHint/blob/master/scripts/.jshintrc). You can safely add stuff to that json file if you want.
 
 Although not recommended, `JSHint.py` can also contain some predefined settings which are probably quite important when writing JavaScript code (like "moz: true"). Add some more settings and options from the TONS available (see the [JSHint docs](http://www.jshint.com/options/)).
