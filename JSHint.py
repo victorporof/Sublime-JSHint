@@ -38,17 +38,23 @@ class JshintCommand(sublime_plugin.TextCommand):
     f.write(bufferText)
     f.close()
 
-    cmd = ["/usr/local/bin/node", scriptPath, tempPath, filePath or "?", setings]
+    node = "node" if self.exists_in_path("node") else "/usr/local/bin/node"
+    cmd = [node, scriptPath, tempPath, filePath or "?", setings]
+
     output = ""
     try:
+      # Sublime Text 2.
       if sublime.platform() != "windows":
-        output = commands.getoutput('"' + '" "'.join(cmd) + '"')
+        # Handle Windows in Python 2.
+        run = '"' + '" "'.join(cmd) + '"'
+        output = commands.getoutput(run)
       else:
+        # Handle Linux and OS X in Python 2.
         output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
-    except NameError:
-      output = subprocess.check_output('"' + '" "'.join(cmd) + '"',
-                                       stderr=subprocess.STDOUT,
-                                       shell=True)
+    except:
+      # Sublime Text 3.
+      run = '"' + '" "'.join(cmd) + '"'
+      output = subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True)
 
     # We're done with linting, remove the temporary file and rebuild the
     # regions shown in the current view.
@@ -97,3 +103,19 @@ class JshintCommand(sublime_plugin.TextCommand):
     selection.clear()
     selection.add(region)
     self.view.show(region)
+
+  def exists_in_path(self, cmd):
+    # Can't search the path if a directory is specified.
+    assert not os.path.dirname(cmd)
+    path = os.environ.get("PATH", "").split(os.pathsep)
+    extensions = os.environ.get("PATHEXT", "").split(os.pathsep)
+
+    # For each directory in PATH, check if it contains the specified binary.
+    for directory in path:
+      base = os.path.join(directory, cmd)
+      options = [base] + [(base + ext) for ext in extensions]
+      for filename in options:
+        if os.path.exists(filename):
+          return True
+
+    return False
