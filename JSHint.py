@@ -1,10 +1,10 @@
 import sublime, sublime_plugin
-import os, re
+import os, subprocess, codecs, re
 
 try:
   import commands
 except ImportError:
-  import subprocess
+  pass
 
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 
@@ -34,7 +34,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     # and dirty files to be linted as well.
     tempName = ".__temp__"
     tempPath = PLUGIN_FOLDER + '/' + tempName
-    f = open(tempPath, 'w', encoding="utf-8")
+    f = codecs.open(tempPath, mode='w', encoding='utf-8')
     f.write(bufferText)
     f.close()
 
