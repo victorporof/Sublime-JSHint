@@ -62,19 +62,20 @@
   var setOptions = function(file, store) {
     var obj = getOptions(file);
     for (var key in obj) {
+      var value = obj[key];
       // Globals are defined as an object, with keys as names, and a boolean
       // value to determine if they are assignable.
-      if (key.indexOf("global") == 0 || key == "predef") {
-        for (var name in obj[key]) {
-          global[name] = isTrue(value);
+      if (key == "global" || key == "globals" || key == "predef") {
+        for (var name in value) {
+          global[name] = isTrue(value[name]);
         }
       } else {
         // Special case "true" and "false" pref values as actually booleans.
         // This avoids common accidents in .jshintrc json files.
-        if (obj[key] == "true" || obj[key] == "false") {
+        if (value == "true" || value == "false") {
           store[key] = isTrue(value);
         } else {
-          store[key] = obj[key];
+          store[key] = value;
         }
       }
     }
