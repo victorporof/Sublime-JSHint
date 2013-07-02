@@ -8,5 +8,6 @@
   "undef": true,
   "unused": true,
   "smarttabs": true,
+  "quotmark": true,
   "globals": {}
 }
