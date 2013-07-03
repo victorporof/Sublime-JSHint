@@ -1,4 +1,5 @@
 [
   { "keys": ["ctrl+shift+j"], "command": "jshint" },
-  { "keys": ["ctrl+shift+j", "ctrl+shift+o"], "command": "jshint_set_options" }
+  { "keys": ["ctrl+alt+j", "o"], "command": "jshint_set_options" },
+  { "keys": ["ctrl+alt+j", "n"], "command": "jshint_set_node_path" }
 ]
