@@ -128,7 +128,7 @@ def open_jshintrc(window):
   window.open_file(PLUGIN_FOLDER + "/.jshintrc")
 
 def open_jshintpy(window):
-  window.open_file(PLUGIN_FOLDER + "/JSHint.py:35", sublime.ENCODED_POSITION)
+  window.open_file(PLUGIN_FOLDER + "/JSHint.py:31", sublime.ENCODED_POSITION)
 
 class JshintSetOptionsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
