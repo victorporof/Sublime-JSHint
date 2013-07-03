@@ -7,7 +7,7 @@ except ImportError:
   pass
 
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
-NODE_LINE = 32
+NODE_LINE = 33
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit):
@@ -28,6 +28,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     f.close()
 
     # Simply using `node` without specifying a path sometimes doesn't work :(
+    # http://nodejs.org/#download
     # https://github.com/victorporof/Sublime-JSHint#oh-noez-command-not-found
     node = "node" if exists_in_path("node") else "/usr/local/bin/node"
 
