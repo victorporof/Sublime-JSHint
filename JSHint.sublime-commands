@@ -1,4 +1,5 @@
-[{
-  "caption": "JSHint",
-  "command": "jshint"
-}]
+[
+  { "caption": "JSHint", "command": "jshint" },
+  { "caption": "JSHint: Set Default Options", "command": "jshint_set_options" },
+  { "caption": "JSHint: Set `node` Path", "command": "jshint_set_node_path" }
+]
