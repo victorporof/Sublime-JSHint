@@ -1,4 +1,4 @@
 [
   { "keys": ["ctrl+shift+j"], "command": "jshint" },
-  { "keys": ["ctrl+shift+j", "o"], "command": "jshint_set_options" }
+  { "keys": ["ctrl+shift+j", "ctrl+shift+o"], "command": "jshint_set_options" }
 ]
