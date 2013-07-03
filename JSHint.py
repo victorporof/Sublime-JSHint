@@ -30,6 +30,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     f.write(bufferText)
     f.close()
 
+    # Simply using node without specifying a path sometimes doesn't work :(
     node = "node" if self.exists_in_path("node") else "/usr/local/bin/node"
     cmd = [node, scriptPath, tempPath, filePath or "?"]
 
