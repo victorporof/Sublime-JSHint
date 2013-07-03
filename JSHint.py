@@ -104,6 +104,10 @@ class JshintSetNodePathCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     open_jshintpy(self.view.window())
 
+class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
+  def run(self, edit):
+    self.view.erase_regions("jshint_errors");
+
 def open_jshintrc(window):
   window.open_file(PLUGIN_FOLDER + "/.jshintrc")
 
