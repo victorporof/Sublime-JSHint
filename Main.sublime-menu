@@ -7,7 +7,7 @@
   }, {
     "caption": "JSHint",
     "children": [{
-      "caption": "Set Default JSHint Options",
+      "caption": "Set Default Options",
       "command": "jshint_set_options"
     }, {
       "caption": "Set `node` Path",

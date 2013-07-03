@@ -1,4 +1,4 @@
 [
   { "caption": "Lint Code Using JSHint", "command": "jshint" },
-  { "caption": "Set Default JSHint Options", "command": "jshint_set_options" }
+  { "caption": "Set JSHint Options", "command": "jshint_set_options" }
 ]
