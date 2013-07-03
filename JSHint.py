@@ -31,23 +31,19 @@ class JshintCommand(sublime_plugin.TextCommand):
     f.close()
 
     # Simply using node without specifying a path sometimes doesn't work :(
+    # https://github.com/victorporof/Sublime-JSHint#oh-noez-command-not-found
     node = "node" if self.exists_in_path("node") else "/usr/local/bin/node"
-    cmd = [node, scriptPath, tempPath, filePath or "?"]
 
-    output = ""
     try:
-      # Sublime Text 2.
-      if sublime.platform() != "windows":
-        # Handle Linux and OS X in Python 2.
-        run = '"' + '" "'.join(cmd) + '"'
-        output = commands.getoutput(run)
-      else:
-        # Handle Windows in Python 2.
-        output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+      output = get_output([node, scriptPath, tempPath, filePath or "?"])
     except:
-      # Sublime Text 3, Python 3.
-      run = '"' + '" "'.join(cmd) + '"'
-      output = subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True)
+      msg = "Node.js was not found in the default path. Please specify the location."
+      if sublime.ok_cancel_dialog(msg):
+        open_jshintpy(self.view.window())
+      else:
+        msg = "You won't be able to use this plugin without specifying the path to Node.js."
+        sublime.error_message(msg)
+      return
 
     # We're done with linting, remove the temporary file and rebuild the
     # regions shown in the current view.
@@ -55,6 +51,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     self.view.erase_regions("jshint_errors");
 
     if len(output) > 0:
+      print(output)
       regions = []
       menuitems = []
 
@@ -113,6 +110,31 @@ class JshintCommand(sublime_plugin.TextCommand):
 
     return False
 
+def get_output(cmd):
+  if int(sublime.version()) < 3000:
+    if sublime.platform() != "windows":
+      # Handle Linux and OS X in Python 2.
+      run = '"' + '" "'.join(cmd) + '"'
+      return commands.getoutput(run)
+    else:
+      # Handle Windows in Python 2.
+      return subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+  else:
+    # Handle all OS in Python 3.
+    run = '"' + '" "'.join(cmd) + '"'
+    return subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True)
+
+def open_jshintrc(window):
+  window.open_file(PLUGIN_FOLDER + "/.jshintrc")
+
+def open_jshintpy(window):
+  window.open_file(PLUGIN_FOLDER + "/JSHint.py:35", sublime.ENCODED_POSITION)
+
 class JshintSetOptionsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
-    self.view.window().open_file(PLUGIN_FOLDER + "/.jshintrc")
+    open_jshintrc(self.view.window())
+
+class JshintSetNodePathCommand(sublime_plugin.TextCommand):
+  def run(self, edit):
+    open_jshintpy(self.view.window())
+
