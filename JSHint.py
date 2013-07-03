@@ -51,7 +51,6 @@ class JshintCommand(sublime_plugin.TextCommand):
     self.view.erase_regions("jshint_errors");
 
     if len(output) > 0:
-      print(output)
       regions = []
       menuitems = []
 
