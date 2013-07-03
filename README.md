@@ -52,14 +52,13 @@ Writing commands in the console is ugly. Set up your own key combo for this, by 
 
 ## Oh noez, command not found!
 If you get an error `sh: node: command not found` or similar, you don't have `node` in the right path. Try setting the absolute path to node in `JSHint.py`.
-
-* `Ctrl+Shift+P` or `Cmd+Shift+P` in Linux/Windows/OS X
-* type `jshint`, select `Set node Path`
-
 This means from:
 `node = "node" if self.exists_in_path("node") else "/usr/local/bin/node"`
 change to
 `node = "node" if self.exists_in_path("node") else "/your/absolute/path/to/node"`
+
+* `Ctrl+Shift+P` or `Cmd+Shift+P` in Linux/Windows/OS X
+* type `jshint`, select `Set node Path`
 
 Simply using `node` without specifying a path sometimes doesn't work :(
 
