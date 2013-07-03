@@ -30,9 +30,9 @@ class JshintCommand(sublime_plugin.TextCommand):
     f.write(bufferText)
     f.close()
 
-    # Simply using node without specifying a path sometimes doesn't work :(
+    # Simply using `node` without specifying a path sometimes doesn't work :(
     # https://github.com/victorporof/Sublime-JSHint#oh-noez-command-not-found
-    node = "node" if self.exists_in_path("node") else "/usr/local/bin/node"
+    node = "node" if exists_in_path("node") else "/usr/local/bin/node"
 
     try:
       output = get_output([node, scriptPath, tempPath, filePath or "?"])
@@ -93,21 +93,21 @@ class JshintCommand(sublime_plugin.TextCommand):
     selection.add(region)
     self.view.show(region)
 
-  def exists_in_path(self, cmd):
-    # Can't search the path if a directory is specified.
-    assert not os.path.dirname(cmd)
-    path = os.environ.get("PATH", "").split(os.pathsep)
-    extensions = os.environ.get("PATHEXT", "").split(os.pathsep)
+def exists_in_path(cmd):
+  # Can't search the path if a directory is specified.
+  assert not os.path.dirname(cmd)
+  path = os.environ.get("PATH", "").split(os.pathsep)
+  extensions = os.environ.get("PATHEXT", "").split(os.pathsep)
 
-    # For each directory in PATH, check if it contains the specified binary.
-    for directory in path:
-      base = os.path.join(directory, cmd)
-      options = [base] + [(base + ext) for ext in extensions]
-      for filename in options:
-        if os.path.exists(filename):
-          return True
+  # For each directory in PATH, check if it contains the specified binary.
+  for directory in path:
+    base = os.path.join(directory, cmd)
+    options = [base] + [(base + ext) for ext in extensions]
+    for filename in options:
+      if os.path.exists(filename):
+        return True
 
-    return False
+  return False
 
 def get_output(cmd):
   if int(sublime.version()) < 3000:
