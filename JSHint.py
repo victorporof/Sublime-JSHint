@@ -6,6 +6,42 @@ try:
 except ImportError:
   pass
 
+def open_jshintrc(window):
+  window.open_file(PLUGIN_FOLDER + "/.jshintrc")
+
+def open_jshintpy(window):
+  window.open_file(PLUGIN_FOLDER + "/JSHint.py:31", sublime.ENCODED_POSITION)
+
+def exists_in_path(cmd):
+  # Can't search the path if a directory is specified.
+  assert not os.path.dirname(cmd)
+  path = os.environ.get("PATH", "").split(os.pathsep)
+  extensions = os.environ.get("PATHEXT", "").split(os.pathsep)
+
+  # For each directory in PATH, check if it contains the specified binary.
+  for directory in path:
+    base = os.path.join(directory, cmd)
+    options = [base] + [(base + ext) for ext in extensions]
+    for filename in options:
+      if os.path.exists(filename):
+        return True
+
+  return False
+
+def get_output(cmd):
+  if int(sublime.version()) < 3000:
+    if sublime.platform() != "windows":
+      # Handle Linux and OS X in Python 2.
+      run = '"' + '" "'.join(cmd) + '"'
+      return commands.getoutput(run)
+    else:
+      # Handle Windows in Python 2.
+      return subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+  else:
+    # Handle all OS in Python 3.
+    run = '"' + '" "'.join(cmd) + '"'
+    return subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True)
+
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 
 class JshintCommand(sublime_plugin.TextCommand):
@@ -93,42 +129,6 @@ class JshintCommand(sublime_plugin.TextCommand):
     selection.clear()
     selection.add(region)
     self.view.show(region)
-
-def exists_in_path(cmd):
-  # Can't search the path if a directory is specified.
-  assert not os.path.dirname(cmd)
-  path = os.environ.get("PATH", "").split(os.pathsep)
-  extensions = os.environ.get("PATHEXT", "").split(os.pathsep)
-
-  # For each directory in PATH, check if it contains the specified binary.
-  for directory in path:
-    base = os.path.join(directory, cmd)
-    options = [base] + [(base + ext) for ext in extensions]
-    for filename in options:
-      if os.path.exists(filename):
-        return True
-
-  return False
-
-def get_output(cmd):
-  if int(sublime.version()) < 3000:
-    if sublime.platform() != "windows":
-      # Handle Linux and OS X in Python 2.
-      run = '"' + '" "'.join(cmd) + '"'
-      return commands.getoutput(run)
-    else:
-      # Handle Windows in Python 2.
-      return subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
-  else:
-    # Handle all OS in Python 3.
-    run = '"' + '" "'.join(cmd) + '"'
-    return subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True)
-
-def open_jshintrc(window):
-  window.open_file(PLUGIN_FOLDER + "/.jshintrc")
-
-def open_jshintpy(window):
-  window.open_file(PLUGIN_FOLDER + "/JSHint.py:31", sublime.ENCODED_POSITION)
 
 class JshintSetOptionsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
