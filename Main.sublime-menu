@@ -1,0 +1,14 @@
+[{
+  "id": "tools",
+  "children": [{
+    "id": "jshint_tools"
+  }, {
+    "caption": "-"
+  }, {
+    "caption": "JSHint",
+    "children": [{
+      "caption": "Set Default Lint Options",
+      "command": "jshint_set_options"
+    }]
+  }]
+}]
