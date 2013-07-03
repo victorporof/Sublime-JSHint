@@ -7,8 +7,14 @@
   }, {
     "caption": "JSHint",
     "children": [{
+      "caption": "Lint Code",
+      "command": "jshint"
+    }, {
       "caption": "Set Default Options",
       "command": "jshint_set_options"
+    }, {
+      "caption": "Clear Annotations",
+      "command": "jshint_clear_annotations"
     }, {
       "caption": "Set `node` Path",
       "command": "jshint_set_node_path"

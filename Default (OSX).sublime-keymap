@@ -5,9 +5,9 @@
   "keys": ["super+alt+j", "o"],
   "command": "jshint_set_options"
 }, {
-  "keys": ["super+alt+j", "n"],
-  "command": "jshint_set_node_path"
-}, {
   "keys": ["super+escape"],
   "command": "jshint_clear_annotations"
+}, {
+  "keys": ["super+alt+j", "n"],
+  "command": "jshint_set_node_path"
 }]

@@ -7,10 +7,10 @@
     "caption": "Set Default Options",
     "command": "jshint_set_options"
   }, {
-    "caption": "Set `node` Path",
-    "command": "jshint_set_node_path"
-  }, {
     "caption": "Clear Annotations",
     "command": "jshint_clear_annotations"
+  }, {
+    "caption": "Set `node` Path",
+    "command": "jshint_set_node_path"
   }]
 }]
