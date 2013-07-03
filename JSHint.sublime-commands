@@ -1,6 +1,4 @@
-[
-  {
-    "caption": "JSHint",
-    "command": "jshint"
-  }
-]
+[{
+  "caption": "JSHint",
+  "command": "jshint"
+}]
