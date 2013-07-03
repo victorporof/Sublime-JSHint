@@ -29,28 +29,24 @@
   var argv = process.argv;
 
   // Require path and file system utilities to load the jshint.js file.
-  var path = require('path');
-  var fs = require('fs');
+  var path = require("path");
+  var fs = require("fs");
   var jshint = require("jshint/src/stable/jshint.js").JSHINT;
 
   // The source file to be linted, original source's path and some options.
   var tempPath = argv[2] || "";
   var filePath = argv[3] || "";
-  var settings = (argv[4] || "").split(" && ");
-  var option = Object.create(null);
-  var global = Object.create(null);
+  var options = Object.create(null);
+  var globals = Object.create(null);
 
   // Some handy utility functions.
-  var isTrue = function(value) {
+  function isTrue(value) {
     return value == "true" || value == true;
   }
-  var getUserHome = function() {
+  function getUserHome() {
     return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
-  };
-
-  // When a JSHint config file exists in the same dir as the source file or
-  // one dir above, then use this configuration instead of the default one.
-  var getOptions = function(file) {
+  }
+  function getOptions(file) {
     var data = fs.readFileSync(file, "utf8");
     var comments = /(?:\/\*(?:[\s\S]*?)\*\/)|(?:\/\/(?:.*)$)/g;
     try {
@@ -58,8 +54,8 @@
     } catch (e) {
       return Object.create(null);
     }
-  };
-  var setOptions = function(file, store) {
+  }
+  function setOptions(file, optionsStore, globalsStore) {
     var obj = getOptions(file);
     for (var key in obj) {
       var value = obj[key];
@@ -67,19 +63,19 @@
       // value to determine if they are assignable.
       if (key == "global" || key == "globals" || key == "predef") {
         for (var name in value) {
-          global[name] = isTrue(value[name]);
+          globalsStore[name] = isTrue(value[name]);
         }
       } else {
         // Special case "true" and "false" pref values as actually booleans.
         // This avoids common accidents in .jshintrc json files.
         if (value == "true" || value == "false") {
-          store[key] = isTrue(value);
+          optionsStore[key] = isTrue(value);
         } else {
-          store[key] = value;
+          optionsStore[key] = value;
         }
       }
     }
-  };
+  }
 
   var jshintrc = ".jshintrc";
   var pluginFolder = __dirname.split(path.sep).slice(0, -1).join(path.sep);
@@ -89,49 +85,23 @@
 
   // Try and get some persistent options from the plugin folder.
   if (fs.existsSync(jshintrcPath = pluginFolder + path.sep + jshintrc)) {
-    setOptions(jshintrcPath, option);
+    setOptions(jshintrcPath, options);
   }
+
+  // When a JSHint config file exists in the same dir as the source file or
+  // one dir above, then use this configuration to overwrite the default prefs.
 
   // Try and get more options from the source's folder.
   if (fs.existsSync(jshintrcPath = sourceFolder + path.sep + jshintrc)) {
-    setOptions(jshintrcPath, option);
+    setOptions(jshintrcPath, options, globals);
   }
   // ...or the parent folder.
   else if (fs.existsSync(jshintrcPath = sourceParent + path.sep + jshintrc)) {
-    setOptions(jshintrcPath, option);
+    setOptions(jshintrcPath, options, globals);
   }
   // ...or the user's home folder if everything else fails.
   else if (fs.existsSync(jshintrcPath = getUserHome() + path.sep + jshintrc)) {
-    setOptions(jshintrcPath, option);
-  }
-
-  // Extra arguments with custom options could be passed, so check them now
-  // and add them to the options object. These overwrite everything else!
-  for (var i = 0, len = settings.length; i < len; i++) {
-    var hash = settings[i].split(":");
-    if (hash.length != 2) {
-      continue;
-    }
-    var key = hash[0].trim();
-    var value = hash[1].trim();
-
-    // There are two options that allow numerical values.
-    if (key == "maxerr" || key == "indent") {
-      // Store value as Number, not as String.
-      option[key] = +value;
-      continue;
-    }
-
-    // There is one option that allows array of strings to be passed
-    // (predefined custom globals).
-    if (key == "predef") {
-      // eval is evil, but JSON.parse would require usage of only double quotes.
-      option[key] = eval(value);
-      continue;
-    }
-
-    // Options are stored in key value pairs, such as option.es5 = true.
-    option[key] = isTrue(value);
+    setOptions(jshintrcPath, options, globals);
   }
 
   // Read the source file and, when done, lint the code.
@@ -142,7 +112,7 @@
 
     // Lint the code and write readable error output to the console.
     try {
-      jshint(data, option, global);
+      jshint(data, options, globals);
     } catch (e) {}
 
     jshint.errors

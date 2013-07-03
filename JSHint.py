@@ -18,14 +18,6 @@ class JshintCommand(sublime_plugin.TextCommand):
 
     packageName = PLUGIN_FOLDER.replace(sublime.packages_path(), "")
     scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
-    setings = " && ".join([
-      # To add persistent options that are used everywhere, edit the .jshintrc
-      # file inside the scripts folder. But you can als add some options here
-      # if you like. For example:
-      # "browser: true",
-      # "esnext: true",
-      # "moz: true"
-    ])
 
     # Get the current text in the buffer.
     bufferText = self.view.substr(sublime.Region(0, self.view.size()))
@@ -39,7 +31,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     f.close()
 
     node = "node" if self.exists_in_path("node") else "/usr/local/bin/node"
-    cmd = [node, scriptPath, tempPath, filePath or "?", setings]
+    cmd = [node, scriptPath, tempPath, filePath or "?"]
 
     output = ""
     try:
