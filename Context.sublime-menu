@@ -1,3 +1,4 @@
 [
-	{ "caption": "Lint code using JSHint", "command": "jshint" }
+  { "caption": "Lint code using JSHint", "command": "jshint" },
+  { "caption": "Set JSHint options", "command": "jshint_set_options" },
 ]

@@ -1,3 +1,4 @@
 [
-  { "keys": ["super+shift+j"], "command": "jshint" }
+  { "keys": ["super+shift+j"], "command": "jshint" },
+  { "keys": ["super+shift+j", "o"], "command": "jshint_set_options" }
 ]

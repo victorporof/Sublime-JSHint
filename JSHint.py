@@ -111,3 +111,7 @@ class JshintCommand(sublime_plugin.TextCommand):
           return True
 
     return False
+
+class JshintSetOptionsCommand(sublime_plugin.TextCommand):
+  def run(self, edit):
+    self.view.window().open_file(PLUGIN_FOLDER + "/.jshintrc")
