@@ -16,12 +16,8 @@ class JshintCommand(sublime_plugin.TextCommand):
     if filePath != None and not re.search(r'\.jsm?$', filePath):
       return
 
-    packageName = PLUGIN_FOLDER.replace(sublime.packages_path(), "")
-    scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
-
     # Get the current text in the buffer.
     bufferText = self.view.substr(sublime.Region(0, self.view.size()))
-
     # ...and save it in a temporary file. This allows for scratch buffers
     # and dirty files to be linted as well.
     tempName = ".__temp__"
@@ -35,6 +31,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     node = "node" if exists_in_path("node") else "/usr/local/bin/node"
 
     try:
+      scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
       output = get_output([node, scriptPath, tempPath, filePath or "?"])
     except:
       msg = "Node.js was not found in the default path. Please specify the location."
@@ -66,21 +63,25 @@ class JshintCommand(sublime_plugin.TextCommand):
         except:
           pass
 
-      if int(sublime.version()) >= 3000:
-        icon = "Packages/" + packageName + "/warning.png"
-        self.view.add_regions("jshint_errors", regions, "keyword", icon,
-          sublime.DRAW_EMPTY |
-          sublime.DRAW_NO_FILL |
-          sublime.DRAW_NO_OUTLINE |
-          sublime.DRAW_SQUIGGLY_UNDERLINE)
-      else:
-        icon = ".." + packageName + "/warning"
-        self.view.add_regions("jshint_errors", regions, "keyword", icon,
-          sublime.DRAW_EMPTY |
-          sublime.DRAW_OUTLINED |
-          sublime.HIDE_ON_MINIMAP)
+      self.add_regions(regions)
+      self.view.window().show_quick_panel(menuitems, self.on_chosen)
 
-      sublime.active_window().show_quick_panel(menuitems, self.on_chosen)
+  def add_regions(self, regions):
+    packageName = PLUGIN_FOLDER.replace(sublime.packages_path(), "")
+
+    if int(sublime.version()) >= 3000:
+      icon = "Packages/" + packageName + "/warning.png"
+      self.view.add_regions("jshint_errors", regions, "keyword", icon,
+        sublime.DRAW_EMPTY |
+        sublime.DRAW_NO_FILL |
+        sublime.DRAW_NO_OUTLINE |
+        sublime.DRAW_SQUIGGLY_UNDERLINE)
+    else:
+      icon = ".." + packageName + "/warning"
+      self.view.add_regions("jshint_errors", regions, "keyword", icon,
+        sublime.DRAW_EMPTY |
+        sublime.DRAW_OUTLINED |
+        sublime.HIDE_ON_MINIMAP)
 
   def on_chosen(self, index):
     if index == -1:
@@ -136,4 +137,3 @@ class JshintSetOptionsCommand(sublime_plugin.TextCommand):
 class JshintSetNodePathCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     open_jshintpy(self.view.window())
-
