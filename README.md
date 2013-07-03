@@ -42,7 +42,7 @@ Tools -> Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) and type `jshint`.
 
 -- or --
 
-Right click in the current buffer and select "Lint code using JSHint".
+Right click in the current buffer and select "Lint Code Using JSHint".
 
 -- or --
 
@@ -67,7 +67,7 @@ For example, on Linux the path could be in `/home/<user>/.nvm/<node version>/bin
 On Windows, the absolute path to node.exe *must* use forward slashes.
 
 ## Using your own jshint options
-The plugin looks for a `.jshintrc` file in the same directory as the source file you're linting (or one directory above if it doesn't exist, or in your home folder if everything else fails) and uses those options instead of the default ones. [Here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc)'s an example of how it can look like.
+The plugin looks for a `.jshintrc` file in the same directory as the source file you're linting (or one directory above if it doesn't exist, or in your home folder if everything else fails) and uses those options along the default ones. [Here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc)'s an example of how it can look like.
 
 Here's how a `.jshintrc` file in your home folder could look like:
 ```
