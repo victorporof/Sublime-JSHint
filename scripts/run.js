@@ -48,7 +48,7 @@
   }
   function getOptions(file) {
     var data = fs.readFileSync(file, "utf8");
-    var comments = /(?:\/\*(?:[\s\S]*?)\*\/)|(?:\/\/(?:.*)$)/g;
+    var comments = /(?:\/\*(?:[\s\S]*?)\*\/)|(?:\/\/(?:.*)$)/gm;
     try {
       return JSON.parse(data.replace(comments, ""));
     } catch (e) {
