@@ -52,6 +52,10 @@ Writing commands in the console is ugly. Set up your own key combo for this, by 
 
 ## Oh noez, command not found!
 If you get an error `sh: node: command not found` or similar, you don't have `node` in the right path. Try setting the absolute path to node in `JSHint.py`.
+
+* `Ctrl+Shift+P` or `Cmd+Shift+P` in Linux/Windows/OS X
+* type `jshint`, select `Set node Path`
+
 This means from:
 `node = "node" if self.exists_in_path("node") else "/usr/local/bin/node"`
 change to
@@ -80,6 +84,7 @@ Here's how a `.jshintrc` file in your home folder could look like:
 ```
 A few persistent options are always applied, if not overwritten by your own `.jshintrc` file. Those are defined [here](https://github.com/victorporof/Sublime-JSHint/blob/master/scripts/.jshintrc). You can safely add stuff to that json file if you want.
 
-Although not recommended, `JSHint.py` can also contain some predefined settings which are probably quite important when writing JavaScript code (like "moz: true"). Add some more settings and options from the TONS available (see the [JSHint docs](http://www.jshint.com/options/)).
+* `Ctrl+Shift+P` or `Cmd+Shift+P` in Linux/Windows/OS X
+* type `jshint`, select `Set Default Options`
 
 Thank you!
