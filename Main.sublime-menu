@@ -9,6 +9,9 @@
     "children": [{
       "caption": "Set Default Lint Options",
       "command": "jshint_set_options"
+    }, {
+      "caption": "Set `node` Path",
+      "command": "jshint_set_node_path"
     }]
   }]
 }]
