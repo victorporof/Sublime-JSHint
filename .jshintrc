@@ -2,14 +2,12 @@
   // Documentation: http://www.jshint.com/docs/
   // Example: https://github.com/jshint/jshint/blob/master/examples/.jshintrc
   "browser": true,
-  "node": false,
   "esnext": true,
-  "moz": true,
+  "globals": {},
   "globalstrict": true,
+  "quotmark": true,
+  "smarttabs": true,
   "trailing": true,
   "undef": true,
-  "unused": true,
-  "smarttabs": true,
-  "quotmark": true,
-  "globals": {}
+  "unused": true
 }
