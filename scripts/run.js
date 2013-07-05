@@ -93,6 +93,9 @@
       return;
     }
 
+    // Mark the output as being from JSHint.
+    log("*** JSHint output ***");
+
     // If this is a markup file (html, xml, xhtml etc.), then javascript
     // is maybe present in a <script> tag. Try to extract it and lint.
     if (data.match(/^\s*</)) {
