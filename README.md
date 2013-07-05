@@ -1,6 +1,6 @@
 # JSHint Gutter for Sublime Text 2 and 3 via node.js
 #### [Sublime Text 3](http://www.sublimetext.com/3)
-#### [JSHint homepage](http://jshint.com/)
+#### [JSHint](https://github.com/jshint/jshint)
 #### [Node.js download](http://nodejs.org/#download)
 
 ## About
@@ -48,7 +48,7 @@ Right click in the current buffer and select `JSHint` -> `Lint Code`.
 
 Open a JavaScript file, pop out the console in Sublime Text from View -> Show Console, and type `view.run_command("jshint")`.
 
-Writing commands in the console is ugly. Set up your own key combo for this, by going to Preferences -> Key Bindings - User, and adding a command in that huge array: `{ "keys": ["super+shift+j"], "command": "jshint" },`. You can use any other command you want, thought most of them are already taken.
+Writing commands in the console is ugly. Set up your own key combo for this, by going to Preferences -> Key Bindings - User, and adding a command in that array: `{ "keys": ["super+shift+j"], "command": "jshint" }`. You can use any other command you want, thought most of them are already taken.
 
 ## Oh noez, command not found!
 If you get an error `sh: node: command not found` or similar, you don't have `node` in the right path. Try setting the absolute path to node in `JSHint.py`.
@@ -66,22 +66,39 @@ For example, on Linux the path could be in `/home/<user>/.nvm/<node version>/bin
 
 On Windows, the absolute path to node.exe *must* use forward slashes.
 
-## Using your own jshint options
+## Using your own .jshintrc options
 The plugin looks for a `.jshintrc` file in the same directory as the source file you're linting (or one directory above if it doesn't exist, or in your home folder if everything else fails) and uses those options along the default ones. [Here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc)'s an example of how it can look like.
 
-Here's how a `.jshintrc` file in your home folder could look like:
+These are the default options used by this plugin:
 ```
 {
+  "browser": true,
+  "esnext": true,
+  "globals": {},
+  "globalstrict": true,
+  "quotmark": true,
+  "smarttabs": true,
+  "trailing": true,
+  "undef": true,
+  "unused": true
+}
+```
+
+And here's how a `.jshintrc` file in your home folder could look like:
+```
+{
+  "node": true,
   "validthis": true,
   "globals": {
-    "Components": false,
-    "XPCOMUtils": false,
     "EventEmitter": true,
     "Promise": true
   }
 }
 ```
-A few persistent options are always applied, if not overwritten by your own `.jshintrc` file. Those are defined [here](https://github.com/victorporof/Sublime-JSHint/blob/master/scripts/.jshintrc). You can safely add stuff to that json file if you want.
+
+See the documentation at [jshint.com](http://www.jshint.com/docs/) and a few examples [here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc).
+
+A few persistent options are always applied from a `.jshintrc` file located in the same directory as the plugin, if not overwritten by your own `.jshintrc` file. Those are defined [here](https://github.com/victorporof/Sublime-JSHint/blob/master/.jshintrc). You can safely add stuff to that json file if you want:
 
 * `Ctrl+Shift+P` or `Cmd+Shift+P` in Linux/Windows/OS X
 * type `jshint`, select `Set Default Options`
