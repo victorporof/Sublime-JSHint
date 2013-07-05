@@ -42,7 +42,7 @@ Tools -> Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) and type `jshint`.
 
 -- or --
 
-Right click in the current buffer and select "Lint Code Using JSHint".
+Right click in the current buffer and select `JSHint` -> `Lint Code`.
 
 -- or --
 
