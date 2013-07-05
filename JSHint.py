@@ -33,6 +33,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     node = "node" if exists_in_path("node") else "/usr/local/bin/node"
 
     try:
+      print("Plugin folder is: " + PLUGIN_FOLDER)
       scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
       filePath = self.view.file_name()
       output = get_output([node, scriptPath, tempPath, filePath or "?"])
@@ -40,7 +41,8 @@ class JshintCommand(sublime_plugin.TextCommand):
       # Make sure the correct/expected output is retrieved.
       if output.find(OUTPUT_VALID) == -1:
         print(output)
-        msg = "Invalid output created by " + scriptPath + " for " + filePath
+        cmd = node + " " + scriptPath + " " + tempPath + " " + filePath
+        msg = "Command " + cmd + " created invalid output"
         raise Exception(msg)
 
     except:
@@ -59,7 +61,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     # We're done with linting, remove the temporary file and rebuild the
     # regions shown in the current view.
     os.remove(tempPath)
-    self.view.erase_regions("jshint_errors");
+    self.view.erase_regions("jshint_errors")
 
     # Remove the output identification marker (first line).
     output = output[len(OUTPUT_VALID) + 1:]
@@ -120,7 +122,7 @@ class JshintSetNodePathCommand(sublime_plugin.TextCommand):
 
 class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
-    self.view.erase_regions("jshint_errors");
+    self.view.erase_regions("jshint_errors")
 
 def open_jshintrc(window):
   window.open_file(PLUGIN_FOLDER + "/.jshintrc")
