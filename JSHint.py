@@ -12,7 +12,7 @@ except ImportError:
 
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 OUTPUT_VALID = "*** JSHint output ***"
-NODE_LINE = 31
+NODE_LINE = 33
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit):
