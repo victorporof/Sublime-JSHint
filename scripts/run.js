@@ -112,6 +112,28 @@
       return;
     }
 
+    // If this is a markup file (html, xml, xhtml etc.), then javascript
+    // is maybe present in a <script> tag. Try to extract it and lint.
+    if (data.match(/^\s*</)) {
+      // First non whitespace character is &lt, so most definitely markup.
+      var regexp = /<script[^>]*>([^]*?)<\/script\s*>/gim;
+      var script;
+
+      while (script = regexp.exec(data)) {
+        // Script contents are captured at index 1.
+        var text = script[1];
+
+        // Count all the lines up to and including the script tag.
+        var prevLines = data.substr(0, data.indexOf(text)).split("\n");
+        var lineOffset = prevLines.length - 1;
+        doLint(text, options, globals, lineOffset, 0);
+      }
+    } else {
+      doLint(data, options, globals, 0, 0);
+    }
+  });
+
+  function doLint(data, options, globals, lineOffset, charOffset) {
     // Lint the code and write readable error output to the console.
     try {
       jshint(data, options, globals);
@@ -122,7 +144,11 @@
         first = first || {};
         second = second || {};
 
-        if (first.line == second.line) {
+        if (!first.line) {
+          return 1;
+        } else if (!second.line){
+          return -1;
+        } else if (first.line == second.line) {
           return +first.character < +second.character ? -1 : 1;
         } else {
           return +first.line < +second.line ? -1 : 1;
@@ -136,15 +162,14 @@
 
         // Do some formatting if the error data is available.
         if (e.raw) {
-          log([
-            e.line,
-            e.character,
-            e.raw.replace("{a}", e.a)
-                 .replace("{b}", e.b)
-                 .replace("{c}", e.c)
-                 .replace("{d}", e.d)
-          ].join(" :: "));
+          var message = e.raw
+            .replace("{a}", e.a)
+            .replace("{b}", e.b)
+            .replace("{c}", e.c)
+            .replace("{d}", e.d);
+
+          log([e.line + lineOffset, e.character + charOffset, message].join(" :: "));
         }
       });
-  });
+  }
 }());
