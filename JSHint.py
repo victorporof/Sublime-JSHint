@@ -11,12 +11,6 @@ NODE_LINE = 33
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit):
-    filePath = self.view.file_name()
-
-    # Make sure we're only linting javascript files.
-    if filePath != None and not re.search(r'\.jsm?$', filePath):
-      return
-
     # Get the current text in the buffer.
     bufferText = self.view.substr(sublime.Region(0, self.view.size()))
     # ...and save it in a temporary file. This allows for scratch buffers
@@ -34,6 +28,7 @@ class JshintCommand(sublime_plugin.TextCommand):
 
     try:
       scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
+      filePath = self.view.file_name()
       output = get_output([node, scriptPath, tempPath, filePath or "?"])
     except:
       msg = "Node.js was not found in the default path. Please specify the location."
