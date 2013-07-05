@@ -1,3 +1,7 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 import sublime, sublime_plugin
 import os, subprocess, codecs, re
 
@@ -7,7 +11,7 @@ except ImportError:
   pass
 
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
-NODE_LINE = 33
+NODE_LINE = 31
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit):
