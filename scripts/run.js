@@ -85,7 +85,7 @@
 
   // Try and get some persistent options from the plugin folder.
   if (fs.existsSync(jshintrcPath = pluginFolder + path.sep + jshintrc)) {
-    setOptions(jshintrcPath, options);
+    setOptions(jshintrcPath, options, globals);
   }
 
   // When a JSHint config file exists in the same dir as the source file or
