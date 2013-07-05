@@ -31,13 +31,15 @@
   // Require path and file system utilities to load the jshint.js file.
   var path = require("path");
   var fs = require("fs");
-  var jshint = require("jshint/src/stable/jshint.js").JSHINT;
 
   // The source file to be linted, original source's path and some options.
   var tempPath = argv[2] || "";
   var filePath = argv[3] || "";
   var options = Object.create(null);
   var globals = Object.create(null);
+
+  // This stuff does all the magic.
+  var jshint = require("jshint/src/stable/jshint.js").JSHINT;
 
   // Some handy utility functions.
   function isTrue(value) {
