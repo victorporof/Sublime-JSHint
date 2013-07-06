@@ -72,11 +72,11 @@ following the instructions at:\n"""
         sublime.error_message(msg)
       return
 
-    # We're done with linting, rebuild the regions shown in the current view.
-    self.view.erase_regions("jshint_errors")
-
     # Remove the output identification marker (first line).
     output = output[len(OUTPUT_VALID) + 1:]
+
+    # We're done with linting, rebuild the regions shown in the current view.
+    self.view.erase_regions("jshint_errors")
 
     if len(output) > 0:
       regions = []
