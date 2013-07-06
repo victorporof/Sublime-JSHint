@@ -33,8 +33,8 @@ following the instructions at:\n"""
     bufferText = self.view.substr(sublime.Region(0, self.view.size()))
     # ...and save it in a temporary file. This allows for scratch buffers
     # and dirty files to be linted as well.
-    tempName = ".__temp__"
-    tempPath = tempfile.gettempdir() + '/' + tempName
+    namedTempFile = tempfile.NamedTemporaryFile()
+    tempPath = namedTempFile.name
     print("Saving buffer to: " + tempPath)
     f = codecs.open(tempPath, mode='w', encoding='utf-8')
     f.write(bufferText)
@@ -72,13 +72,12 @@ following the instructions at:\n"""
         sublime.error_message(msg)
       return
 
-    # We're done with linting, remove the temporary file and rebuild the
-    # regions shown in the current view.
-    os.remove(tempPath)
+    # We're done with linting, rebuild the regions shown in the current view.
     self.view.erase_regions("jshint_errors")
 
     # Remove the output identification marker (first line).
     output = output[len(OUTPUT_VALID) + 1:]
+
     if len(output) > 0:
       regions = []
       menuitems = []
