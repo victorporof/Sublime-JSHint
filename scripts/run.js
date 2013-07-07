@@ -60,6 +60,7 @@
     }
   }
 
+  /*
   var jshintrc = ".jshintrc";
   var pluginFolder = __dirname.split(path.sep).slice(0, -1).join(path.sep);
   var sourceFolder = filePath.split(path.sep).slice(0, -1).join(path.sep);
@@ -84,6 +85,31 @@
   }
   // ...or the user's home folder if everything else fails.
   else if (fs.existsSync(jshintrcPath = getUserHome() + path.sep + jshintrc)) {
+    setOptions(jshintrcPath, options, globals);
+  }
+  */
+
+  var jshintrc = ".jshintrc";
+  var pluginFolder = __dirname.split(path.sep).slice(0, -1).join(path.sep);
+  var currentFolder = path.dirname(filePath);
+  var jshintrcPath;
+
+  // Try and get some persistent options from the plugin folder.
+  if (fs.existsSync(jshintrcPath = pluginFolder + path.sep + jshintrc)) {
+    setOptions(jshintrcPath, options, globals);
+  }
+
+  if (fs.existsSync(jshintrcPath = currentFolder + path.sep + jshintrc)) {
+    setOptions(jshintrcPath, options, globals);
+  } else {
+    jshintrcPath = "";
+    while (currentFolder !== "/") {
+      currentFolder = path.dirname(currentFolder);
+      if (fs.existsSync(currentFolder + path.sep + jshintrc)) {
+        jshintrcPath = currentFolder + path.sep + jshintrc;
+        break;
+      }
+    }
     setOptions(jshintrcPath, options, globals);
   }
 
