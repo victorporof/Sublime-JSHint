@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import sublime, sublime_plugin
-import os, sys, subprocess, tempfile, codecs, webbrowser
+import os, sys, subprocess, codecs, webbrowser
 
 try:
   import commands
@@ -33,8 +33,8 @@ following the instructions at:\n"""
     bufferText = self.view.substr(sublime.Region(0, self.view.size()))
     # ...and save it in a temporary file. This allows for scratch buffers
     # and dirty files to be linted as well.
-    namedTempFile = tempfile.NamedTemporaryFile()
-    tempPath = namedTempFile.name
+    namedTempFile = ".__temp__"
+    tempPath = PLUGIN_FOLDER + "/" + namedTempFile
     print("Saving buffer to: " + tempPath)
     f = codecs.open(tempPath, mode='w', encoding='utf-8')
     f.write(bufferText)
@@ -77,6 +77,7 @@ following the instructions at:\n"""
 
     # We're done with linting, rebuild the regions shown in the current view.
     self.view.erase_regions("jshint_errors")
+    os.remove(tempPath)
 
     if len(output) > 0:
       regions = []
