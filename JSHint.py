@@ -22,9 +22,7 @@ class JshintCommand(sublime_plugin.TextCommand):
       # Thus executing scripts *located inside this archive* via node.js
       # will, unfortunately, not be possible.
       url = "https://github.com/victorporof/Sublime-JSHint#manually"
-      msg = """You won't be able to use this plugin in Sublime Text 3 when \
-installed via the Package Manager.\n\nPlease remove it and install manually, \
-following the instructions at:\n"""
+      msg = """You won't be able to use this plugin in Sublime Text 3 when installed via the Package Manager.\n\nPlease remove it and install manually, following the instructions at:\n"""
       sublime.ok_cancel_dialog(msg + url)
       webbrowser.open(url)
       return
@@ -137,6 +135,11 @@ class JshintSetNodePathCommand(sublime_plugin.TextCommand):
 class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     self.view.erase_regions("jshint_errors")
+
+class JshintLintOnSave(sublime_plugin.EventListener):
+  def on_post_save(self, view):
+    JshintCommand(view).run(view)
+    sublime.run_command("jshint")
 
 def open_jshintrc(window):
   window.open_file(PLUGIN_FOLDER + "/.jshintrc")
