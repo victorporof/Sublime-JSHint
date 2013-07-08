@@ -62,8 +62,7 @@
 
   var jshintrc = ".jshintrc";
   var pluginFolder = __dirname.split(path.sep).slice(0, -1).join(path.sep);
-  var sourceFolder = filePath.split(path.sep).slice(0, -1).join(path.sep);
-  var sourceParent = filePath.split(path.sep).slice(0, -2).join(path.sep);
+  var currentFolder = path.dirname(filePath);
   var jshintrcPath;
 
   // Try and get some persistent options from the plugin folder.
@@ -71,19 +70,17 @@
     setOptions(jshintrcPath, options, globals);
   }
 
-  // When a JSHint config file exists in the same dir as the source file or
-  // one dir above, then use this configuration to overwrite the default prefs.
-
-  // Try and get more options from the source's folder.
-  if (fs.existsSync(jshintrcPath = sourceFolder + path.sep + jshintrc)) {
+  if (fs.existsSync(jshintrcPath = currentFolder + path.sep + jshintrc)) {
     setOptions(jshintrcPath, options, globals);
-  }
-  // ...or the parent folder.
-  else if (fs.existsSync(jshintrcPath = sourceParent + path.sep + jshintrc)) {
-    setOptions(jshintrcPath, options, globals);
-  }
-  // ...or the user's home folder if everything else fails.
-  else if (fs.existsSync(jshintrcPath = getUserHome() + path.sep + jshintrc)) {
+  } else {
+    jshintrcPath = "";
+    while (currentFolder !== "/") {
+      currentFolder = path.dirname(currentFolder);
+      if (fs.existsSync(currentFolder + path.sep + jshintrc)) {
+        jshintrcPath = currentFolder + path.sep + jshintrc;
+        break;
+      }
+    }
     setOptions(jshintrcPath, options, globals);
   }
 
