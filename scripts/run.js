@@ -26,9 +26,6 @@
   function isTrue(value) {
     return value == "true" || value == true;
   }
-  function getUserHome() {
-    return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
-  }
   function getOptions(file) {
     var data = fs.readFileSync(file, "utf8");
     var comments = /(?:\/\*(?:[\s\S]*?)\*\/)|(?:\/\/(?:.*)$)/gm;
@@ -61,7 +58,7 @@
   }
 
   var jshintrc = ".jshintrc";
-  var pluginFolder = __dirname.split(path.sep).slice(0, -1).join(path.sep);
+  var pluginFolder = path.dirname(__dirname);
   var currentFolder = path.dirname(filePath);
   var jshintrcPath;
 
