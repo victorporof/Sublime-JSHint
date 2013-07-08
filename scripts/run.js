@@ -70,19 +70,14 @@
   // When a JSHint config file exists in the same directory as the source file,
   // or any directory above it, then use this configuration to overwrite the
   // default prefs.
-  if (fs.existsSync(jshintrcPath = currentFolder + path.sep + jshintrc)) {
-    setOptions(jshintrcPath, options, globals);
-  } else {
-    jshintrcPath = "";
-    while (currentFolder !== "/") {
+  do {
+    if (fs.existsSync(jshintrcPath = currentFolder + path.sep + jshintrc)) {
+      setOptions(jshintrcPath, options, globals);
+      break; // Stop at the first found JSHint config file.
+    } else {
       currentFolder = path.dirname(currentFolder);
-      if (fs.existsSync(currentFolder + path.sep + jshintrc)) {
-        jshintrcPath = currentFolder + path.sep + jshintrc;
-        break;
-      }
     }
-    setOptions(jshintrcPath, options, globals);
-  }
+  } while (currentFolder != "/");
 
   // Read the source file and, when done, lint the code.
   fs.readFile(tempPath, "utf8", function(err, data) {
