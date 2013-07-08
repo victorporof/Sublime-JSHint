@@ -67,6 +67,9 @@
     setOptions(jshintrcPath, options, globals);
   }
 
+  // When a JSHint config file exists in the same directory as the source file,
+  // or any directory above it, then use this configuration to overwrite the
+  // default prefs.
   if (fs.existsSync(jshintrcPath = currentFolder + path.sep + jshintrc)) {
     setOptions(jshintrcPath, options, globals);
   } else {
