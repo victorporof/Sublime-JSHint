@@ -164,7 +164,7 @@ class JshintListener(sublime_plugin.EventListener):
 
   @staticmethod
   def on_selection_modified_async(view):
-    display_to_status_bar(view, view.get_regions("jshint_errors"), JshintListener.errors)
+    display_to_status_bar(view, JshintListener.errors)
 
 def open_jshintrc(window):
   window.open_file(PLUGIN_FOLDER + "/.jshintrc")
@@ -202,14 +202,12 @@ def get_output(cmd):
     run = '"' + '" "'.join(cmd) + '"'
     return subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True)
 
-def display_to_status_bar(view, regions, regions_to_descriptions):
+def display_to_status_bar(view, regions_to_descriptions):
   caret_region = view.sel()[0]
 
-  for target_region in regions:
-    if caret_region.intersects(target_region):
-      for message_region, message_text in regions_to_descriptions:
-        if target_region.intersects(message_region):
-          sublime.status_message(message_text)
-          return
-    else:
-      sublime.status_message("")
+  for message_region, message_text in regions_to_descriptions:
+    if message_region.intersects(caret_region):
+      sublime.status_message(message_text)
+      return
+  else:
+    sublime.status_message("")
