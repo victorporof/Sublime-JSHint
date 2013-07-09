@@ -21,7 +21,9 @@ class JshintCommand(sublime_plugin.TextCommand):
     filePath = self.view.file_name()
 
     # Make sure we're only linting javascript files.
-    if filePath != None and not re.search(r'\.jsm?$', filePath):
+    hasJsExtension = filePath != None and bool(re.search(r'\.jsm?$', filePath))
+    hasJsSyntax = bool(re.search("JavaScript", self.view.settings().get('syntax'), re.I))
+    if not hasJsExtension or not hasJsSyntax:
       return
 
     if PLUGIN_FOLDER.find(u".sublime-package") != -1:
