@@ -80,7 +80,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     if len(output) > 0:
       regions = []
       menuitems = []
-      JSHintListener.errors = []
+      JshintListener.errors = []
 
       # For each line of jshint output (errors, warnings etc.) add a region
       # in the view and a menuitem in a quick panel.
@@ -91,7 +91,7 @@ class JshintCommand(sublime_plugin.TextCommand):
           word = self.view.word(point)
           menuitems.append(lineNo + ":" + columnNo + " " + description)
           regions.append(word)
-          JSHintListener.errors.append((word, description))
+          JshintListener.errors.append((word, description))
         except:
           pass
 
@@ -138,7 +138,7 @@ class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     self.view.erase_regions("jshint_errors")
 
-class JSHintListener(sublime_plugin.EventListener):
+class JshintListener(sublime_plugin.EventListener):
   errors = []
 
   def on_selection_modified(self, view):
@@ -195,7 +195,7 @@ def display_to_status_bar(view):
     select_line = get_line_number(view, view.sel()[0])
     warning_line = get_line_number(view, warning)
     if select_line == warning_line:
-      for reg, err in JSHintListener.errors:
+      for reg, err in JshintListener.errors:
         if reg == warning:
           sublime.status_message(err)
           return
