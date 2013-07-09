@@ -167,7 +167,7 @@ class JshintListener(sublime_plugin.EventListener):
     if self.timer != None:
       self.timer.cancel()
 
-    # Invalidate any pre-existing errors.
+    self.timer = None
     self.errors = []
 
   @staticmethod
