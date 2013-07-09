@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import sublime, sublime_plugin
-import os, sys, subprocess, codecs, webbrowser
+import os, sys, subprocess, codecs, re, webbrowser
 from threading import Timer
 
 try:
@@ -13,10 +13,16 @@ except ImportError:
 
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 OUTPUT_VALID = b"*** JSHint output ***"
-NODE_LINE = 47
+NODE_LINE = 53
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit, show_regions=True, show_panel=True):
+    filePath = self.view.file_name()
+
+    # Make sure we're only linting javascript files.
+    if filePath != None and not re.search(r'\.jsm?$', filePath):
+      return
+
     if PLUGIN_FOLDER.find(u".sublime-package") != -1:
       # Can't use this plugin if installed via the Package Manager in Sublime
       # Text 3, because it will be zipped into a .sublime-package archive.
@@ -50,7 +56,6 @@ following the instructions at:\n"""
     try:
       print("Plugin folder is: " + PLUGIN_FOLDER)
       scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
-      filePath = self.view.file_name()
       output = get_output([node, scriptPath, tempPath, filePath or "?"])
 
       # Make sure the correct/expected output is retrieved.
