@@ -181,7 +181,11 @@ class JshintListener(sublime_plugin.EventListener):
     self.timer.start()
 
   @staticmethod
-  def on_selection_modified_async(view):
+  def on_post_save(view):
+    view.window().run_command("jshint", { "show_panel": False })
+
+  @staticmethod
+  def on_selection_modified(view):
     display_to_status_bar(view, JshintListener.errors)
 
 def open_jshintrc(window):
