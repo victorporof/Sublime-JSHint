@@ -178,8 +178,6 @@ class JshintListener(sublime_plugin.EventListener):
     # plugin settings allow this to happen. This is only available in Sublime 3.
     if int(sublime.version()) < 3000:
       return
-    if len(view.get_regions("jshint_errors")) == 0:
-      return
     if not sublime.load_settings(SETTINGS_FILE).get("lint_on_edit"):
       return
 
