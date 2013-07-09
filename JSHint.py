@@ -3,7 +3,8 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import sublime, sublime_plugin
-import os, re, sys, subprocess, codecs, webbrowser
+import os, sys, subprocess, codecs, webbrowser
+from threading import Timer
 
 try:
   import commands
@@ -15,7 +16,7 @@ OUTPUT_VALID = b"*** JSHint output ***"
 NODE_LINE = 46
 
 class JshintCommand(sublime_plugin.TextCommand):
-  def run(self, edit):
+  def run(self, edit, show_regions=True, show_panel=True):
     if PLUGIN_FOLDER.find(u".sublime-package") != -1:
       # Can't use this plugin if installed via the Package Manager in Sublime
       # Text 3, because it will be zipped into a .sublime-package archive.
@@ -95,8 +96,10 @@ class JshintCommand(sublime_plugin.TextCommand):
         except:
           pass
 
-      self.add_regions(regions)
-      self.view.window().show_quick_panel(menuitems, self.on_chosen)
+      if show_regions:
+        self.add_regions(regions)
+      if show_panel:
+        self.view.window().show_quick_panel(menuitems, self.on_chosen)
 
   def add_regions(self, regions):
     packageName = PLUGIN_FOLDER.replace(sublime.packages_path(), "")
@@ -139,10 +142,29 @@ class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
     self.view.erase_regions("jshint_errors")
 
 class JshintListener(sublime_plugin.EventListener):
+  timer = None
   errors = []
 
-  def on_selection_modified(self, view):
-    display_to_status_bar(view, view.get_regions("jshint_errors"), self.errors)
+  @staticmethod
+  def on_modified(view):
+    self = JshintListener
+
+    # Continue only if the source code was previously linted.
+    if len(self.errors) == 0:
+      return
+
+    # Re-run the jshint command after a second of inactivity after the view
+    # has been modified, to avoid regins getting out of sync with the actual
+    # source code previously linted.
+    if self.timer != None:
+      self.timer.cancel()
+
+    self.timer = Timer(1, lambda: view.window().run_command("jshint", { "show_panel": False }))
+    self.timer.start()
+
+  @staticmethod
+  def on_selection_modified_async(view):
+    display_to_status_bar(view, view.get_regions("jshint_errors"), JshintListener.errors)
 
 def open_jshintrc(window):
   window.open_file(PLUGIN_FOLDER + "/.jshintrc")
@@ -186,7 +208,7 @@ def display_to_status_bar(view, regions, regions_to_descriptions):
   for target_region in regions:
     if caret_region.intersects(target_region):
       for message_region, message_text in regions_to_descriptions:
-        if message_region == target_region:
+        if target_region.intersects(message_region):
           sublime.status_message(message_text)
           return
     else:

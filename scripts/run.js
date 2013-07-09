@@ -26,6 +26,7 @@
   function isTrue(value) {
     return value == "true" || value == true;
   }
+
   function getOptions(file) {
     var data = fs.readFileSync(file, "utf8");
     var comments = /(?:\/\*(?:[\s\S]*?)\*\/)|(?:\/\/(?:.*)$)/gm;
