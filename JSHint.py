@@ -142,7 +142,7 @@ class JshintListener(sublime_plugin.EventListener):
   errors = []
 
   def on_selection_modified(self, view):
-    display_to_status_bar(view)
+    display_to_status_bar(view, view.get_regions("jshint_errors"))
 
 def open_jshintrc(window):
   window.open_file(PLUGIN_FOLDER + "/.jshintrc")
@@ -183,14 +183,13 @@ def get_output(cmd):
 def get_line_number(view, region):
   return view.rowcol(region.end())[0]
 
-def display_to_status_bar(view):
-  warnings = view.get_regions("jshint_errors")
-  for warning in warnings:
+def display_to_status_bar(view, regions):
+  for region in regions:
     select_line = get_line_number(view, view.sel()[0])
-    warning_line = get_line_number(view, warning)
+    warning_line = get_line_number(view, region)
     if select_line == warning_line:
       for reg, err in JshintListener.errors:
-        if reg == warning:
+        if reg == region:
           sublime.status_message(err)
           return
     else:
