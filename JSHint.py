@@ -88,7 +88,7 @@ following the instructions at:\n"""
     if len(output) > 0:
       regions = []
       menuitems = []
-      JshintListener.errors = []
+      JshintListener.reset()
 
       # For each line of jshint output (errors, warnings etc.) add a region
       # in the view and a menuitem in a quick panel.
@@ -151,6 +151,17 @@ class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
 class JshintListener(sublime_plugin.EventListener):
   timer = None
   errors = []
+
+  @staticmethod
+  def reset():
+    self = JshintListener
+
+    # Invalidate any previously set timer.
+    if self.timer != None:
+      self.timer.cancel()
+
+    # Invalidate any pre-existing errors.
+    self.errors = []
 
   @staticmethod
   def on_modified(view):
