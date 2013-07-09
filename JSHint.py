@@ -180,16 +180,10 @@ def get_output(cmd):
     run = '"' + '" "'.join(cmd) + '"'
     return subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True)
 
-def is_javascript(view):
-  return bool(re.search("JavaScript", view.settings().get('syntax'), re.I))
-
 def get_line_number(view, region):
   return view.rowcol(region.end())[0]
 
 def display_to_status_bar(view):
-  if not is_javascript(view):
-    return
-
   warnings = view.get_regions("jshint_errors")
   for warning in warnings:
     select_line = get_line_number(view, view.sel()[0])
