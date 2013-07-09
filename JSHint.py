@@ -192,7 +192,7 @@ class JshintListener(sublime_plugin.EventListener):
 
   @staticmethod
   def on_post_save(view):
-    # Continue only if the curren plugin settings allow this to happen.
+    # Continue only if the current plugin settings allow this to happen.
     if sublime.load_settings(SETTINGS_FILE).get("lint_on_save"):
       view.window().run_command("jshint", { "show_panel": False })
 
