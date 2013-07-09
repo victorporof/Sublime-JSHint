@@ -12,8 +12,9 @@ except ImportError:
   pass
 
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
+SETTINGS_FILE = "JSHint.sublime-settings"
 OUTPUT_VALID = b"*** JSHint output ***"
-NODE_LINE = 53
+NODE_LINE = 54
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit, show_regions=True, show_panel=True):
@@ -167,8 +168,11 @@ class JshintListener(sublime_plugin.EventListener):
   def on_modified(view):
     self = JshintListener
 
-    # Continue only if the source code was previously linted.
-    if len(self.errors) == 0:
+    # Continue only if the source code was previously linted and the current
+    # plugin settings allow this to happen.
+    if len(view.get_regions("jshint_errors")) == 0:
+      return
+    if not sublime.load_settings(SETTINGS_FILE).get("lint_on_edit"):
       return
 
     # Re-run the jshint command after a second of inactivity after the view
@@ -182,7 +186,9 @@ class JshintListener(sublime_plugin.EventListener):
 
   @staticmethod
   def on_post_save(view):
-    view.window().run_command("jshint", { "show_panel": False })
+    # Continue only if the curren plugin settings allow this to happen.
+    if sublime.load_settings(SETTINGS_FILE).get("lint_on_save"):
+      view.window().run_command("jshint", { "show_panel": False })
 
   @staticmethod
   def on_selection_modified(view):
