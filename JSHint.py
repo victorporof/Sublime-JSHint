@@ -18,9 +18,10 @@ NODE_LINE = 54
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit, show_regions=True, show_panel=True):
-    filePath = self.view.file_name()
+    JshintListener.reset()
 
     # Make sure we're only linting javascript files.
+    filePath = self.view.file_name()
     hasJsExtension = filePath != None and bool(re.search(r'\.jsm?$', filePath))
     hasJsSyntax = bool(re.search("JavaScript", self.view.settings().get('syntax'), re.I))
     if not hasJsExtension or not hasJsSyntax:
@@ -91,7 +92,6 @@ following the instructions at:\n"""
     if len(output) > 0:
       regions = []
       menuitems = []
-      JshintListener.reset()
 
       # For each line of jshint output (errors, warnings etc.) add a region
       # in the view and a menuitem in a quick panel.
