@@ -66,7 +66,7 @@ For example, on Linux the path could be in `/home/<user>/.nvm/<node version>/bin
 
 On Windows, the absolute path to node.exe *must* use forward slashes.
 
-## Automatically linting on edit on save
+## Automatically linting on edit or save
 This plugin can be set to automatically lint when a file is saved or the current buffer is modified.
 
 * `Ctrl+Shift+P` or `Cmd+Shift+P` in Linux/Windows/OS X
