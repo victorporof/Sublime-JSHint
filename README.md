@@ -78,7 +78,7 @@ Note that live linting while *editing* is only available in Sublime Text 3.
 The plugin looks for a `.jshintrc` file in the same directory as the source file you're linting (or one directory above if it doesn't exist, or in your home folder if everything else fails) and uses those options along the default ones. [Here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc)'s an example of how it can look like.
 
 These are the default options used by this plugin:
-```json
+```javascript
 {
   // Documentation: http://www.jshint.com/docs/
   // Example: https://github.com/jshint/jshint/blob/master/examples/.jshintrc
@@ -95,7 +95,7 @@ These are the default options used by this plugin:
 ```
 
 And here's how a `.jshintrc` file in your home folder could look like:
-```json
+```javascript
 {
   "node": true,
   "validthis": true,
