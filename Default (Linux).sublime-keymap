@@ -2,8 +2,11 @@
   "keys": ["ctrl+shift+j"],
   "command": "jshint"
 }, {
+  "keys": ["ctrl+alt+j", "p"],
+  "command": "jshint_set_linting_prefs"
+}, {
   "keys": ["ctrl+alt+j", "o"],
-  "command": "jshint_set_options"
+  "command": "jshint_set_plugin_options"
 }, {
   "keys": ["ctrl+escape"],
   "command": "jshint_clear_annotations"

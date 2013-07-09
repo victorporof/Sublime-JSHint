@@ -10,8 +10,11 @@
       "caption": "Lint Code",
       "command": "jshint"
     }, {
-      "caption": "Set Default Options",
-      "command": "jshint_set_options"
+      "caption": "Set Linting Prefs",
+      "command": "jshint_set_linting_prefs"
+    }, {
+      "caption": "Set Plugin Options",
+      "command": "jshint_set_plugin_options"
     }, {
       "caption": "Clear Annotations",
       "command": "jshint_clear_annotations"

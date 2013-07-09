@@ -137,9 +137,13 @@ following the instructions at:\n"""
     selection.add(region)
     self.view.show(region)
 
-class JshintSetOptionsCommand(sublime_plugin.TextCommand):
+class JshintSetLintingPrefsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     open_jshintrc(self.view.window())
+
+class JshintSetPluginOptionsCommand(sublime_plugin.TextCommand):
+  def run(self, edit):
+    open_jshintsettings(self.view.window())
 
 class JshintSetNodePathCommand(sublime_plugin.TextCommand):
   def run(self, edit):
@@ -196,6 +200,9 @@ class JshintListener(sublime_plugin.EventListener):
 
 def open_jshintrc(window):
   window.open_file(PLUGIN_FOLDER + "/.jshintrc")
+
+def open_jshintsettings(window):
+  window.open_file(PLUGIN_FOLDER + "/JSHint.sublime-settings")
 
 def open_jshintpy(window):
   window.open_file(PLUGIN_FOLDER + "/JSHint.py:" + str(NODE_LINE), sublime.ENCODED_POSITION)

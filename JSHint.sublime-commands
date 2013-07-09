@@ -2,8 +2,11 @@
   "caption": "JSHint",
   "command": "jshint"
 }, {
-  "caption": "JSHint: Set Default Options",
-  "command": "jshint_set_options"
+  "caption": "JSHint: Set Linting Prefs",
+  "command": "jshint_set_linting_prefs"
+}, {
+  "caption": "JSHint: Set Plugin Options",
+  "command": "jshint_set_plugin_options"
 }, {
   "caption": "JSHint: Set `node` Path",
   "command": "jshint_set_node_path"
