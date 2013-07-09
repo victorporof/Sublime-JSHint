@@ -177,7 +177,6 @@ class JshintListener(sublime_plugin.EventListener):
     # Continue only if the source code was previously linted and the current
     # plugin settings allow this to happen. This is only available in Sublime 3.
     if int(sublime.version()) < 3000:
-      print("Automatically liting on edit is only available in Sublime Text 3.")
       return
     if len(view.get_regions("jshint_errors")) == 0:
       return
