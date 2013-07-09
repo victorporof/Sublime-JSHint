@@ -23,7 +23,9 @@ class JshintCommand(sublime_plugin.TextCommand):
       # Thus executing scripts *located inside this archive* via node.js
       # will, unfortunately, not be possible.
       url = "https://github.com/victorporof/Sublime-JSHint#manually"
-      msg = """You won't be able to use this plugin in Sublime Text 3 when installed via the Package Manager.\n\nPlease remove it and install manually, following the instructions at:\n"""
+      msg = """You won't be able to use this plugin in Sublime Text 3 when \
+installed via the Package Manager.\n\nPlease remove it and install manually, \
+following the instructions at:\n"""
       sublime.ok_cancel_dialog(msg + url)
       webbrowser.open(url)
       return
