@@ -72,6 +72,8 @@ This plugin can be set to automatically lint when a file is saved or the current
 * `Ctrl+Shift+P` or `Cmd+Shift+P` in Linux/Windows/OS X
 * type `jshint`, select `Set Plugin Options`
 
+Note that live linting while *editing* is only available in Sublime Text 3.
+
 ## Using your own .jshintrc options
 The plugin looks for a `.jshintrc` file in the same directory as the source file you're linting (or one directory above if it doesn't exist, or in your home folder if everything else fails) and uses those options along the default ones. [Here](https://github.com/jshint/jshint/blob/master/examples/.jshintrc)'s an example of how it can look like.
 
