@@ -87,11 +87,11 @@ class JshintCommand(sublime_plugin.TextCommand):
       for line in output.decode().splitlines():
         try:
           lineNo, columnNo, description = line.split(" :: ")
-          point = self.view.text_point(int(lineNo) - 1, int(columnNo))
-          word = self.view.word(point)
+          text_point = self.view.text_point(int(lineNo) - 1, int(columnNo))
+          region = self.view.word(text_point)
           menuitems.append(lineNo + ":" + columnNo + " " + description)
-          regions.append(word)
-          JshintListener.errors.append((word, description))
+          regions.append(region)
+          JshintListener.errors.append((region, description))
         except:
           pass
 
@@ -180,12 +180,12 @@ def get_output(cmd):
     run = '"' + '" "'.join(cmd) + '"'
     return subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True)
 
-def display_to_status_bar(view, regions, messages):
+def display_to_status_bar(view, regions, regions_to_descriptions):
   caret_region = view.sel()[0]
 
   for target_region in regions:
     if caret_region.intersects(target_region):
-      for message_region, message_text in messages:
+      for message_region, message_text in regions_to_descriptions:
         if message_region == target_region:
           sublime.status_message(message_text)
           return
