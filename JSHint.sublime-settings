@@ -1,5 +1,5 @@
 {
-  // Automatically lint on edit.
+  // Automatically lint on edit (Sublime Text 3 only).
   "lint_on_edit": false,
 
   // Automatically lint when a file is saved.
