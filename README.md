@@ -80,6 +80,8 @@ The plugin looks for a `.jshintrc` file in the same directory as the source file
 These are the default options used by this plugin:
 ```json
 {
+  // Documentation: http://www.jshint.com/docs/
+  // Example: https://github.com/jshint/jshint/blob/master/examples/.jshintrc
   "browser": true,
   "esnext": true,
   "globals": {},
