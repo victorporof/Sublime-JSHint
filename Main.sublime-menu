@@ -23,4 +23,28 @@
       "command": "jshint_set_node_path"
     }]
   }]
+}, {
+  "id": "preferences",
+  "children": [{
+    "id": "package-settings",
+    "children": [{
+      "caption": "JSHint Gutter",
+      "children": [{
+        "caption": "Lint Code",
+        "command": "jshint"
+      }, {
+        "caption": "Set Linting Prefs",
+        "command": "jshint_set_linting_prefs"
+      }, {
+        "caption": "Set Plugin Options",
+        "command": "jshint_set_plugin_options"
+      }, {
+        "caption": "Clear Annotations",
+        "command": "jshint_clear_annotations"
+      }, {
+        "caption": "Set `node` Path",
+        "command": "jshint_set_node_path"
+      }]
+    }]
+  }]
 }]
