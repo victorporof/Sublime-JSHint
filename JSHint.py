@@ -14,7 +14,7 @@ except ImportError:
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 SETTINGS_FILE = "JSHint.sublime-settings"
 OUTPUT_VALID = b"*** JSHint output ***"
-NODE_LINE = 54
+NODE_LINE = 57
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit, show_regions=True, show_panel=True):
