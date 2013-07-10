@@ -111,6 +111,6 @@ See the documentation at [jshint.com](http://www.jshint.com/docs/) and a few exa
 A few persistent options are always applied from a `.jshintrc` file located in the same directory as the plugin, if not overwritten by your own `.jshintrc` file. Those are defined [here](https://github.com/victorporof/Sublime-JSHint/blob/master/.jshintrc). You can safely add stuff to that json file if you want:
 
 * `Ctrl+Shift+P` or `Cmd+Shift+P` in Linux/Windows/OS X
-* type `jshint`, select `Set Linting Prefs`
+* type `jshint`, select `Set Linting Preferences`
 
 Thank you!
