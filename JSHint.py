@@ -153,6 +153,7 @@ class JshintSetNodePathCommand(sublime_plugin.TextCommand):
 
 class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
+    JshintListener.reset()
     self.view.erase_regions("jshint_errors")
 
 class JshintListener(sublime_plugin.EventListener):
