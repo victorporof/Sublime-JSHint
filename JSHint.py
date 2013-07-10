@@ -12,6 +12,7 @@ except ImportError:
   pass
 
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
+RC_FILE = ".jshintrc"
 SETTINGS_FILE = "JSHint.sublime-settings"
 OUTPUT_VALID = b"*** JSHint output ***"
 
@@ -200,10 +201,10 @@ class JshintListener(sublime_plugin.EventListener):
     display_to_status_bar(view, JshintListener.errors)
 
 def open_jshint_rc(window):
-  window.open_file(PLUGIN_FOLDER + "/.jshintrc")
+  window.open_file(PLUGIN_FOLDER + "/" + RC_FILE)
 
 def open_jshint_sublime_settings(window):
-  window.open_file(PLUGIN_FOLDER + "/JSHint.sublime-settings")
+  window.open_file(PLUGIN_FOLDER + "/" + SETTINGS_FILE)
 
 def exists_in_path(cmd):
   # Can't search the path if a directory is specified.
