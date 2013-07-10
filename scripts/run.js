@@ -84,7 +84,7 @@
     } else {
       currentFolder = path.dirname(currentFolder);
     }
-  } while (currentFolder != "/");
+  } while (currentFolder != "/" && currentFolder != ".");
 
   // Read the source file and, when done, lint the code.
   fs.readFile(tempPath, "utf8", function(err, data) {
