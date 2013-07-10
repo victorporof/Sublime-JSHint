@@ -2,7 +2,7 @@
   "caption": "JSHint",
   "command": "jshint"
 }, {
-  "caption": "JSHint: Set Linting Prefs",
+  "caption": "JSHint: Set Linting Preferences",
   "command": "jshint_set_linting_prefs"
 }, {
   "caption": "JSHint: Set Plugin Options",

@@ -4,7 +4,7 @@
     "caption": "Lint Code",
     "command": "jshint"
   }, {
-    "caption": "Set Linting Prefs",
+    "caption": "Set Linting Preferences",
     "command": "jshint_set_linting_prefs"
   }, {
     "caption": "Set Plugin Options",
