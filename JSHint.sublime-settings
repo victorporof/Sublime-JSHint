@@ -1,4 +1,9 @@
 {
+  // Simply using `node` without specifying a path sometimes doesn't work :(
+  // https://github.com/victorporof/Sublime-JSHint#oh-noez-command-not-found
+  // http://nodejs.org/#download
+  "node_path": "/usr/local/bin/node",
+
   // Automatically lint on edit (Sublime Text 3 only).
   "lint_on_edit": false,
 

@@ -14,7 +14,6 @@ except ImportError:
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 SETTINGS_FILE = "JSHint.sublime-settings"
 OUTPUT_VALID = b"*** JSHint output ***"
-NODE_LINE = 57
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit, show_regions=True, show_panel=True):
@@ -52,11 +51,10 @@ following the instructions at:\n"""
     f.close()
 
     # Simply using `node` without specifying a path sometimes doesn't work :(
-    # http://nodejs.org/#download
-    # https://github.com/victorporof/Sublime-JSHint#oh-noez-command-not-found
-    node = "node" if exists_in_path("node") else "/usr/local/bin/node"
-    output = ""
+    settings = sublime.load_settings(SETTINGS_FILE)
+    node = "node" if exists_in_path("node") else settings.get("node_path")
 
+    output = ""
     try:
       print("Plugin folder is: " + PLUGIN_FOLDER)
       scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
@@ -76,7 +74,7 @@ following the instructions at:\n"""
       # Usually, it's just node.js not being found. Try to alleviate the issue.
       msg = "Node.js was not found in the default path. Please specify the location."
       if sublime.ok_cancel_dialog(msg):
-        open_jshintpy(self.view.window())
+        open_jshint_sublime_settings(self.view.window())
       else:
         msg = "You won't be able to use this plugin without specifying the path to Node.js."
         sublime.error_message(msg)
@@ -141,15 +139,15 @@ following the instructions at:\n"""
 
 class JshintSetLintingPrefsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
-    open_jshintrc(self.view.window())
+    open_jshint_rc(self.view.window())
 
 class JshintSetPluginOptionsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
-    open_jshintsettings(self.view.window())
+    open_jshint_sublime_settings(self.view.window())
 
 class JshintSetNodePathCommand(sublime_plugin.TextCommand):
   def run(self, edit):
-    open_jshintpy(self.view.window())
+    open_jshint_sublime_settings(self.view.window())
 
 class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
@@ -201,14 +199,11 @@ class JshintListener(sublime_plugin.EventListener):
   def on_selection_modified(view):
     display_to_status_bar(view, JshintListener.errors)
 
-def open_jshintrc(window):
+def open_jshint_rc(window):
   window.open_file(PLUGIN_FOLDER + "/.jshintrc")
 
-def open_jshintsettings(window):
+def open_jshint_sublime_settings(window):
   window.open_file(PLUGIN_FOLDER + "/JSHint.sublime-settings")
-
-def open_jshintpy(window):
-  window.open_file(PLUGIN_FOLDER + "/JSHint.py:" + str(NODE_LINE), sublime.ENCODED_POSITION)
 
 def exists_in_path(cmd):
   # Can't search the path if a directory is specified.
