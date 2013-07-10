@@ -80,8 +80,9 @@ The plugin looks for a `.jshintrc` file in the same directory as the source file
 These are the default options used by this plugin:
 ```javascript
 {
-  // Documentation: http://www.jshint.com/docs/
+  // Details: https://github.com/victorporof/Sublime-JSHint#using-your-own-jshintrc-options
   // Example: https://github.com/jshint/jshint/blob/master/examples/.jshintrc
+  // Documentation: http://www.jshint.com/docs/
   "browser": true,
   "esnext": true,
   "globals": {},
