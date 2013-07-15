@@ -1,19 +1,19 @@
 [{
-  "keys": ["ctrl+shift+j"],
+  "keys": ["ctrl+alt+j"],
   "command": "jshint"
 }, {
-  "keys": ["ctrl+alt+j", "p"],
+  "keys": ["shift+alt+j", "p"],
   "command": "jshint_set_linting_prefs"
 }, {
-  "keys": ["ctrl+alt+j", "o"],
+  "keys": ["shift+alt+j", "o"],
   "command": "jshint_set_plugin_options"
 }, {
-  "keys": ["ctrl+alt+j", "k"],
+  "keys": ["shift+alt+j", "k"],
   "command": "jshint_set_keyboard_shortcuts"
 }, {
-  "keys": ["ctrl+escape"],
+  "keys": ["ctrl+alt+c"],
   "command": "jshint_clear_annotations"
 }, {
-  "keys": ["ctrl+alt+j", "n"],
+  "keys": ["shift+alt+j", "n"],
   "command": "jshint_set_node_path"
 }]
