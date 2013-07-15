@@ -9,6 +9,9 @@
   }, {
     "caption": "Set Plugin Options",
     "command": "jshint_set_plugin_options"
+  },  {
+    "caption": "Set Keyboard Shortcuts",
+    "command": "jshint_set_keyboard_shortcuts"
   }, {
     "caption": "Clear Annotations",
     "command": "jshint_clear_annotations"

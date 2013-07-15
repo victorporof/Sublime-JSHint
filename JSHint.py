@@ -14,6 +14,7 @@ except ImportError:
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 RC_FILE = ".jshintrc"
 SETTINGS_FILE = "JSHint.sublime-settings"
+KEYMAP_FILE = "Default ($PLATFORM).sublime-keymap"
 OUTPUT_VALID = b"*** JSHint output ***"
 
 class JshintCommand(sublime_plugin.TextCommand):
@@ -147,6 +148,12 @@ class JshintSetPluginOptionsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     open_jshint_sublime_settings(self.view.window())
 
+class JshintSetKeyboardShortcutsCommand(sublime_plugin.TextCommand):
+  def run(self, edit):
+    open_jshint_sublime_keymap(self.view.window(), {
+      "windows": "Windows", "linux": "Linux", "osx": "OSX"
+    }.get(sublime.platform()))
+
 class JshintSetNodePathCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     open_jshint_sublime_settings(self.view.window())
@@ -206,6 +213,9 @@ def open_jshint_rc(window):
 
 def open_jshint_sublime_settings(window):
   window.open_file(PLUGIN_FOLDER + "/" + SETTINGS_FILE)
+
+def open_jshint_sublime_keymap(window, platform):
+  window.open_file(PLUGIN_FOLDER + "/" + KEYMAP_FILE.replace("$PLATFORM", platform))
 
 def exists_in_path(cmd):
   # Can't search the path if a directory is specified.

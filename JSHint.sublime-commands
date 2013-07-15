@@ -8,6 +8,9 @@
   "caption": "JSHint: Set Plugin Options",
   "command": "jshint_set_plugin_options"
 }, {
+  "caption": "Set Keyboard Shortcuts",
+  "command": "jshint_set_keyboard_shortcuts"
+}, {
   "caption": "JSHint: Set `node` Path",
   "command": "jshint_set_node_path"
 }, {

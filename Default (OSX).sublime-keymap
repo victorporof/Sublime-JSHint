@@ -8,6 +8,9 @@
   "keys": ["super+alt+j", "o"],
   "command": "jshint_set_plugin_options"
 }, {
+  "keys": ["super+alt+j", "k"],
+  "command": "jshint_set_keyboard_shortcuts"
+}, {
   "keys": ["super+escape"],
   "command": "jshint_clear_annotations"
 }, {
