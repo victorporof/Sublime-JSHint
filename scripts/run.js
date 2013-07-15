@@ -66,6 +66,7 @@
   var jshintrc = ".jshintrc";
   var pluginFolder = path.dirname(__dirname);
   var currentFolder = path.dirname(filePath);
+  var lastCurrentFolder;
   var jshintrcPath;
 
   // Try and get some persistent options from the plugin folder.
@@ -76,14 +77,15 @@
   // When a JSHint config file exists in the same directory as the source file,
   // or any directory above it, then use this configuration to overwrite the
   // default prefs.
-  do {
+  while (currentFolder !== lastCurrentFolder) {
+    lastCurrentFolder = currentFolder;
     if (fs.existsSync(jshintrcPath = currentFolder + path.sep + jshintrc)) {
       setOptions(jshintrcPath, options, globals);
       break; // Stop at the first found JSHint config file.
     } else {
       currentFolder = path.dirname(currentFolder);
     }
-  } while (currentFolder != "/" && currentFolder != ".");
+  }
 
   // Read the source file and, when done, lint the code.
   fs.readFile(tempPath, "utf8", function(err, data) {
