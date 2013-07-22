@@ -182,16 +182,16 @@ class JshintListener(sublime_plugin.EventListener):
   def on_modified(view):
     self = JshintListener
 
-    # Continue only if the source code was previously linted and the current
-    # plugin settings allow this to happen. This is only available in Sublime 3.
+    # Continue only if the plugin settings allow this to happen.
+    # This is only available in Sublime 3.
     if int(sublime.version()) < 3000:
       return
     if not sublime.load_settings(SETTINGS_FILE).get("lint_on_edit"):
       return
 
     # Re-run the jshint command after a second of inactivity after the view
-    # has been modified, to avoid regins getting out of sync with the actual
-    # source code previously linted.
+    # has been modified, to avoid regions getting out of sync with the actual
+    # previously linted source code.
     if self.timer != None:
       self.timer.cancel()
 
