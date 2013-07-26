@@ -1,10 +1,7 @@
 [{
   "id": "tools",
   "children": [{
-    "id": "jshint_tools"
-  }, {
-    "caption": "-"
-  }, {
+    "id": "jshint_tools",
     "caption": "JSHint",
     "children": [{
       "caption": "Lint Code",
