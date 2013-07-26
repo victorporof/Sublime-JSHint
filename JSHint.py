@@ -182,16 +182,16 @@ class JshintListener(sublime_plugin.EventListener):
   def on_modified(view):
     self = JshintListener
 
-    # Continue only if the source code was previously linted and the current
-    # plugin settings allow this to happen. This is only available in Sublime 3.
+    # Continue only if the plugin settings allow this to happen.
+    # This is only available in Sublime 3.
     if int(sublime.version()) < 3000:
       return
     if not sublime.load_settings(SETTINGS_FILE).get("lint_on_edit"):
       return
 
     # Re-run the jshint command after a second of inactivity after the view
-    # has been modified, to avoid regins getting out of sync with the actual
-    # source code previously linted.
+    # has been modified, to avoid regions getting out of sync with the actual
+    # previously linted source code.
     if self.timer != None:
       self.timer.cancel()
 
@@ -241,7 +241,13 @@ def get_output(cmd):
       return commands.getoutput(run)
     else:
       # Handle Windows in Python 2.
-      return subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+      
+      # Hack to prevent console window from showing. Stolen from
+      # http://stackoverflow.com/questions/1813872/running-a-process-in-pythonw-with-popen-without-a-console
+      startupinfo = subprocess.STARTUPINFO()
+      startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+      
+      return subprocess.Popen(cmd, stdout=subprocess.PIPE, startupinfo=startupinfo).communicate()[0]
   else:
     # Handle all OS in Python 3.
     run = '"' + '" "'.join(cmd) + '"'
