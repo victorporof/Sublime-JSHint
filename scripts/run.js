@@ -38,12 +38,10 @@
   function setOptions(file, optionsStore, globalsStore) {
     var obj = getOptions(file);
     // Handle jshintConfig on package.json (NPM) files
-    if (file.match(/package\.json$/i) !== null) {
-      if (typeof obj.jshintConfig !== "undefined") {
-        obj = obj.jshintConfig;
-      } else {
-        return false;
-      }
+    if (obj.jshintConfig) {
+      obj = obj.jshintConfig;
+    } else if (obj.name) { // Skip the rest if NPM without jshintConfig
+      return false;
     }
     for (var key in obj) {
       var value = obj[key];
