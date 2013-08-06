@@ -99,6 +99,8 @@ These are the default options used by this plugin:
 And here's how a `.jshintrc` file in your home folder could look like:
 ```javascript
 {
+  "esnext": false,
+  "moz": true,
   "node": true,
   "validthis": true,
   "globals": {
