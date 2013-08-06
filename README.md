@@ -101,6 +101,7 @@ And here's how a `.jshintrc` file in your home folder could look like:
 {
   "esnext": false,
   "moz": true,
+  "boss": true,
   "node": true,
   "validthis": true,
   "globals": {
