@@ -28,7 +28,7 @@
   }
   function getOptions(file) {
     var data = fs.readFileSync(file, "utf8");
-    var comments = /(?:\/\*(?:[\s\S]*?)\*\/)|(?:\/\/(?:.*)$)/gm;
+    var comments = /(?:\/\*(?:[\s\S]*?)\*\/)|(?:\/\/(?:[^\"]*)$)/gm;
     try {
       return JSON.parse(data.replace(comments, ""));
     } catch (e) {
@@ -37,6 +37,12 @@
   }
   function setOptions(file, optionsStore, globalsStore) {
     var obj = getOptions(file);
+    // Handle jshintConfig on package.json (NPM) files
+    if (obj.jshintConfig) {
+      obj = obj.jshintConfig;
+    } else if (obj.name) { // Skip the rest if NPM without jshintConfig
+      return false;
+    }
     for (var key in obj) {
       var value = obj[key];
       // Globals are defined as an object, with keys as names, and a boolean
@@ -64,10 +70,12 @@
   }
 
   var jshintrc = ".jshintrc";
+  var packagejson = "package.json";
   var pluginFolder = path.dirname(__dirname);
   var currentFolder = path.dirname(filePath);
   var lastCurrentFolder;
   var jshintrcPath;
+  var packagejsonPath;
 
   // Try and get some persistent options from the plugin folder.
   if (fs.existsSync(jshintrcPath = pluginFolder + path.sep + jshintrc)) {
@@ -82,9 +90,13 @@
     if (fs.existsSync(jshintrcPath = currentFolder + path.sep + jshintrc)) {
       setOptions(jshintrcPath, options, globals);
       break; // Stop at the first found JSHint config file.
-    } else {
-      currentFolder = path.dirname(currentFolder);
+    } else if (fs.existsSync(packagejsonPath = currentFolder + path.sep + packagejson)) {
+      var success = setOptions(packagejsonPath, options, globals);
+      if (success !== false) {
+        break; // Stop at the first package.json with JSHint config.
+      }
     }
+    currentFolder = path.dirname(currentFolder);
   }
 
   // Read the source file and, when done, lint the code.
