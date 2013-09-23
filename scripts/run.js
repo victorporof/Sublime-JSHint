@@ -79,6 +79,7 @@
 
   // Older versions of node has `existsSync` in the path module, not fs. Meh.
   fs.existsSync = fs.existsSync || path.existsSync;
+  path.sep = "/" || path.sep;
 
   // Try and get some persistent options from the plugin folder.
   if (fs.existsSync(jshintrcPath = pluginFolder + path.sep + jshintrc)) {
