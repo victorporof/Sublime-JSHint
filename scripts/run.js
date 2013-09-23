@@ -77,6 +77,9 @@
   var jshintrcPath;
   var packagejsonPath;
 
+  // Older versions of node has `existsSync` in the path module, not fs. Meh.
+  fs.existsSync = fs.existsSync || path.existsSync;
+
   // Try and get some persistent options from the plugin folder.
   if (fs.existsSync(jshintrcPath = pluginFolder + path.sep + jshintrc)) {
     setOptions(jshintrcPath, options, globals);
