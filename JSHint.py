@@ -25,6 +25,8 @@ class JshintCommand(sublime_plugin.TextCommand):
     filePath = self.view.file_name()
     hasJsExtension = filePath != None and bool(re.search(r'\.jsm?$', filePath))
     hasJsSyntax = bool(re.search("JavaScript", self.view.settings().get("syntax"), re.I))
+    if (bool(re.search("JSON.tmLanguage$", self.view.settings().get("syntax"), re.I))):
+      hasJsSyntax = False
     if not hasJsExtension and not hasJsSyntax:
       return
 
