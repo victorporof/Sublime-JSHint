@@ -20,7 +20,7 @@
   var globals = Object.create(null);
 
   // This stuff does all the magic.
-  var jshint = require("jshint/src/stable/jshint.js").JSHINT;
+  var jshint = require("jshint/src/jshint.js").JSHINT;
 
   // Some handy utility functions.
   function isTrue(value) {
