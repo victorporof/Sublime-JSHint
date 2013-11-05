@@ -104,13 +104,23 @@ following the instructions at:\n"""
       for line in output.decode().splitlines():
         try:
           lineNo, columnNo, description = line.split(" :: ")
-          text_point = self.view.text_point(int(lineNo) - 1, int(columnNo))
-          region = self.view.word(text_point)
-          menuitems.append(lineNo + ":" + columnNo + " " + description)
-          regions.append(region)
-          JshintListener.errors.append((region, description))
         except:
-          pass
+          continue
+
+        symbolname = re.match("('[^']+')", description)
+
+        text_point = self.view.text_point(int(lineNo) - 1, int(columnNo) - 1)
+        region = self.view.word(text_point)
+
+        if symbolname:
+          region = self.view.word(text_point)
+        else:
+          region = self.view.line(text_point)
+
+        menuitems.append(lineNo + ":" + columnNo + " " + description)
+
+        regions.append(region)
+        JshintListener.errors.append((region, description))
 
       if show_regions:
         self.add_regions(regions)
@@ -139,12 +149,16 @@ following the instructions at:\n"""
     if index == -1:
       return
 
+    self.view.erase_regions("jshint_selected")
+
     # Focus the user requested region from the quick panel.
-    region = self.view.get_regions("jshint_errors")[index]
+    region = JshintListener.errors[index][0]
+    region_cursor = sublime.Region(region.begin(), region.begin())
     selection = self.view.sel()
     selection.clear()
-    selection.add(region)
-    self.view.show(region)
+    selection.add(region_cursor)
+    self.view.add_regions("jshint_selected", [region], "markup.changed")
+    self.view.show(region_cursor)
 
 class JshintSetLintingPrefsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
@@ -168,6 +182,7 @@ class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     JshintListener.reset()
     self.view.erase_regions("jshint_errors")
+    self.view.erase_regions("jshint_selected")
 
 class JshintListener(sublime_plugin.EventListener):
   timer = None
