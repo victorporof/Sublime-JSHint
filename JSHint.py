@@ -118,7 +118,7 @@ following the instructions at:\n"""
         self.view.window().show_quick_panel(menuitems, self.on_chosen)
 
   def add_regions(self, regions):
-    packageName = PLUGIN_FOLDER.replace(sublime.packages_path(), "")
+    packageName = (PLUGIN_FOLDER.split(os.path.sep))[-1]
 
     if int(sublime.version()) >= 3000:
       icon = "Packages/" + packageName + "/warning.png"
