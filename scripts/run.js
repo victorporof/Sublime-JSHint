@@ -5,8 +5,6 @@
 (function() {
   "use strict";
 
-  require("jsonminify");
-
   // Cache the console log function and the process arguments.
   var log = console.log;
   var argv = process.argv;
@@ -30,6 +28,7 @@
   }
   function getOptions(file) {
     try {
+      require("jsonminify");
       return JSON.parse(JSON.minify(fs.readFileSync(file, "utf8")));
     } catch (e) {
       return Object.create(null);
