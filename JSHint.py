@@ -157,7 +157,7 @@ following the instructions at:\n"""
     selection = self.view.sel()
     selection.clear()
     selection.add(region_cursor)
-    self.view.add_regions("jshint_selected", [region], "markup.changed")
+    self.view.add_regions("jshint_selected", [region], "meta")
     self.view.show(region_cursor)
 
 class JshintSetLintingPrefsCommand(sublime_plugin.TextCommand):
