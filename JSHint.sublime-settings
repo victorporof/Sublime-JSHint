@@ -8,5 +8,8 @@
   "lint_on_edit": false,
 
   // Automatically lint when a file is saved.
-  "lint_on_save": false
+  "lint_on_save": false,
+
+  // Highlight problematic regions when selected.
+  "highlight_selected_regions": false
 }
