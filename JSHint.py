@@ -155,13 +155,13 @@ following the instructions at:\n"""
     selection = self.view.sel()
     selection.clear()
     selection.add(region_cursor)
+    self.view.show(region_cursor)
 
     if not sublime.load_settings(SETTINGS_FILE).get("highlight_selected_regions"):
       return
 
     self.view.erase_regions("jshint_selected")
     self.view.add_regions("jshint_selected", [region], "meta")
-    self.view.show(region_cursor)
 
 class JshintSetLintingPrefsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
