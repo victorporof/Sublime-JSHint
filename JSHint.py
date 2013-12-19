@@ -139,7 +139,7 @@ following the instructions at:\n"""
         sublime.DRAW_SQUIGGLY_UNDERLINE |
         sublime.HIDE_ON_MINIMAP)
     else:
-      icon = ".." + packageName + "/warning"
+      icon = ".." + os.path.sep + packageName + "/warning"
       self.view.add_regions("jshint_errors", regions, "keyword", icon,
         sublime.DRAW_EMPTY |
         sublime.DRAW_OUTLINED |
