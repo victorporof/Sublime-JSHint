@@ -205,12 +205,13 @@ class JshintListener(sublime_plugin.EventListener):
   @staticmethod
   def on_modified(view):
     self = JshintListener
+    plugin_settings = sublime.load_settings(SETTINGS_FILE)
 
     # Continue only if the plugin settings allow this to happen.
     # This is only available in Sublime 3.
     if int(sublime.version()) < 3000:
       return
-    if not sublime.load_settings(SETTINGS_FILE).get("lint_on_edit"):
+    if not plugin_settings.get("lint_on_edit"):
       return
 
     # Re-run the jshint command after a second of inactivity after the view
@@ -219,7 +220,8 @@ class JshintListener(sublime_plugin.EventListener):
     if self.timer != None:
       self.timer.cancel()
 
-    self.timer = Timer(1, lambda: view.window().run_command("jshint", { "show_panel": False }))
+    timeout = plugin_settings.get("lint_on_edit_timeout")
+    self.timer = Timer(timeout, lambda: view.window().run_command("jshint", { "show_panel": False }))
     self.timer.start()
 
   @staticmethod
