@@ -229,6 +229,12 @@ class JshintListener(sublime_plugin.EventListener):
       view.window().run_command("jshint", { "show_panel": False })
 
   @staticmethod
+  def on_load(view):
+    # Continue only if the current plugin settings allow this to happen.
+    if sublime.load_settings(SETTINGS_FILE).get("lint_on_load"):
+      v = view.window() if int(sublime.version()) < 3000 else view
+      v.run_command("jshint", { "show_panel": False })
+
   def on_selection_modified(view):
     display_to_status_bar(view, JshintListener.errors)
 
