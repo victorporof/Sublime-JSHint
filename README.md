@@ -70,8 +70,8 @@ On Windows, the absolute path to node.exe *must* use forward slashes.
 ### Be very careful on Linux!
 Depending on your distribution and default package sources, `apt-get install node` (for example) *will not* install node.js, contrary to all human common sense and popular belief. You want `nodejs` instead. Best thing is to make it yourself from http://nodejs.org/#download.
 
-## Automatically linting on edit or save
-This plugin can be set to automatically lint when a file is saved or the current buffer is modified.
+## Automatically linting on edit, load or save
+This plugin can be set to automatically lint when a file is loaded, saved, or the current buffer is modified.
 
 * `Ctrl+Shift+P` or `Cmd+Shift+P` in Linux/Windows/OS X
 * type `jshint`, select `Set Plugin Options`
