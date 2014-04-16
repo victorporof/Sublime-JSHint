@@ -235,6 +235,7 @@ class JshintListener(sublime_plugin.EventListener):
       v = view.window() if int(sublime.version()) < 3000 else view
       v.run_command("jshint", { "show_panel": False })
 
+  @staticmethod
   def on_selection_modified(view):
     display_to_status_bar(view, JshintListener.errors)
 
