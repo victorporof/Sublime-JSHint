@@ -132,14 +132,12 @@ following the instructions at:\n"""
         sublime.DRAW_EMPTY |
         sublime.DRAW_NO_FILL |
         sublime.DRAW_NO_OUTLINE |
-        sublime.DRAW_SQUIGGLY_UNDERLINE |
-        sublime.HIDE_ON_MINIMAP)
+        sublime.DRAW_SQUIGGLY_UNDERLINE)
     else:
       icon = ".." + os.path.sep + packageName + os.path.sep + "warning"
       self.view.add_regions("jshint_errors", regions, "keyword", icon,
         sublime.DRAW_EMPTY |
-        sublime.DRAW_OUTLINED |
-        sublime.HIDE_ON_MINIMAP)
+        sublime.DRAW_OUTLINED)
 
   def on_chosen(self, index):
     if index == -1:
