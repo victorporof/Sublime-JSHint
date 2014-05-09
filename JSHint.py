@@ -107,20 +107,16 @@ following the instructions at:\n"""
         except:
           continue
 
-        symbolname = re.match("('[^']+')", description)
-
-        text_point = self.view.text_point(int(lineNo) - 1, int(columnNo) - 1)
-        region = self.view.word(text_point)
-
-        if symbolname:
-          region = self.view.word(text_point)
+        symbolName = re.match("('[^']+')", description)
+        hintPoint = self.view.text_point(int(lineNo) - 1, int(columnNo) - 1)
+        if symbolName:
+          hintRegion = self.view.word(hintPoint)
         else:
-          region = self.view.line(text_point)
+          hintRegion = self.view.line(hintPoint)
 
         menuitems.append(lineNo + ":" + columnNo + " " + description)
-
-        regions.append(region)
-        JshintListener.errors.append((region, description))
+        regions.append(hintRegion)
+        JshintListener.errors.append((hintRegion, description))
 
       if show_regions:
         self.add_regions(regions)
