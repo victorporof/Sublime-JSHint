@@ -26,6 +26,9 @@
   function isTrue(value) {
     return value == "true" || value == true;
   }
+  function getUserHome() {
+    return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
+  }
   function getOptions(file) {
     try {
       require("jsonminify");
@@ -71,8 +74,9 @@
   var jshintrc = ".jshintrc";
   var packagejson = "package.json";
   var pluginFolder = path.dirname(__dirname);
-  var currentFolder = path.dirname(filePath);
-  var lastCurrentFolder;
+  var sourceFolder = path.dirname(filePath);
+  var jshintrcPath;
+  var lastSourceFolder;
   var jshintrcPath;
   var packagejsonPath;
 
@@ -86,21 +90,24 @@
   }
 
   // When a JSHint config file exists in the same directory as the source file,
-  // or any directory above it, then use this configuration to overwrite the
-  // default prefs.
-  while (currentFolder !== lastCurrentFolder) {
-    lastCurrentFolder = currentFolder;
-    if (fs.existsSync(jshintrcPath = currentFolder + path.sep + jshintrc)) {
+  // any directory above, or the user's home folder, then use that configuration
+  // to overwrite the default prefs.
+  var sourceFolderParts = path.resolve(sourceFolder).split(path.sep);
+
+  var pathsToLook = sourceFolderParts.map(function(value, key) {
+    return sourceFolderParts.slice(0, key + 1).join(path.sep);
+  });
+
+  // Start with the current directory first, end with the user's home folder.
+  pathsToLook.reverse();
+  pathsToLook.push(getUserHome());
+
+  pathsToLook.some(function(pathToLook) {
+    if (fs.existsSync(jshintrcPath = path.join(pathToLook, jshintrc))) {
       setOptions(jshintrcPath, options, globals);
-      break; // Stop at the first found JSHint config file.
-    } else if (fs.existsSync(packagejsonPath = currentFolder + path.sep + packagejson)) {
-      var success = setOptions(packagejsonPath, options, globals);
-      if (success !== false) {
-        break; // Stop at the first package.json with JSHint config.
-      }
+      return true;
     }
-    currentFolder = path.dirname(currentFolder);
-  }
+  });
 
   // Read the source file and, when done, lint the code.
   fs.readFile(tempPath, "utf8", function(err, data) {
