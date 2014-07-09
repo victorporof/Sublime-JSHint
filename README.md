@@ -118,7 +118,7 @@ See the documentation at [jshint.com](http://www.jshint.com/docs/) and a few exa
 
 ## Alternative for NPM packages
 Alternatively for an NPM package, you can omit the `.jshintrc` file and instead place your jshint options in your `package.json` file as the property `jshintConfig`<sup>[1](http://jshint.com/blog/2013-08-02/npm/)</sup>.
-Check an example [here](https://github.com/jshint/jshint/blob/master/package.json#L51).
+Check an example [here](https://github.com/jshint/jshint/blob/master/package.json).
 
 A few persistent options are always applied from a `.jshintrc` file located in the same directory as the plugin, if not overwritten by your own `.jshintrc` file. Those are defined [here](https://github.com/victorporof/Sublime-JSHint/blob/master/.jshintrc). You can safely add stuff to that json file if you want:
 
