@@ -109,6 +109,8 @@
     }
   });
 
+  log("Using JSHint options: " + JSON.stringify(options));
+
   // Read the source file and, when done, lint the code.
   fs.readFile(tempPath, "utf8", function(err, data) {
     if (err) {

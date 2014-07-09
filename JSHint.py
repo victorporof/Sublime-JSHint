@@ -88,6 +88,10 @@ following the instructions at:\n"""
         sublime.error_message(msg)
       return
 
+    # Dump any diagnostics from run.js
+    diag = output[:output.find(OUTPUT_VALID)]
+    print(diag)
+
     # Remove the output identification marker (first line).
     output = output[len(OUTPUT_VALID) + 1:]
 
