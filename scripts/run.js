@@ -76,8 +76,6 @@
   var pluginFolder = path.dirname(__dirname);
   var sourceFolder = path.dirname(filePath);
   var jshintrcPath;
-  var lastSourceFolder;
-  var jshintrcPath;
   var packagejsonPath;
 
   // Older versions of node has `existsSync` in the path module, not fs. Meh.
