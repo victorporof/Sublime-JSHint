@@ -29,7 +29,7 @@
   function getUserHome() {
     return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
   }
-  function getOptions(file) {
+  function parseOptions(file) {
     try {
       require("jsonminify");
       return JSON.parse(JSON.minify(fs.readFileSync(file, "utf8")));
@@ -38,7 +38,7 @@
     }
   }
   function setOptions(file, optionsStore, globalsStore) {
-    var obj = getOptions(file);
+    var obj = parseOptions(file);
     // Handle jshintConfig on package.json (NPM) files
     if (obj.jshintConfig) {
       obj = obj.jshintConfig;
