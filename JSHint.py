@@ -88,11 +88,12 @@ following the instructions at:\n"""
       return
 
     # Dump any diagnostics from run.js
-    diag = output[:output.find(OUTPUT_VALID)]
-    print(diag.decode())
+    diagEndIndex = output.find(OUTPUT_VALID)
+    diagMessage = output[:diagEndIndex]
+    print(diagMessage.decode())
 
     # Remove the output identification marker (first line).
-    output = output[len(OUTPUT_VALID) + 1:]
+    output = output[diagEndIndex + len(OUTPUT_VALID) + 1:]
 
     # We're done with linting, rebuild the regions shown in the current view.
     self.view.erase_regions("jshint_errors")
