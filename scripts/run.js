@@ -45,7 +45,7 @@
       if (obj.jshintConfig) {
         obj = obj.jshintConfig;
       } else {
-        return;
+        return false;
       }
     }
 
@@ -73,6 +73,9 @@
         }
       }
     }
+
+    // Options were set successfully.
+    return true;
   }
 
   var jshintrc = ".jshintrc";
@@ -106,12 +109,10 @@
 
   pathsToLook.some(function(pathToLook) {
     if (fs.existsSync(jshintrcPath = path.join(pathToLook, jshintrc))) {
-      setOptions(jshintrcPath, false, options, globals);
-      return true;
+      return setOptions(jshintrcPath, false, options, globals);
     }
     if (fs.existsSync(packagejsonPath = path.join(pathToLook, packagejson))) {
-      setOptions(packagejsonPath, true, options, globals);
-      return true;
+      return setOptions(packagejsonPath, true, options, globals);
     }
   });
 
