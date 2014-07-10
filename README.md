@@ -31,7 +31,7 @@ These are for Sublime Text 3:
 `git clone https://github.com/victorporof/Sublime-JSHint.git ~/.config/sublime-text-3/Packages/Sublime-JSHint`
 
 #### Windows
-`git clone https://github.com/victorporof/Sublime-JSHint.git %APPDATA%/Sublime\ Text\ 3/Packages/Sublime-JSHint`
+`git clone https://github.com/victorporof/Sublime-JSHint.git "%APPDATA%/Sublime Text 3/Packages/Sublime-JSHint"`
 
 ## Usage
 Tools -> Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) and type `jshint`.
