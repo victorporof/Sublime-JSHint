@@ -116,7 +116,8 @@
     }
   });
 
-  log("Using JSHint options: " + JSON.stringify(options));
+  log("Using JSHint options: " + JSON.stringify(options) +
+      " with globals: " + JSON.stringify(Object.keys(globals)));
 
   // Read the source file and, when done, lint the code.
   fs.readFile(tempPath, "utf8", function(err, data) {
