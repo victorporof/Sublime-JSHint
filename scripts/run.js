@@ -53,7 +53,7 @@
       var value = obj[key];
       // Globals are defined as an object, with keys as names, and a boolean
       // value to determine if they are assignable.
-      if (key == "global" || key == "globals" || key == "predef") {
+      if (key == "globals" || key == "predef") {
         if (value instanceof Array) {
           value.forEach(function(name) {
             globalsStore[name] = true;
