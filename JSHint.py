@@ -90,7 +90,7 @@ following the instructions at:\n"""
 
     # Dump any diagnostics from run.js
     diag = output[:output.find(OUTPUT_VALID)]
-    print(diag)
+    print(diag.decode())
 
     # Remove the output identification marker (first line).
     output = output[len(OUTPUT_VALID) + 1:]
