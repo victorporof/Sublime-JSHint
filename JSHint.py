@@ -29,19 +29,6 @@ class JshintCommand(sublime_plugin.TextCommand):
     if hasJsonSyntax or (not hasJsExtension and not hasJsSyntax):
       return
 
-    if PLUGIN_FOLDER.find(u".sublime-package") != -1:
-      # Can't use this plugin if installed via the Package Manager in Sublime
-      # Text 3, because it will be zipped into a .sublime-package archive.
-      # Thus executing scripts *located inside this archive* via node.js
-      # will, unfortunately, not be possible.
-      url = "https://github.com/victorporof/Sublime-JSHint#manually"
-      msg = """You won't be able to use this plugin in Sublime Text 3 when \
-installed via the Package Manager.\n\nPlease remove it and install manually, \
-following the instructions at:\n"""
-      sublime.ok_cancel_dialog(msg + url)
-      webbrowser.open(url)
-      return
-
     # Get the current text in the buffer.
     bufferText = self.view.substr(sublime.Region(0, self.view.size()))
     # ...and save it in a temporary file. This allows for scratch buffers
