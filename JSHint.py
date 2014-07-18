@@ -19,61 +19,25 @@ OUTPUT_VALID = b"*** JSHint output ***"
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit, show_regions=True, show_panel=True):
-    JshintEventListeners.reset()
-
     # Make sure we're only linting javascript files.
     if self.file_unsupported():
       return
 
-    # Get the current text in the buffer.
-    bufferText = self.view.substr(sublime.Region(0, self.view.size()))
-    # ...and save it in a temporary file. This allows for scratch buffers
-    # and dirty files to be linted as well.
-    namedTempFile = ".__temp__"
-    tempPath = PLUGIN_FOLDER + "/" + namedTempFile
-    print("Saving buffer to: " + tempPath)
-    f = codecs.open(tempPath, mode='w', encoding='utf-8')
-    f.write(bufferText)
-    f.close()
+    # Get the current text in the buffer and save it in a temporary file.
+    # This allows for scratch buffers and dirty files to be linted as well.
+    temp_file_path = self.save_buffer_to_temp_file()
+    print("Saved buffer to: " + temp_file_path)
 
-    node = PluginUtils.get_node_path()
-    output = ""
-    try:
-      filePath = self.view.file_name()
-      scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
-      output = PluginUtils.get_output([node, scriptPath, tempPath, filePath or "?"])
+    output = self.run_script_on_file(temp_file_path)
+    os.remove(temp_file_path)
 
-      # Make sure the correct/expected output is retrieved.
-      if output.find(OUTPUT_VALID) == -1:
-        print(output)
-        cmd = node + " " + scriptPath + " " + tempPath + " " + filePath
-        msg = "Command " + cmd + " created invalid output"
-        raise Exception(msg)
-
-    except:
-      # Something bad happened.
-      print("Unexpected error({0}): {1}".format(sys.exc_info()[0], sys.exc_info()[1]))
-
-      # Usually, it's just node.js not being found. Try to alleviate the issue.
-      msg = "Node.js was not found in the default path. Please specify the location."
-      if sublime.ok_cancel_dialog(msg):
-        PluginUtils.open_sublime_settings(self.view.window())
-      else:
-        msg = "You won't be able to use this plugin without specifying the path to Node.js."
-        sublime.error_message(msg)
-      return
-
-    # Dump any diagnostics from run.js
-    diagEndIndex = output.find(OUTPUT_VALID)
-    diagMessage = output[:diagEndIndex]
-    print(diagMessage.decode())
-
-    # Remove the output identification marker (first line).
-    output = output[diagEndIndex + len(OUTPUT_VALID) + 1:]
+    # Dump any diagnostics and get the output after the identification marker.
+    print(self.get_output_diagnostics(output))
+    output = self.get_output_data(output)
 
     # We're done with linting, rebuild the regions shown in the current view.
+    JshintEventListeners.reset()
     self.view.erase_regions("jshint_errors")
-    os.remove(tempPath)
 
     if len(output) > 0:
       regions = []
@@ -81,7 +45,7 @@ class JshintCommand(sublime_plugin.TextCommand):
 
       # For each line of jshint output (errors, warnings etc.) add a region
       # in the view and a menuitem in a quick panel.
-      for line in output.decode().splitlines():
+      for line in output.splitlines():
         try:
           lineNo, columnNo, description = line.split(" :: ")
         except:
@@ -110,6 +74,51 @@ class JshintCommand(sublime_plugin.TextCommand):
     has_js_syntax = bool(re.search("JavaScript", view_settings.get("syntax"), re.I))
     has_json_syntax = bool(re.search("JSON", view_settings.get("syntax"), re.I))
     return has_json_syntax or (not has_js_extension and not has_js_syntax)
+
+  def save_buffer_to_temp_file(self):
+    buffer_text = self.view.substr(sublime.Region(0, self.view.size()))
+    temp_file_name = ".__temp__"
+    temp_file_path = PLUGIN_FOLDER + "/" + temp_file_name
+    f = codecs.open(temp_file_path, mode="w", encoding="utf-8")
+    f.write(buffer_text)
+    f.close()
+    return temp_file_path
+
+  def run_script_on_file(self, temp_file_path):
+    try:
+      node_path = PluginUtils.get_node_path()
+      script_path = PLUGIN_FOLDER + "/scripts/run.js"
+      file_path = self.view.file_name()
+      cmd = [node_path, script_path, temp_file_path, file_path or "?"]
+      output = PluginUtils.get_output(cmd)
+
+      # Make sure the correct/expected output is retrieved.
+      if output.find(OUTPUT_VALID) != -1:
+        return output
+
+      msg = "Command " + '" "'.join(cmd) + " created invalid output."
+      print(output)
+      raise Exception(msg)
+
+    except:
+      # Something bad happened.
+      print("Unexpected error({0}): {1}".format(sys.exc_info()[0], sys.exc_info()[1]))
+
+      # Usually, it's just node.js not being found. Try to alleviate the issue.
+      msg = "Node.js was not found in the default path. Please specify the location."
+      if not sublime.ok_cancel_dialog(msg):
+        msg = "You won't be able to use this plugin without specifying the path to node.js."
+        sublime.error_message(msg)
+      else:
+        PluginUtils.open_sublime_settings(self.view.window())
+
+  def get_output_diagnostics(self, output):
+    index = output.find(OUTPUT_VALID)
+    return output[:index].decode("utf-8")
+
+  def get_output_data(self, output):
+    index = output.find(OUTPUT_VALID)
+    return output[index + len(OUTPUT_VALID) + 1:].decode("utf-8")
 
   def add_regions(self, regions):
     packageName = (PLUGIN_FOLDER.split(os.path.sep))[-1]
