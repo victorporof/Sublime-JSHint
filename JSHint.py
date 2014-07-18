@@ -163,30 +163,6 @@ following the instructions at:\n"""
     self.view.erase_regions("jshint_selected")
     self.view.add_regions("jshint_selected", [region], "meta")
 
-class JshintSetLintingPrefsCommand(sublime_plugin.TextCommand):
-  def run(self, edit):
-    open_jshint_rc(self.view.window())
-
-class JshintSetPluginOptionsCommand(sublime_plugin.TextCommand):
-  def run(self, edit):
-    open_jshint_sublime_settings(self.view.window())
-
-class JshintSetKeyboardShortcutsCommand(sublime_plugin.TextCommand):
-  def run(self, edit):
-    open_jshint_sublime_keymap(self.view.window(), {
-      "windows": "Windows", "linux": "Linux", "osx": "OSX"
-    }.get(sublime.platform()))
-
-class JshintSetNodePathCommand(sublime_plugin.TextCommand):
-  def run(self, edit):
-    open_jshint_sublime_settings(self.view.window())
-
-class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
-  def run(self, edit):
-    JshintListener.reset()
-    self.view.erase_regions("jshint_errors")
-    self.view.erase_regions("jshint_selected")
-
 class JshintListener(sublime_plugin.EventListener):
   timer = None
   errors = []
@@ -247,6 +223,30 @@ class JshintListener(sublime_plugin.EventListener):
         return
     else:
       sublime.status_message("")
+
+class JshintSetLintingPrefsCommand(sublime_plugin.TextCommand):
+  def run(self, edit):
+    open_jshint_rc(self.view.window())
+
+class JshintSetPluginOptionsCommand(sublime_plugin.TextCommand):
+  def run(self, edit):
+    open_jshint_sublime_settings(self.view.window())
+
+class JshintSetKeyboardShortcutsCommand(sublime_plugin.TextCommand):
+  def run(self, edit):
+    open_jshint_sublime_keymap(self.view.window(), {
+      "windows": "Windows", "linux": "Linux", "osx": "OSX"
+    }.get(sublime.platform()))
+
+class JshintSetNodePathCommand(sublime_plugin.TextCommand):
+  def run(self, edit):
+    open_jshint_sublime_settings(self.view.window())
+
+class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
+  def run(self, edit):
+    JshintListener.reset()
+    self.view.erase_regions("jshint_errors")
+    self.view.erase_regions("jshint_selected")
 
 def open_jshint_rc(window):
   window.open_file(PLUGIN_FOLDER + "/" + RC_FILE)
