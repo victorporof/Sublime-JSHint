@@ -46,20 +46,20 @@ class JshintCommand(sublime_plugin.TextCommand):
     # in the view and a menuitem in a quick panel.
     for line in output.splitlines():
       try:
-        lineNo, columnNo, description = line.split(" :: ")
+        line_no, column_no, description = line.split(" :: ")
       except:
         continue
 
-      symbolName = re.match("('[^']+')", description)
-      hintPoint = self.view.text_point(int(lineNo) - 1, int(columnNo) - 1)
-      if symbolName:
-        hintRegion = self.view.word(hintPoint)
+      symbol_name = re.match("('[^']+')", description)
+      hint_point = self.view.text_point(int(line_no) - 1, int(column_no) - 1)
+      if symbol_name:
+        hint_region = self.view.word(hint_point)
       else:
-        hintRegion = self.view.line(hintPoint)
+        hint_region = self.view.line(hint_point)
 
-      menuitems.append(lineNo + ":" + columnNo + " " + description)
-      regions.append(hintRegion)
-      JshintEventListeners.errors.append((hintRegion, description))
+      regions.append(hint_region)
+      menuitems.append(line_no + ":" + column_no + " " + description)
+      JshintEventListeners.errors.append((hint_region, description))
 
     if show_regions:
       self.add_regions(regions)
