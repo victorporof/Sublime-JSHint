@@ -19,7 +19,7 @@ OUTPUT_VALID = b"*** JSHint output ***"
 
 class JshintCommand(sublime_plugin.TextCommand):
   def run(self, edit, show_regions=True, show_panel=True):
-    JshintListener.reset()
+    JshintEventListeners.reset()
 
     # Make sure we're only linting javascript files.
     filePath = self.view.file_name()
@@ -122,7 +122,7 @@ following the instructions at:\n"""
 
         menuitems.append(lineNo + ":" + columnNo + " " + description)
         regions.append(hintRegion)
-        JshintListener.errors.append((hintRegion, description))
+        JshintEventListeners.errors.append((hintRegion, description))
 
       if show_regions:
         self.add_regions(regions)
@@ -150,7 +150,7 @@ following the instructions at:\n"""
       return
 
     # Focus the user requested region from the quick panel.
-    region = JshintListener.errors[index][0]
+    region = JshintEventListeners.errors[index][0]
     region_cursor = sublime.Region(region.begin(), region.begin())
     selection = self.view.sel()
     selection.clear()
@@ -163,13 +163,13 @@ following the instructions at:\n"""
     self.view.erase_regions("jshint_selected")
     self.view.add_regions("jshint_selected", [region], "meta")
 
-class JshintListener(sublime_plugin.EventListener):
+class JshintEventListeners(sublime_plugin.EventListener):
   timer = None
   errors = []
 
   @staticmethod
   def reset():
-    self = JshintListener
+    self = JshintEventListeners
 
     # Invalidate any previously set timer.
     if self.timer != None:
@@ -180,7 +180,7 @@ class JshintListener(sublime_plugin.EventListener):
 
   @staticmethod
   def on_modified(view):
-    self = JshintListener
+    self = JshintEventListeners
     plugin_settings = sublime.load_settings(SETTINGS_FILE)
 
     # Continue only if the plugin settings allow this to happen.
@@ -217,7 +217,7 @@ class JshintListener(sublime_plugin.EventListener):
   def on_selection_modified(view):
     caret_region = view.sel()[0]
 
-    for message_region, message_text in JshintListener.errors:
+    for message_region, message_text in JshintEventListeners.errors:
       if message_region.intersects(caret_region):
         sublime.status_message(message_text)
         return
@@ -244,7 +244,7 @@ class JshintSetNodePathCommand(sublime_plugin.TextCommand):
 
 class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
-    JshintListener.reset()
+    JshintEventListeners.reset()
     self.view.erase_regions("jshint_errors")
     self.view.erase_regions("jshint_selected")
 
