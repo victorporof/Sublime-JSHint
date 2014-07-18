@@ -119,17 +119,17 @@ class JshintCommand(sublime_plugin.TextCommand):
     return output[index + len(OUTPUT_VALID) + 1:].decode("utf-8")
 
   def add_regions(self, regions):
-    packageName = (PLUGIN_FOLDER.split(os.path.sep))[-1]
+    package_name = (PLUGIN_FOLDER.split(os.path.sep))[-1]
 
     if int(sublime.version()) >= 3000:
-      icon = "Packages/" + packageName + "/warning.png"
+      icon = "Packages/" + package_name + "/warning.png"
       self.view.add_regions("jshint_errors", regions, "keyword", icon,
         sublime.DRAW_EMPTY |
         sublime.DRAW_NO_FILL |
         sublime.DRAW_NO_OUTLINE |
         sublime.DRAW_SQUIGGLY_UNDERLINE)
     else:
-      icon = ".." + os.path.sep + packageName + os.path.sep + "warning"
+      icon = ".." + os.path.sep + package_name + os.path.sep + "warning"
       self.view.add_regions("jshint_errors", regions, "keyword", icon,
         sublime.DRAW_EMPTY |
         sublime.DRAW_OUTLINED)
