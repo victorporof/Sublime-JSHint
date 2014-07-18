@@ -26,8 +26,6 @@ class JshintCommand(sublime_plugin.TextCommand):
     # Get the current text in the buffer and save it in a temporary file.
     # This allows for scratch buffers and dirty files to be linted as well.
     temp_file_path = self.save_buffer_to_temp_file()
-    print("Saved buffer to: " + temp_file_path)
-
     output = self.run_script_on_file(temp_file_path)
     os.remove(temp_file_path)
 
