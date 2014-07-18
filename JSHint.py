@@ -239,7 +239,14 @@ class JshintListener(sublime_plugin.EventListener):
 
   @staticmethod
   def on_selection_modified(view):
-    display_to_status_bar(view, JshintListener.errors)
+    caret_region = view.sel()[0]
+
+    for message_region, message_text in JshintListener.errors:
+      if message_region.intersects(caret_region):
+        sublime.status_message(message_text)
+        return
+    else:
+      sublime.status_message("")
 
 def open_jshint_rc(window):
   window.open_file(PLUGIN_FOLDER + "/" + RC_FILE)
@@ -285,13 +292,3 @@ def get_output(cmd):
     # Handle all OS in Python 3.
     run = '"' + '" "'.join(cmd) + '"'
     return subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True)
-
-def display_to_status_bar(view, regions_to_descriptions):
-  caret_region = view.sel()[0]
-
-  for message_region, message_text in regions_to_descriptions:
-    if message_region.intersects(caret_region):
-      sublime.status_message(message_text)
-      return
-  else:
-    sublime.status_message("")
