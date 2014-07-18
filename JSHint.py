@@ -39,33 +39,32 @@ class JshintCommand(sublime_plugin.TextCommand):
     JshintEventListeners.reset()
     self.view.erase_regions("jshint_errors")
 
-    if len(output) > 0:
-      regions = []
-      menuitems = []
+    regions = []
+    menuitems = []
 
-      # For each line of jshint output (errors, warnings etc.) add a region
-      # in the view and a menuitem in a quick panel.
-      for line in output.splitlines():
-        try:
-          lineNo, columnNo, description = line.split(" :: ")
-        except:
-          continue
+    # For each line of jshint output (errors, warnings etc.) add a region
+    # in the view and a menuitem in a quick panel.
+    for line in output.splitlines():
+      try:
+        lineNo, columnNo, description = line.split(" :: ")
+      except:
+        continue
 
-        symbolName = re.match("('[^']+')", description)
-        hintPoint = self.view.text_point(int(lineNo) - 1, int(columnNo) - 1)
-        if symbolName:
-          hintRegion = self.view.word(hintPoint)
-        else:
-          hintRegion = self.view.line(hintPoint)
+      symbolName = re.match("('[^']+')", description)
+      hintPoint = self.view.text_point(int(lineNo) - 1, int(columnNo) - 1)
+      if symbolName:
+        hintRegion = self.view.word(hintPoint)
+      else:
+        hintRegion = self.view.line(hintPoint)
 
-        menuitems.append(lineNo + ":" + columnNo + " " + description)
-        regions.append(hintRegion)
-        JshintEventListeners.errors.append((hintRegion, description))
+      menuitems.append(lineNo + ":" + columnNo + " " + description)
+      regions.append(hintRegion)
+      JshintEventListeners.errors.append((hintRegion, description))
 
-      if show_regions:
-        self.add_regions(regions)
-      if show_panel:
-        self.view.window().show_quick_panel(menuitems, self.on_chosen)
+    if show_regions:
+      self.add_regions(regions)
+    if show_panel:
+      self.view.window().show_quick_panel(menuitems, self.on_chosen)
 
   def file_unsupported(self):
     file_path = self.view.file_name()
