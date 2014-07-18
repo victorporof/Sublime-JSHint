@@ -36,6 +36,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     output = self.get_output_data(output)
 
     # We're done with linting, rebuild the regions shown in the current view.
+    JshintGlobalStore.reset()
     JshintEventListeners.reset()
     self.view.erase_regions("jshint_errors")
 
@@ -59,12 +60,12 @@ class JshintCommand(sublime_plugin.TextCommand):
 
       regions.append(hint_region)
       menuitems.append(line_no + ":" + column_no + " " + description)
-      JshintEventListeners.errors.append((hint_region, description))
+      JshintGlobalStore.errors.append((hint_region, description))
 
     if show_regions:
       self.add_regions(regions)
     if show_panel:
-      self.view.window().show_quick_panel(menuitems, self.on_chosen)
+      self.view.window().show_quick_panel(menuitems, self.on_quick_panel_selection)
 
   def file_unsupported(self):
     file_path = self.view.file_name()
@@ -135,12 +136,12 @@ class JshintCommand(sublime_plugin.TextCommand):
         sublime.DRAW_EMPTY |
         sublime.DRAW_OUTLINED)
 
-  def on_chosen(self, index):
+  def on_quick_panel_selection(self, index):
     if index == -1:
       return
 
     # Focus the user requested region from the quick panel.
-    region = JshintEventListeners.errors[index][0]
+    region = JshintGlobalStore.errors[index][0]
     region_cursor = sublime.Region(region.begin(), region.begin())
     selection = self.view.sel()
     selection.clear()
@@ -153,24 +154,25 @@ class JshintCommand(sublime_plugin.TextCommand):
     self.view.erase_regions("jshint_selected")
     self.view.add_regions("jshint_selected", [region], "meta")
 
-class JshintEventListeners(sublime_plugin.EventListener):
-  timer = None
+class JshintGlobalStore:
   errors = []
 
-  @staticmethod
-  def reset():
-    self = JshintEventListeners
+  @classmethod
+  def reset(self):
+    self.errors = []
 
+class JshintEventListeners(sublime_plugin.EventListener):
+  timer = None
+
+  @classmethod
+  def reset(self):
     # Invalidate any previously set timer.
     if self.timer != None:
       self.timer.cancel()
+      self.timer = None
 
-    self.timer = None
-    self.errors = []
-
-  @staticmethod
-  def on_modified(view):
-    self = JshintEventListeners
+  @classmethod
+  def on_modified(self, view):
     # Continue only if the plugin settings allow this to happen.
     # This is only available in Sublime 3.
     if int(sublime.version()) < 3000:
@@ -181,8 +183,7 @@ class JshintEventListeners(sublime_plugin.EventListener):
     # Re-run the jshint command after a second of inactivity after the view
     # has been modified, to avoid regions getting out of sync with the actual
     # previously linted source code.
-    if self.timer != None:
-      self.timer.cancel()
+    self.reset()
 
     timeout = PluginUtils.get_pref("lint_on_edit_timeout")
     self.timer = Timer(timeout, lambda: view.window().run_command("jshint", { "show_panel": False }))
@@ -205,7 +206,7 @@ class JshintEventListeners(sublime_plugin.EventListener):
   def on_selection_modified(view):
     caret_region = view.sel()[0]
 
-    for message_region, message_text in JshintEventListeners.errors:
+    for message_region, message_text in JshintGlobalStore.errors:
       if message_region.intersects(caret_region):
         sublime.status_message(message_text)
         return
