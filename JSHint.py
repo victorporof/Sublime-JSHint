@@ -296,7 +296,9 @@ class PluginUtils:
         # Prevent console window from showing.
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        return subprocess.Popen(cmd, stdout=subprocess.PIPE, startupinfo=startupinfo).communicate()[0]
+        return subprocess.Popen(cmd, \
+          stdout=subprocess.PIPE, \
+          startupinfo=startupinfo).communicate()[0]
     else:
       # Handle all OS in Python 3.
       run = '"' + '" "'.join(cmd) + '"'
