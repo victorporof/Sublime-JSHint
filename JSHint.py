@@ -225,7 +225,9 @@ class JshintSetPluginOptionsCommand(sublime_plugin.TextCommand):
 class JshintSetKeyboardShortcutsCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     PluginUtils.open_sublime_keymap(self.view.window(), {
-      "windows": "Windows", "linux": "Linux", "osx": "OSX"
+      "windows": "Windows",
+      "linux": "Linux",
+      "osx": "OSX"
     }.get(sublime.platform()))
 
 class JshintSetNodePathCommand(sublime_plugin.TextCommand):
