@@ -147,7 +147,7 @@ following the instructions at:\n"""
     selection.add(region_cursor)
     self.view.show(region_cursor)
 
-    if not sublime.load_settings(SETTINGS_FILE).get("highlight_selected_regions"):
+    if not PluginUtils.get_pref("highlight_selected_regions"):
       return
 
     self.view.erase_regions("jshint_selected")
@@ -171,13 +171,11 @@ class JshintEventListeners(sublime_plugin.EventListener):
   @staticmethod
   def on_modified(view):
     self = JshintEventListeners
-    plugin_settings = sublime.load_settings(SETTINGS_FILE)
-
     # Continue only if the plugin settings allow this to happen.
     # This is only available in Sublime 3.
     if int(sublime.version()) < 3000:
       return
-    if not plugin_settings.get("lint_on_edit"):
+    if not PluginUtils.get_pref("lint_on_edit"):
       return
 
     # Re-run the jshint command after a second of inactivity after the view
@@ -186,20 +184,20 @@ class JshintEventListeners(sublime_plugin.EventListener):
     if self.timer != None:
       self.timer.cancel()
 
-    timeout = plugin_settings.get("lint_on_edit_timeout")
+    timeout = PluginUtils.get_pref("lint_on_edit_timeout")
     self.timer = Timer(timeout, lambda: view.window().run_command("jshint", { "show_panel": False }))
     self.timer.start()
 
   @staticmethod
   def on_post_save(view):
     # Continue only if the current plugin settings allow this to happen.
-    if sublime.load_settings(SETTINGS_FILE).get("lint_on_save"):
+    if PluginUtils.get_pref("lint_on_save"):
       view.window().run_command("jshint", { "show_panel": False })
 
   @staticmethod
   def on_load(view):
     # Continue only if the current plugin settings allow this to happen.
-    if sublime.load_settings(SETTINGS_FILE).get("lint_on_load"):
+    if PluginUtils.get_pref("lint_on_load"):
       v = view.window() if int(sublime.version()) < 3000 else view
       v.run_command("jshint", { "show_panel": False })
 
@@ -242,6 +240,10 @@ class JshintClearAnnotationsCommand(sublime_plugin.TextCommand):
 
 class PluginUtils:
   @staticmethod
+  def get_pref(key):
+    return sublime.load_settings(SETTINGS_FILE).get(key)
+
+  @staticmethod
   def open_config_rc(window):
     window.open_file(PLUGIN_FOLDER + "/" + RC_FILE)
 
@@ -278,9 +280,8 @@ class PluginUtils:
     elif PluginUtils.exists_in_path("node"):
       return "node"
     else:
-      settings = sublime.load_settings(SETTINGS_FILE)
       platform = sublime.platform();
-      node = settings.get("node_path").get(platform)
+      node = PluginUtils.get_pref("node_path").get(platform)
       print("Using node.js path on '" + platform + "': " + node)
       return node
 
