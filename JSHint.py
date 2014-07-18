@@ -22,11 +22,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     JshintEventListeners.reset()
 
     # Make sure we're only linting javascript files.
-    filePath = self.view.file_name()
-    hasJsExtension = filePath != None and bool(re.search(r'\.jsm?$', filePath))
-    hasJsSyntax = bool(re.search("JavaScript", self.view.settings().get("syntax"), re.I))
-    hasJsonSyntax = bool(re.search("JSON", self.view.settings().get("syntax"), re.I))
-    if hasJsonSyntax or (not hasJsExtension and not hasJsSyntax):
+    if self.file_unsupported():
       return
 
     # Get the current text in the buffer.
@@ -43,6 +39,7 @@ class JshintCommand(sublime_plugin.TextCommand):
     node = PluginUtils.get_node_path()
     output = ""
     try:
+      filePath = self.view.file_name()
       scriptPath = PLUGIN_FOLDER + "/scripts/run.js"
       output = PluginUtils.get_output([node, scriptPath, tempPath, filePath or "?"])
 
@@ -105,6 +102,14 @@ class JshintCommand(sublime_plugin.TextCommand):
         self.add_regions(regions)
       if show_panel:
         self.view.window().show_quick_panel(menuitems, self.on_chosen)
+
+  def file_unsupported(self):
+    file_path = self.view.file_name()
+    view_settings = self.view.settings()
+    has_js_extension = file_path != None and bool(re.search(r'\.jsm?$', file_path))
+    has_js_syntax = bool(re.search("JavaScript", view_settings.get("syntax"), re.I))
+    has_json_syntax = bool(re.search("JSON", view_settings.get("syntax"), re.I))
+    return has_json_syntax or (not has_js_extension and not has_js_syntax)
 
   def add_regions(self, regions):
     packageName = (PLUGIN_FOLDER.split(os.path.sep))[-1]
