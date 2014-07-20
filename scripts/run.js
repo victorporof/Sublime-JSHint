@@ -50,6 +50,7 @@ pathsToLook.some(function(pathToLook) {
   }
 });
 
+// Dump some diagnostics messages, parsed out by the plugin.
 console.log("Using JSHint globals: " + JSON.stringify(globals));
 console.log("Using JSHint options: " + JSON.stringify(options, null, 2));
 
