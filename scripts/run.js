@@ -9,6 +9,10 @@ var fs = require("fs");
 var jshint = require("jshint/src/jshint.js").JSHINT;
 var minify = require("jsonminify");
 
+// Older versions of node have `existsSync` in the `path` module, not `fs`. Meh.
+fs.existsSync = fs.existsSync || path.existsSync;
+path.sep = path.sep || "/";
+
 var tempPath = process.argv[2] || ""; // The source file to be linted.
 var filePath = process.argv[3] || ""; // The original source's path.
 var pluginFolder = path.dirname(__dirname);
@@ -75,10 +79,6 @@ function setOptions(file, isPackageJSON, optionsStore, globalsStore) {
 
 var jshintrcPath;
 var packagejsonPath;
-
-// Older versions of node has `existsSync` in the path module, not fs. Meh.
-fs.existsSync = fs.existsSync || path.existsSync;
-path.sep = path.sep || "/";
 
 // Try and get some persistent options from the plugin folder.
 if (fs.existsSync(jshintrcPath = pluginFolder + path.sep + ".jshintrc")) {
