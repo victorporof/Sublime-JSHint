@@ -87,8 +87,6 @@ These are the default options used by this plugin:
   "globals": {},
   "globalstrict": true,
   "quotmark": true,
-  "smarttabs": true,
-  "trailing": true,
   "undef": true,
   "unused": true
 }
