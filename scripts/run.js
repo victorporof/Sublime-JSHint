@@ -6,7 +6,7 @@
 // Require path and file system utilities to load the jshint.js file.
 var path = require("path");
 var fs = require("fs");
-var jshint = require("jshint/src/jshint.js").JSHINT;
+var jshint = require("jshint").JSHINT;
 var minify = require("jsonminify");
 
 // Older versions of node have `existsSync` in the `path` module, not `fs`. Meh.
