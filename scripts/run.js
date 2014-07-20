@@ -9,9 +9,10 @@ var fs = require("fs");
 var jshint = require("jshint/src/jshint.js").JSHINT;
 var minify = require("jsonminify");
 
-// The source file to be linted, original source's path and some options.
-var tempPath = process.argv[2] || "";
-var filePath = process.argv[3] || "";
+var tempPath = process.argv[2] || ""; // The source file to be linted.
+var filePath = process.argv[3] || ""; // The original source's path.
+var pluginFolder = path.dirname(__dirname);
+var sourceFolder = path.dirname(filePath);
 var options = {};
 var globals = {};
 
@@ -44,6 +45,7 @@ function setOptions(file, isPackageJSON, optionsStore, globalsStore) {
 
   for (var key in obj) {
     var value = obj[key];
+
     // Globals are defined as an object, with keys as names, and a boolean
     // value to determine if they are assignable.
     if (key == "globals" || key == "predef") {
@@ -71,10 +73,6 @@ function setOptions(file, isPackageJSON, optionsStore, globalsStore) {
   return true;
 }
 
-var jshintrc = ".jshintrc";
-var packagejson = "package.json";
-var pluginFolder = path.dirname(__dirname);
-var sourceFolder = path.dirname(filePath);
 var jshintrcPath;
 var packagejsonPath;
 
@@ -83,7 +81,7 @@ fs.existsSync = fs.existsSync || path.existsSync;
 path.sep = path.sep || "/";
 
 // Try and get some persistent options from the plugin folder.
-if (fs.existsSync(jshintrcPath = pluginFolder + path.sep + jshintrc)) {
+if (fs.existsSync(jshintrcPath = pluginFolder + path.sep + ".jshintrc")) {
   setOptions(jshintrcPath, false, options, globals);
 }
 
@@ -101,10 +99,10 @@ pathsToLook.reverse();
 pathsToLook.push(getUserHome());
 
 pathsToLook.some(function(pathToLook) {
-  if (fs.existsSync(jshintrcPath = path.join(pathToLook, jshintrc))) {
+  if (fs.existsSync(jshintrcPath = path.join(pathToLook, ".jshintrc"))) {
     return setOptions(jshintrcPath, false, options, globals);
   }
-  if (fs.existsSync(packagejsonPath = path.join(pathToLook, packagejson))) {
+  if (fs.existsSync(packagejsonPath = path.join(pathToLook, "package.json"))) {
     return setOptions(packagejsonPath, true, options, globals);
   }
 });
