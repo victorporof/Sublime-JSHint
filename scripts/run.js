@@ -6,15 +6,14 @@
 // Require path and file system utilities to load the jshint.js file.
 var path = require("path");
 var fs = require("fs");
+var jshint = require("jshint/src/jshint.js").JSHINT;
+require("jsonminify");
 
 // The source file to be linted, original source's path and some options.
 var tempPath = process.argv[2] || "";
 var filePath = process.argv[3] || "";
 var options = Object.create(null);
 var globals = Object.create(null);
-
-// This stuff does all the magic.
-var jshint = require("jshint/src/jshint.js").JSHINT;
 
 // Some handy utility functions.
 function isTrue(value) {
@@ -25,7 +24,6 @@ function getUserHome() {
 }
 function parseOptions(file) {
   try {
-    require("jsonminify");
     return JSON.parse(JSON.minify(fs.readFileSync(file, "utf8")));
   } catch (e) {
     return Object.create(null);
