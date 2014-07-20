@@ -12,8 +12,8 @@ var minify = require("jsonminify");
 // The source file to be linted, original source's path and some options.
 var tempPath = process.argv[2] || "";
 var filePath = process.argv[3] || "";
-var options = Object.create(null);
-var globals = Object.create(null);
+var options = {};
+var globals = {};
 
 // Some handy utility functions.
 function isTrue(value) {
@@ -26,7 +26,7 @@ function parseOptions(file) {
   try {
     return JSON.parse(minify(fs.readFileSync(file, "utf8")));
   } catch (e) {
-    return Object.create(null);
+    return {};
   }
 }
 function setOptions(file, isPackageJSON, optionsStore, globalsStore) {
