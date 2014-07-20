@@ -5,17 +5,13 @@
 (function() {
   "use strict";
 
-  // Cache the console log function and the process arguments.
-  var log = console.log;
-  var argv = process.argv;
-
   // Require path and file system utilities to load the jshint.js file.
   var path = require("path");
   var fs = require("fs");
 
   // The source file to be linted, original source's path and some options.
-  var tempPath = argv[2] || "";
-  var filePath = argv[3] || "";
+  var tempPath = process.argv[2] || "";
+  var filePath = process.argv[3] || "";
   var options = Object.create(null);
   var globals = Object.create(null);
 
@@ -116,8 +112,8 @@
     }
   });
 
-  log("Using JSHint globals: " + JSON.stringify(globals));
-  log("Using JSHint options: " + JSON.stringify(options, null, 2));
+  console.log("Using JSHint globals: " + JSON.stringify(globals));
+  console.log("Using JSHint options: " + JSON.stringify(options, null, 2));
 
   // Read the source file and, when done, lint the code.
   fs.readFile(tempPath, "utf8", function(err, data) {
@@ -126,7 +122,7 @@
     }
 
     // Mark the output as being from JSHint.
-    log("*** JSHint output ***");
+    console.log("*** JSHint output ***");
 
     // If this is a markup file (html, xml, xhtml etc.), then javascript
     // is maybe present in a <script> tag. Try to extract it and lint.
@@ -184,7 +180,7 @@
             .replace("{c}", e.c)
             .replace("{d}", e.d);
 
-          log([e.line + lineOffset, e.character + charOffset, message].join(" :: "));
+          console.log([e.line + lineOffset, e.character + charOffset, message].join(" :: "));
         }
       });
   }
