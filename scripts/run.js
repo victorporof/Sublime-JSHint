@@ -20,63 +20,6 @@ var sourceFolder = path.dirname(filePath);
 var options = {};
 var globals = {};
 
-// Some handy utility functions.
-function isTrue(value) {
-  return value == "true" || value == true;
-}
-function getUserHome() {
-  return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
-}
-function parseJSON(file) {
-  try {
-    return JSON.parse(minify(fs.readFileSync(file, "utf8")));
-  } catch (e) {
-    console.log("Could not parse JSON at: " + file);
-    return {};
-  }
-}
-function setOptions(file, isPackageJSON, optionsStore, globalsStore) {
-  var obj = parseJSON(file);
-
-  // Handle jshintConfig on package.json (NPM) files
-  if (isPackageJSON) {
-    if (obj.jshintConfig) {
-      obj = obj.jshintConfig;
-    } else {
-      return false;
-    }
-  }
-
-  for (var key in obj) {
-    var value = obj[key];
-
-    // Globals are defined as an object, with keys as names, and a boolean
-    // value to determine if they are assignable.
-    if (key == "globals" || key == "predef") {
-      if (value instanceof Array) {
-        value.forEach(function(name) {
-          globalsStore[name] = true;
-        });
-      } else {
-        for (var name in value) {
-          globalsStore[name] = isTrue(value[name]);
-        }
-      }
-    } else {
-      // Special case "true" and "false" pref values as actually booleans.
-      // This avoids common accidents in .jshintrc json files.
-      if (value == "true" || value == "false") {
-        optionsStore[key] = isTrue(value);
-      } else {
-        optionsStore[key] = value;
-      }
-    }
-  }
-
-  // Options were set successfully.
-  return true;
-}
-
 var jshintrcPath;
 var packagejsonPath;
 
@@ -139,6 +82,68 @@ fs.readFile(tempPath, "utf8", function(err, data) {
     doLint(data, options, globals, 0, 0);
   }
 });
+
+// Some handy utility functions.
+
+function isTrue(value) {
+  return value == "true" || value == true;
+}
+
+function getUserHome() {
+  return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
+}
+
+function parseJSON(file) {
+  try {
+    return JSON.parse(minify(fs.readFileSync(file, "utf8")));
+  } catch (e) {
+    console.log("Could not parse JSON at: " + file);
+    return {};
+  }
+}
+
+function setOptions(file, isPackageJSON, optionsStore, globalsStore) {
+  var obj = parseJSON(file);
+
+  // Handle jshintConfig on package.json (NPM) files
+  if (isPackageJSON) {
+    if (obj.jshintConfig) {
+      obj = obj.jshintConfig;
+    } else {
+      return false;
+    }
+  }
+
+  for (var key in obj) {
+    var value = obj[key];
+
+    // Globals are defined as either an array, or an object with keys as names,
+    // and a boolean value to determine if they are assignable.
+    if (key == "globals" || key == "predef") {
+      if (value instanceof Array) {
+        for (var i = 0; i < value.length; i++) {
+          var name = value[i];
+          globalsStore[name] = true;
+        }
+      } else {
+        for (var name in value) {
+          globalsStore[name] = isTrue(value[name]);
+        }
+      }
+    } else {
+      // Special case "true" and "false" pref values as actually booleans.
+      // This avoids common accidents in .jshintrc json files.
+      if (value == "true" || value == "false") {
+        optionsStore[key] = isTrue(value);
+      } else {
+        optionsStore[key] = value;
+      }
+    }
+  }
+
+  // Options were set successfully.
+  return true;
+}
 
 function doLint(data, options, globals, lineOffset, charOffset) {
   // Lint the code and write readable error output to the console.
