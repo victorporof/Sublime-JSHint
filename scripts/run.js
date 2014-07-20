@@ -7,7 +7,7 @@
 var path = require("path");
 var fs = require("fs");
 var jshint = require("jshint/src/jshint.js").JSHINT;
-require("jsonminify");
+var minify = require("jsonminify");
 
 // The source file to be linted, original source's path and some options.
 var tempPath = process.argv[2] || "";
@@ -24,7 +24,7 @@ function getUserHome() {
 }
 function parseOptions(file) {
   try {
-    return JSON.parse(JSON.minify(fs.readFileSync(file, "utf8")));
+    return JSON.parse(minify(fs.readFileSync(file, "utf8")));
   } catch (e) {
     return Object.create(null);
   }
