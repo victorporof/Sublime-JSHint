@@ -22,6 +22,9 @@ var globals = {};
 var jshintrcPath;
 var packagejsonPath;
 
+// Mark the output as being from JSHint.
+console.log("*** JSHint output ***"); //done before parsing the options so parsing errors can show
+
 // Try and get some persistent options from the plugin folder.
 if (fs.existsSync(jshintrcPath = pluginFolder + path.sep + ".jshintrc")) {
   setOptions(jshintrcPath, false, options, globals);
@@ -59,9 +62,6 @@ fs.readFile(tempPath, "utf8", function(err, data) {
     return;
   }
 
-  // Mark the output as being from JSHint.
-  console.log("*** JSHint output ***");
-
   // If this is a markup file (html, xml, xhtml etc.), then javascript
   // is maybe present in a <script> tag. Try to extract it and lint.
   if (data.match(/^\s*</)) {
@@ -93,11 +93,31 @@ function getUserHome() {
   return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
 }
 
+function mergeOptions(source, target) {
+  for (var entry in source) {
+    if (entry === "globals") {
+      if (!target[entry]) target[entry] = {};
+      mergeOptions(source[entry], target[entry]);
+    } else {
+      target[entry] = source[entry];
+    }
+  }
+}
+
 function parseJSON(file) {
   try {
-    return JSON.parse(minify(fs.readFileSync(file, "utf8")));
+    var options = JSON.parse(minify(fs.readFileSync(file, "utf8")));
+    if (!options.extends) { return options; }
+    //get the options from base file
+    var baseFile = options.extends;
+    file = baseFile[0] === "/" ? baseFile : path.dirname(file) + "/" + baseFile;
+    var baseOptions = parseJSON(file);
+    //overwrite base options with local options
+    delete options.extends;
+    mergeOptions(options, baseOptions);
+    return baseOptions;
   } catch (e) {
-    console.log("Could not parse JSON at: " + file);
+    console.log("0 :: 0 :: Invalid options: " + file); //this will show on top of error list
     return {};
   }
 }
