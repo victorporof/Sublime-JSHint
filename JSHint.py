@@ -303,4 +303,4 @@ class PluginUtils:
     else:
       # Handle all OS in Python 3.
       run = '"' + '" "'.join(cmd) + '"'
-      return subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True, env=os.enviorn)
+      return subprocess.check_output(run, stderr=subprocess.STDOUT, shell=True, env=os.environ)
