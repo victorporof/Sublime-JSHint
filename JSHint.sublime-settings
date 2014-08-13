@@ -21,5 +21,8 @@
   "lint_on_save": false,
 
   // Highlight problematic regions when selected.
-  "highlight_selected_regions": false
+  "highlight_selected_regions": false,
+
+  // Log the settings passed to JSHint from `.jshintrc`.
+  "print_diagnostics": true
 }
