@@ -60,7 +60,7 @@ fs.readFile(tempPath, "utf8", function(err, data) {
   }
 
   // Mark the output as being from JSHint.
-  console.log("*** JSHint output ***"); //done before parsing the options so parsing errors can show
+  console.log("*** JSHint output ***");
 
   // If this is a markup file (html, xml, xhtml etc.), then javascript
   // is maybe present in a <script> tag. Try to extract it and lint.
