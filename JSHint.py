@@ -69,10 +69,10 @@ class JshintCommand(sublime_plugin.TextCommand):
   def file_unsupported(self):
     file_path = self.view.file_name()
     view_settings = self.view.settings()
-    has_js_extension = file_path != None and bool(re.search(r'\.jsm?$', file_path))
-    has_js_syntax = bool(re.search("JavaScript", view_settings.get("syntax"), re.I))
+    has_js_or_html_extension = file_path != None and bool(re.search(r'\.(jsm?|html?)$', file_path))
+    has_js_or_html_syntax = bool(re.search(r'JavaScript|HTML', view_settings.get("syntax"), re.I))
     has_json_syntax = bool(re.search("JSON", view_settings.get("syntax"), re.I))
-    return has_json_syntax or (not has_js_extension and not has_js_syntax)
+    return has_json_syntax or (not has_js_or_html_extension and not has_js_or_html_syntax)
 
   def save_buffer_to_temp_file(self):
     buffer_text = self.view.substr(sublime.Region(0, self.view.size()))
