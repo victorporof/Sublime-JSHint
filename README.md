@@ -48,7 +48,7 @@ Right click in the current buffer and select `JSHint` -> `Lint Code`.
 
 Open a JavaScript file, pop out the console in Sublime Text from View -> Show Console, and type `view.run_command("jshint")`.
 
-Writing commands in the console is ugly. Set up your own key combo for this, by going to Preferences -> Key Bindings - User, and adding a command in that array: `{ "keys": ["super+shift+j"], "command": "jshint" }`. You can use any other command you want, thought most of them are already taken.
+Writing commands in the console is ugly. Set up your own key combo for this, by going to Preferences -> Key Bindings - User, and adding a command in that array: `{ "keys": ["super+shift+j"], "command": "jshint" }`. You can use any other command you want, though most of them are already taken.
 
 ## Oh noez, command not found!
 If you get an error `sh: node: command not found` or similar, you don't have `node` in the right path. Try setting the absolute path to node in `JSHint.sublime-settings`.
