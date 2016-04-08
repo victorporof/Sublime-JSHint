@@ -51,7 +51,7 @@ class JshintCommand(sublime_plugin.TextCommand):
         continue
 
       symbol_name = re.match("('[^']+')", description)
-      hint_point = self.view.text_point(int(line_no) - 1, int(column_no) - 1)
+      hint_point = self.view.text_point(int(line_no) - 1, int(column_no if column_no != "NaN" else "1") - 1)
       if symbol_name:
         hint_region = self.view.word(hint_point)
       else:
