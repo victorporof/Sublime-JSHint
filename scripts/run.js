@@ -194,11 +194,13 @@ function doLint(data, options, globals, lineOffset, charOffset) {
 
       // Do some formatting if the error data is available.
       if (e.raw) {
-        var message = e.raw
-          .replace("{a}", e.a)
-          .replace("{b}", e.b)
-          .replace("{c}", e.c)
-          .replace("{d}", e.d);
+        var message = e.reason;
+
+        if(e.a !== undefined && e.b !== undefined && e.c !== undefined && e.d !== undefined)
+          message = e.raw.replace("{a}", e.a)
+                         .replace("{b}", e.b)
+                         .replace("{c}", e.c)
+                         .replace("{d}", e.d);
 
         console.log([e.line + lineOffset, e.character + charOffset, message].join(" :: "));
       }
